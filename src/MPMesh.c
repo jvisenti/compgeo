@@ -21,6 +21,8 @@ MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices
 {
     MPMesh *mesh = malloc(sizeof(MPMesh));
     
+    mesh->retainCount = 0;
+    
     mesh->vertexData = vertexData;
     mesh->stride = stride;
     mesh->numVertices = numVertices;
@@ -43,6 +45,28 @@ void MPMeshFree(MPMesh *mesh)
     }
 }
 
+void MPMeshRetain(MPMesh *mesh)
+{
+    mesh->retainCount++;
+}
+
+void MPMeshRelease(MPMesh *mesh)
+{
+    if (!mesh->retainCount)
+    {
+        printf("warning: releasing unretained mesh!\n");
+    }
+    
+    if (mesh->retainCount < 2)
+    {
+        MPMeshFree(mesh);
+    }
+    else
+    {
+        mesh->retainCount--;
+    }
+}
+
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
 {    
     MPVec3 **extrema = (MPVec3 **)mesh->_reserved;
@@ -58,14 +82,14 @@ MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
     
     if (transform != NULL)
     {
-        left = MPMat4MultiplyVec3(*transform, left);
-        right = MPMat4MultiplyVec3(*transform, right);
+        left = MPMat4TransformVec3(*transform, left);
+        right = MPMat4TransformVec3(*transform, right);
         
-        bottom = MPMat4MultiplyVec3(*transform, bottom);
-        top = MPMat4MultiplyVec3(*transform, top);
+        bottom = MPMat4TransformVec3(*transform, bottom);
+        top = MPMat4TransformVec3(*transform, top);
         
-        back = MPMat4MultiplyVec3(*transform, back);
-        front = MPMat4MultiplyVec3(*transform, front);
+        back = MPMat4TransformVec3(*transform, back);
+        front = MPMat4TransformVec3(*transform, front);
     }
     
     float midX = left.x + 0.5f * (right.x - left.x);
@@ -74,8 +98,13 @@ MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
     
     MPVec3 center = MPVec3Make(midX, midY, midZ);
     
-    float maxDist = fmaxf(MPVec3EuclideanDistance(left, right), MPVec3EuclideanDistance(bottom, top));
-    maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(back, front));
+    float maxDist = fmaxf(MPVec3EuclideanDistance(center, left), MPVec3EuclideanDistance(center, right));
+    
+    maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, bottom));
+    
+    maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, top));
+    maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, back));
+    maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, front));
     
     return MPSphereMake(center, maxDist);
 }
