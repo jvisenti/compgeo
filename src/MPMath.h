@@ -72,9 +72,20 @@ static inline int MPVec3EqualToVec3(MPVec3 v1, MPVec3 v2)
     return (v1.x == v2.x && v1.y == v2.y && v1.z == v2.z);
 }
     
+static inline float MPVec3Length(MPVec3 v)
+{
+    return sqrt((v.v[0] * v.v[0]) + (v.v[1] * v.v[1]) + (v.v[2] * v.v[2]));
+}
+
+static inline MPVec3 MPVec3Normalize(MPVec3 v)
+{
+    float len = MPVec3Length(v);
+    return MPVec3MultiplyScalar(v, 1.0f / len);
+}
+    
 static inline float MPVec3EuclideanDistance(MPVec3 v1, MPVec3 v2)
 {
-    return sqrtf((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
+    return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 }
 
 #pragma mark - quaternion functions
@@ -93,6 +104,18 @@ static inline MPQuaternion MPQuaternionMakeWithAngleAndAxis(float angle, float x
     float scale = sinf(half);
     
     return MPQuaternionMake(scale * x, scale * y, scale * z, cosf(half));
+}
+    
+static float MPQuaternionLength(MPQuaternion q)
+{
+    return sqrt((q.q[0] * q.q[0]) + (q.q[1] * q.q[1]) + (q.q[2] * q.q[2]) + (q.q[3] * q.q[3]));
+}
+    
+static inline MPQuaternion MPQuaternionNormalize(MPQuaternion q)
+{
+    float len = MPQuaternionLength(q);
+    
+    return MPQuaternionMake(q.q[0] / len, q.q[1] / len, q.q[2] / len, q.q[3] / len);
 }
 
 static inline MPQuaternion MPQuaternionInvert(MPQuaternion q)
@@ -120,6 +143,61 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
 
 #pragma mark - matrix functions
 
+static inline MPMat4 MPMat4MakeTranslation(MPVec3 translation)
+{
+    MPMat4 m = MPMat4Identity;
+    
+    m.m[12] = translation.x;
+    m.m[13] = translation.y;
+    m.m[14] = translation.z;
+    
+    return m;
+}
+    
+static inline MPMat4 MPMat4MakeScale(MPVec3 scale)
+{
+    MPMat4 m = MPMat4Identity;
+    
+    m.m[0]  = scale.x;
+    m.m[5]  = scale.y;
+    m.m[10] = scale.z;
+    
+    return m;
+}
+    
+static inline MPMat4 MPMat4MakeRotation(MPQuaternion rotation)
+{
+    rotation = MPQuaternionNormalize(rotation);
+    
+    float x = rotation.x;
+    float y = rotation.y;
+    float z = rotation.z;
+    float w = rotation.w;
+    
+    float xx = x + x;
+    float yy = y + y;
+    float zz = z + z;
+    float ww = w + w;
+    
+    MPMat4 m = MPMat4Identity;
+    
+    m.m[0]  = 1.0f - yy*y - zz*z;
+    m.m[1]  = xx*y + ww*z;
+    m.m[2]  = xx*z - ww*y;
+    
+    m.m[4]  = xx*y - ww*z;
+    m.m[5]  = 1.0f - xx*x - zz*z;
+    m.m[6]  = yy*z + ww*x;
+    
+    m.m[8]  = xx*z + ww*y;
+    m.m[9]  = yy*z - ww*x;
+    m.m[10] = 1.0f - xx*x - yy*y;
+    
+    m.m[15] = 1.0f;
+    
+    return m;
+}
+    
 static inline MPMat4 MPMat4Multiply(MPMat4 left, MPMat4 right)
 {
     MPMat4 m;
@@ -147,13 +225,13 @@ static inline MPMat4 MPMat4Multiply(MPMat4 left, MPMat4 right)
     return m;
 }
 
-static inline MPVec3 MPMat4MultiplyVec3(MPMat4 m, MPVec3 v)
+static inline MPVec3 MPMat4TransformVec3(MPMat4 m, MPVec3 v)
 {
     MPVec3 mv;
     
-    mv.v[0] = m.m00 * v.v[0] + m.m10 * v.v[1] + m.m20 * v.v[2];
-    mv.v[1] = m.m01 * v.v[0] + m.m11 * v.v[1] + m.m21 * v.v[2];
-    mv.v[2] = m.m02 * v.v[0] + m.m12 * v.v[1] + m.m22 * v.v[2];
+    mv.v[0] = m.m00 * v.v[0] + m.m10 * v.v[1] + m.m20 * v.v[2] + m.m30;
+    mv.v[1] = m.m01 * v.v[0] + m.m11 * v.v[1] + m.m21 * v.v[2] + m.m31;
+    mv.v[2] = m.m02 * v.v[0] + m.m12 * v.v[1] + m.m22 * v.v[2] + m.m32;
     
     return mv;
 }
