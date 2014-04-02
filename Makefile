@@ -7,7 +7,7 @@ CFLAGS+= -Wall
 
 CC=gcc $(CFLAGS)
 
-SOURCES=main.c
+SOURCES=main.c MPMath.c MPMesh.c
 
 SRC_PATH=src
 OBJ_PATH=obj
