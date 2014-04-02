@@ -11,6 +11,10 @@
 #include <stddef.h>
 #include "MPMath.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 typedef struct _MPMesh
 {
     unsigned short retainCount;
@@ -40,5 +44,9 @@ void MPMeshRelease(MPMesh *mesh);
 
 /* returns the bounding sphere of the mesh using the given transform. pass NULL to use identity. */
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform);
+    
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

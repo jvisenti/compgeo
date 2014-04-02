@@ -10,10 +10,6 @@
 
 #include <math.h>
 
-#if defined(__cplusplus)
-extern "C" {
-#endif
-
 typedef union _MPVec3
 {
     struct {float x, y, z;};
@@ -245,9 +241,5 @@ static inline MPSphere MPSphereMake(MPVec3 center, float radius)
     
     return m;
 }
-    
-#if defined(__cplusplus)
-}
-#endif
 
 #endif
