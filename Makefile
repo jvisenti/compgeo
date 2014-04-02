@@ -1,29 +1,40 @@
 ##debug 
-#CFLAGS = -g
+CFLAGS = -g
 ##release
-CFLAGS = -O3 -DNDEBUG
+#CFLAGS = -O3 -DNDEBUG
 
-CFLAGS+= -Wall
+CFLAGS += -Wall
 
-CC=gcc $(CFLAGS)
+## just use the same compiler flags for cpp
+CPPFLAGS = $(CFLAGS)
 
-SOURCES=main.c MPMath.c MPMesh.c
+CC = gcc $(CFLAGS)
+CXX = g++ $(CPPFLAGS)
 
-SRC_PATH=src
-OBJ_PATH=obj
+C_SOURCES = MPMath.c MPMesh.c
+CXX_SOURCES = main.cpp
 
-OBJ_FILES=$(patsubst %.c,$(OBJ_PATH)/%.o,$(SOURCES))
+SRC_PATH = src
+OBJ_PATH = obj
+
+C_OBJ_FILES = $(patsubst %.c,$(OBJ_PATH)/%.o,$(C_SOURCES))
+CXX_OBJ_FILES = $(patsubst %.cpp,$(OBJ_PATH)/%.o,$(CXX_SOURCES))
 
 PROGS=MotionPlanner
 
 .PHONY: all clean
 all: $(PROGS)
 
-$(PROGS): $(OBJ_FILES)
-	$(CC) $^ -o $@
+$(PROGS): $(C_OBJ_FILES) $(CXX_OBJ_FILES)
+	$(CXX) $^ -o $@
 
+## straight c rules
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) -c $< -o $@
+    
+## c++ rules
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp
+	$(CXX) -c $< -o $@
 
 clean:	
 	$(RM) $(OBJ_PATH)/*.o $(PROGS)
