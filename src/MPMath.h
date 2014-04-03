@@ -5,8 +5,8 @@
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 
-#ifndef MotionPlanner_MPMath_h
-#define MotionPlanner_MPMath_h
+#ifndef _MPMath_h
+#define _MPMath_h
 
 #include <math.h>
 

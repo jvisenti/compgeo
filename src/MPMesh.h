@@ -5,8 +5,8 @@
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 
-#ifndef MotionPlanner_MPMesh_h
-#define MotionPlanner_MPMesh_h
+#ifndef _MPMesh_h
+#define _MPMesh_h
 
 #include <stddef.h>
 #include "MPMath.h"
