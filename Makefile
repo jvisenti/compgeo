@@ -9,10 +9,10 @@ CFLAGS += -Wall
 CPPFLAGS = $(CFLAGS)
 
 CC = gcc $(CFLAGS)
-CXX = g++ $(CPPFLAGS)
+CXX = g++ -std=c++11 $(CPPFLAGS)
 
 C_SOURCES = MPMath.c MPMesh.c
-CXX_SOURCES = main.cpp
+CXX_SOURCES = main.cpp MPModel.cpp
 
 SRC_PATH = src
 OBJ_PATH = obj
