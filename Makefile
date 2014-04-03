@@ -12,7 +12,7 @@ CC = gcc $(CFLAGS)
 CXX = g++ $(CPPFLAGS)
 
 C_SOURCES = MPMath.c MPMesh.c
-CXX_SOURCES = main.cpp
+CXX_SOURCES = main.cpp MPHeap.cpp
 
 SRC_PATH = src
 OBJ_PATH = obj
