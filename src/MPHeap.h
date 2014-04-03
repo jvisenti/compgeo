@@ -35,11 +35,19 @@ public:
   /* Build a min heap from the given data */
   void buildHeap(const std::vector<HeapElement> &);
 
-  /* Remove the minimum-keyed element in the heap in O(lg n) */
+  /* Remove the minimum-keyed element in the heap in O(lg n) time */
   HeapElement remove();
+
+  /* Decrease the key of a given state (located by its heap index) in O(lg n) time */
+  void decreaseKey(State *s, double k);
+  
+  /* Insert the state s into the heap with key k in O(lg n) time */
+  void insertState(State *s, double k);
 
   /* Returns the number of elements in the heap */
   inline int size() const { return data_.size(); }
+
+  void print();
 
 private:
   inline int getParent(int i) const { return (i == 0 ? INVALID_INDEX : (i-1)/2); }
@@ -48,7 +56,11 @@ private:
 
   inline int getRightChild(int i) const { return ((2*i + 2) < size() ? (2*i + 2) : INVALID_INDEX); }
 
+  /* Restore the heap property in O(lg n) time by percolating down the element at index i */
   void heapify(int i);
+  
+  /* Clear all elements in the heap */
+  void clear();
 
   std::vector<HeapElement> data_;
 
