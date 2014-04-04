@@ -502,7 +502,10 @@ void BHGLprintShaderLog(GLuint shader)
     GLchar *logText = malloc(length * sizeof(GLchar));
     glGetShaderInfoLog(shader, length, 0, logText);
     
-    fprintf(stderr, "%s\n", logText);
+    if (length > 0)
+    {
+        fprintf(stderr, "%s\n", logText);
+    }
     
     free(logText);
 }
@@ -515,7 +518,10 @@ void BHGLprintProgramLog(GLuint program)
     GLchar *logText = malloc(length * sizeof(GLchar));
     glGetProgramInfoLog(program, length, 0, logText);
     
-    fprintf(stderr, "%s\n", logText);
+    if (length > 0)
+    {
+        fprintf(stderr, "%s\n", logText);
+    }
     
     free(logText);
 }
