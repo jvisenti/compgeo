@@ -10,6 +10,10 @@
 
 #include <math.h>
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 typedef union _MPVec3
 {
     struct {float x, y, z;};
@@ -84,7 +88,7 @@ static inline float MPVec3EuclideanDistance(MPVec3 v1, MPVec3 v2)
     return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 }
 
-static float MPVec3 MPVec3DotProcuct(MPVec3 v1, MPVec3 v2)
+static inline float MPVec3DotProcuct(MPVec3 v1, MPVec3 v2)
 {
     return (v1.v[0] * v2.v[0]) + (v1.v[1] * v2.v[1]) + (v1.v[2] * v2.v[2]);
 }
@@ -262,5 +266,9 @@ static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
 {
     return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
 }
+    
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

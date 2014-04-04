@@ -11,6 +11,10 @@
 #include <stdio.h>
 #include "MPMath.h"
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 static inline void MPVec3Print(MPVec3 v)
 {
     printf("(%.2f, %.2f, %.2f)", v.v[0], v.v[1], v.v[2]);
@@ -32,5 +36,9 @@ static inline void MPSpherePrint(MPSphere s)
     MPVec3Print(s.center);
     printf(" r:%.2f}", s.radius);
 }
+    
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
