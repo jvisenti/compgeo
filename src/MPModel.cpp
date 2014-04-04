@@ -98,5 +98,17 @@ bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
 {
     // TODO: the collision test
     
+    MPMat4 modelMatrix = state.getTransform();
+    MPMat4 otherModelMatrix = model.getModelMatrix();
+    
+    MPSphere boundingSphere = MPMeshGetBoundingSphere(this->mesh, &modelMatrix);
+    MPSphere otherBoundingSphere = MPMeshGetBoundingSphere(model.getMesh(), &otherModelMatrix);
+    
+    // bounding spheres don't intersect, so neither can the models
+    if (!MPSphereIntersectsSphere(boundingSphere, otherBoundingSphere))
+    {
+        return false;
+    }
+    
     return false;
 }
