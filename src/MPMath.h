@@ -84,6 +84,22 @@ static inline float MPVec3EuclideanDistance(MPVec3 v1, MPVec3 v2)
     return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
 }
 
+static float MPVec3 MPVec3DotProcuct(MPVec3 v1, MPVec3 v2)
+{
+    return (v1.v[0] * v2.v[0]) + (v1.v[1] * v2.v[1]) + (v1.v[2] * v2.v[2]);
+}
+
+static inline MPVec3 MPVec3CrossProduct(MPVec3 v1, MPVec3 v2)
+{
+    MPVec3 v;
+    
+    v.v[0] = (v1.v[1] * v2.v[2]) - (v1.v[2] * v2.v[1]);
+    v.v[1] = (v1.v[2] * v2.v[0]) - (v1.v[0] * v2.v[2]);
+    v.v[2] = (v1.v[0] * v2.v[1]) - (v1.v[1] * v2.v[0]);
+    
+    return v;
+}
+
 #pragma mark - quaternion functions
 
 static inline MPQuaternion MPQuaternionMake(float x, float y, float z, float w)
@@ -240,6 +256,11 @@ static inline MPSphere MPSphereMake(MPVec3 center, float radius)
     m.center = center; m.radius = radius;
     
     return m;
+}
+
+static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
+{
+    return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
 }
 
 #endif
