@@ -9,12 +9,15 @@
 
 #pragma mark - public methods
 
+MPModel::MPModel()
+{
+    this->mesh = nullptr;
+}
+
 MPModel::MPModel(MPMesh *mesh)
 {
+    this->mesh = nullptr;
     this->setMesh(mesh);
-    
-    MPState defaultState(MPVec3Zero, MPVec3Make(1.0f, 1.0f, 1.0f), MPQuaternionIdentity);
-    state = defaultState;
 }
 
 MPModel::~MPModel()
@@ -36,7 +39,7 @@ void MPModel::setMesh(MPMesh *mesh)
     }
 }
 
-MPMesh* MPModel::getMesh()
+MPMesh* MPModel::getMesh() const
 {
     return this->mesh;
 }
@@ -56,7 +59,7 @@ void MPModel::setPosition(const MPVec3 &position)
     this->state.setPosition(position);
 }
 
-MPVec3& MPModel::getPosition()
+MPVec3 MPModel::getPosition() const
 {
     return this->state.getPosition();
 }
@@ -66,7 +69,7 @@ void MPModel::setScale(const MPVec3 &scale)
     this->state.setScale(scale);
 }
 
-MPVec3& MPModel::getScale()
+MPVec3 MPModel::getScale() const
 {
     return this->state.getScale();
 }
@@ -76,22 +79,22 @@ void MPModel::setRotation(const MPQuaternion &rotation)
     this->state.setRotation(rotation);
 }
 
-MPQuaternion& MPModel::getRotation()
+MPQuaternion MPModel::getRotation() const
 {
     return this->state.getRotation();
 }
 
-MPMat4& MPModel::getModelMatrix()
+MPMat4 MPModel::getModelMatrix()
 {
-    return this->state.getTransform();
+    return state.getTransform();
 }
 
-bool MPModel::collidesWithModel(const MPModel &model)
+bool MPModel::collidesWithModel(MPModel &model)
 {
     return this->stateCollidesWithModel(this->state, model);
 }
 
-bool MPModel::stateCollidesWithModel(const MPState &state, const MPModel &model)
+bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
 {
     // TODO: the collision test
     

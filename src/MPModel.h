@@ -14,28 +14,29 @@
 class MPModel
 {
 public:
-    MPModel(MPMesh *mesh=NULL);
+    MPModel();
+    MPModel(MPMesh *mesh);
     ~MPModel();
     
     void setMesh(MPMesh *mesh);
-    MPMesh* getMesh();
+    MPMesh* getMesh() const;
     
     void setState(const MPState &state);
     MPState& getState();
     
     void setPosition(const MPVec3 &position);
-    MPVec3& getPosition();
+    MPVec3 getPosition() const;
     
     void setScale(const MPVec3 &scale);
-    MPVec3& getScale();
+    MPVec3 getScale() const;
     
     void setRotation(const MPQuaternion &rotation);
-    MPQuaternion& getRotation();
+    MPQuaternion getRotation() const;
     
-    MPMat4& getModelMatrix();
+    MPMat4 getModelMatrix();
     
-    bool collidesWithModel(const MPModel &model);
-    bool stateCollidesWithModel(const MPState &state, const MPModel &model);
+    bool collidesWithModel(MPModel &model);
+    bool stateCollidesWithModel(MPState &state, MPModel &model);
         
 private:
     MPMesh *mesh;
