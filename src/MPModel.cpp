@@ -1,6 +1,5 @@
 //
 //  MPModel.cpp
-//  MotionPlanner
 //
 //  Created by John Visentin on 4/3/14.
 //  Copyright (c) 2014 John Visentin. All rights reserved.
@@ -14,11 +13,13 @@ MPModel::MPModel(MPMesh *mesh)
 {
     this->setMesh(mesh);
     
-    this->modelMatrixCache = nullptr;
-    
-    this->setPosition(MPVec3Zero);
-    this->setScale(MPVec3Make(1.0f, 1.0f, 1.0f));
-    this->setRotation(MPQuaternionIdentity);
+    MPState defaultState(MPVec3Zero, MPVec3Make(1.0f, 1.0f, 1.0f), MPQuaternionIdentity);
+    state = defaultState;
+}
+
+MPModel::~MPModel()
+{
+    MPMeshRelease(this->mesh);
 }
 
 void MPModel::setMesh(MPMesh *mesh)
@@ -40,67 +41,59 @@ MPMesh* MPModel::getMesh()
     return this->mesh;
 }
 
+void MPModel::setState(const MPState &state)
+{
+    this->state = state;
+}
+
+MPState& MPModel::getState()
+{
+    return this->state;
+}
+
 void MPModel::setPosition(const MPVec3 &position)
 {
-    this->position = position;
-    this->invalidateMatrixCache();
+    this->state.setPosition(position);
 }
 
 MPVec3& MPModel::getPosition()
 {
-    return this->position;
+    return this->state.getPosition();
 }
 
 void MPModel::setScale(const MPVec3 &scale)
 {
-    this->scale = scale;
-    this->invalidateMatrixCache();
+    this->state.setScale(scale);
 }
 
 MPVec3& MPModel::getScale()
 {
-    return this->scale;
+    return this->state.getScale();
 }
 
 void MPModel::setRotation(const MPQuaternion &rotation)
 {
-    this->rotation = rotation;
-    this->invalidateMatrixCache();
+    this->state.setRotation(rotation);
 }
 
 MPQuaternion& MPModel::getRotation()
 {
-    return this->rotation;
+    return this->state.getRotation();
 }
 
-MPMat4& MPModel::modelMatrix()
+MPMat4& MPModel::getModelMatrix()
 {
-    if (this->modelMatrixCache == nullptr)
-    {
-        MPMat4 s = MPMat4MakeScale(MPVec3Make(this->scale.x, this->scale.y, this->scale.z));
-        MPMat4 r = MPMat4MakeRotation(this->rotation);
-        
-        MPMat4 mat = MPMat4Multiply(r, s);
-        
-        // shortcut to apply a translation transformation
-        mat.m[12] += this->position.x;
-        mat.m[13] += this->position.y;
-        mat.m[14] += this->position.z;
-        
-        this->modelMatrixCache = new MPMat4;
-        *(this->modelMatrixCache) = mat;
-    }
+    return this->state.getTransform();
+}
+
+bool MPModel::collidesWithModel(const MPModel &model)
+{
+    return this->stateCollidesWithModel(this->state, model);
+}
+
+bool MPModel::stateCollidesWithModel(const MPState &state, const MPModel &model)
+{
+    // TODO: the collision test
     
-    return *(this->modelMatrixCache);
-}
-
-#pragma mark - private methods
-
-void MPModel::invalidateMatrixCache()
-{
-    if (this->modelMatrixCache != nullptr)
-    {
-        delete this->modelMatrixCache;
-        this->modelMatrixCache = NULL;
-    }
+    return false;
 }

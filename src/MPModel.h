@@ -9,14 +9,19 @@
 #define __MotionPlanner__MPModel__
 
 #include "MPMesh.h"
+#include "MPState.h"
 
 class MPModel
 {
 public:
     MPModel(MPMesh *mesh=NULL);
+    ~MPModel();
     
     void setMesh(MPMesh *mesh);
     MPMesh* getMesh();
+    
+    void setState(const MPState &state);
+    MPState& getState();
     
     void setPosition(const MPVec3 &position);
     MPVec3& getPosition();
@@ -27,18 +32,15 @@ public:
     void setRotation(const MPQuaternion &rotation);
     MPQuaternion& getRotation();
     
-    MPMat4& modelMatrix();
+    MPMat4& getModelMatrix();
     
+    bool collidesWithModel(const MPModel &model);
+    bool stateCollidesWithModel(const MPState &state, const MPModel &model);
+        
 private:
     MPMesh *mesh;
     
-    MPMat4 *modelMatrixCache;
-    
-    MPVec3 position;
-    MPVec3 scale;
-    MPQuaternion rotation;
-    
-    void invalidateMatrixCache();
+    MPState state;
 };
 
 #endif
