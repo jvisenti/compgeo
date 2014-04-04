@@ -47,11 +47,15 @@ void MPMeshFree(MPMesh *mesh)
 
 void MPMeshRetain(MPMesh *mesh)
 {
+    if (mesh == NULL) return;
+    
     mesh->retainCount++;
 }
 
 void MPMeshRelease(MPMesh *mesh)
 {
+    if (mesh == NULL) return;
+    
     if (!mesh->retainCount)
     {
         printf("warning: releasing unretained mesh!\n");
