@@ -10,20 +10,22 @@
 #define __MotionPlanner__MPModel__
 
 #include "MPMesh.h"
-#include "MPState.h"
+#include "MPTransform3D.h"
 
-class MPModel
+namespace MP
+{
+class Model
 {
 public:
-    MPModel();
-    MPModel(MPMesh *mesh);
-    ~MPModel();
+    Model();
+    Model(MPMesh *mesh);
+    ~Model();
     
     void setMesh(MPMesh *mesh);
     MPMesh* getMesh() const;
     
-    void setState(const MPState &state);
-    MPState& getState();
+    void setTransform(const Transform3D &transform);
+    Transform3D& getTransform();
     
     void setPosition(const MPVec3 &position);
     MPVec3 getPosition() const;
@@ -34,19 +36,19 @@ public:
     void setRotation(const MPQuaternion &rotation);
     MPQuaternion getRotation() const;
     
-    /* returns the model/TRS matrix for the current pose */
     MPMat4 getModelMatrix();
     
     /* returns true if the current state causes a collision with the given model */
-    bool collidesWithModel(MPModel &model);
+    bool collidesWithModel(Model &model);
     
-    /* returns true if moving to the given state would cause a collision with the given model */
-    bool stateCollidesWithModel(MPState &state, MPModel &model);
+    /* returns true if moving to the given transform would cause a collision with the given model */
+    bool wouldCollideWithModel(Transform3D &transform, Model &model);
         
 private:
     MPMesh *mesh;
     
-    MPState state;
+    Transform3D transform;
 };
+}
 
 #endif
