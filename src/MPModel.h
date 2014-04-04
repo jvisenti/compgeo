@@ -4,6 +4,7 @@
 //  Created by John Visentin on 4/3/14.
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
+//  An 3D object prepresented by its mesh (vertices) and a state (pose)
 
 #ifndef __MotionPlanner__MPModel__
 #define __MotionPlanner__MPModel__
@@ -33,9 +34,13 @@ public:
     void setRotation(const MPQuaternion &rotation);
     MPQuaternion getRotation() const;
     
+    /* returns the model/TRS matrix for the current pose */
     MPMat4 getModelMatrix();
     
+    /* returns true if the current state causes a collision with the given model */
     bool collidesWithModel(MPModel &model);
+    
+    /* returns true if moving to the given state would cause a collision with the given model */
     bool stateCollidesWithModel(MPState &state, MPModel &model);
         
 private:

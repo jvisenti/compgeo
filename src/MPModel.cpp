@@ -31,9 +31,11 @@ void MPModel::setMesh(MPMesh *mesh)
     {
         if (this->mesh != nullptr)
         {
+            // no longer using the mesh, so decrease reference count
             MPMeshRelease(this->mesh);
         }
         
+        // increase the reference count of the mesh
         MPMeshRetain(mesh);
         this->mesh = mesh;
     }
@@ -96,8 +98,6 @@ bool MPModel::collidesWithModel(MPModel &model)
 
 bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
 {
-    // TODO: the collision test
-    
     MPMat4 modelMatrix = state.getTransform();
     MPMat4 otherModelMatrix = model.getModelMatrix();
     
@@ -110,5 +110,7 @@ bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
         return false;
     }
     
-    return false;
+    // TODO: precise collision test brute force
+    
+    return true;
 }
