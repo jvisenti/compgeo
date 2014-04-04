@@ -18,15 +18,15 @@ public:
     ~MPState();
     
     void setPosition(const MPVec3 &position);
-    MPVec3& getPosition();
+    MPVec3 getPosition() const;
     
     void setScale(const MPVec3 &scale);
-    MPVec3& getScale();
+    MPVec3 getScale() const;
     
     void setRotation(const MPQuaternion &rotation);
-    MPQuaternion& getRotation();
+    MPQuaternion getRotation() const;
     
-    MPMat4& getTransform();
+    MPMat4 getTransform();
 
 private:
     MPMat4 *matrixCache;

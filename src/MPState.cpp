@@ -16,8 +16,6 @@ MPState::MPState()
 
 MPState::MPState(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
 {
-    this->matrixCache = nullptr;
-    
     this->init(pos, scale, rotation);
 }
 
@@ -32,7 +30,7 @@ void MPState::setPosition(const MPVec3 &position)
     this->invalidateMatrixCache();
 }
 
-MPVec3& MPState::getPosition()
+MPVec3 MPState::getPosition() const
 {
     return this->position;
 }
@@ -43,7 +41,7 @@ void MPState::setScale(const MPVec3 &scale)
     this->invalidateMatrixCache();
 }
 
-MPVec3& MPState::getScale()
+MPVec3 MPState::getScale() const
 {
     return this->scale;
 }
@@ -54,12 +52,12 @@ void MPState::setRotation(const MPQuaternion &rotation)
     this->invalidateMatrixCache();
 }
 
-MPQuaternion& MPState::getRotation()
+MPQuaternion MPState::getRotation() const
 {
     return this->rotation;
 }
 
-MPMat4& MPState::getTransform()
+MPMat4 MPState::getTransform()
 {
     if (this->matrixCache == nullptr)
     {
@@ -84,6 +82,8 @@ MPMat4& MPState::getTransform()
 
 void MPState::init(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
 {
+    this->matrixCache = nullptr;
+    
     this->position = pos;
     this->scale = scale;
     this->rotation = rotation;
