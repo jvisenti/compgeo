@@ -1,1 +1,5 @@
-./MotionPlanner
+[Tt]humbs.db
+*.DS_Store
+/obj
+MotionPlanner
+!MotionPlanner/
