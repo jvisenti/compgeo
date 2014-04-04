@@ -7,25 +7,27 @@
 
 #include "MPModel.h"
 
+namespace MP
+{
 #pragma mark - public methods
 
-MPModel::MPModel()
+Model::Model()
 {
     this->mesh = nullptr;
 }
 
-MPModel::MPModel(MPMesh *mesh)
+Model::Model(MPMesh *mesh)
 {
     this->mesh = nullptr;
     this->setMesh(mesh);
 }
 
-MPModel::~MPModel()
+Model::~Model()
 {
     MPMeshRelease(this->mesh);
 }
 
-void MPModel::setMesh(MPMesh *mesh)
+void Model::setMesh(MPMesh *mesh)
 {
     if (mesh != this->mesh)
     {
@@ -41,64 +43,64 @@ void MPModel::setMesh(MPMesh *mesh)
     }
 }
 
-MPMesh* MPModel::getMesh() const
+MPMesh* Model::getMesh() const
 {
     return this->mesh;
 }
 
-void MPModel::setState(const MPState &state)
+void Model::setTransform(const Transform3D &transform)
 {
-    this->state = state;
+    this->transform = transform;
 }
 
-MPState& MPModel::getState()
+Transform3D& Model::getTransform()
 {
-    return this->state;
+    return this->transform;
 }
 
-void MPModel::setPosition(const MPVec3 &position)
+void Model::setPosition(const MPVec3 &position)
 {
-    this->state.setPosition(position);
+    this->transform.setPosition(position);
 }
 
-MPVec3 MPModel::getPosition() const
+MPVec3 Model::getPosition() const
 {
-    return this->state.getPosition();
+    return this->transform.getPosition();
 }
 
-void MPModel::setScale(const MPVec3 &scale)
+void Model::setScale(const MPVec3 &scale)
 {
-    this->state.setScale(scale);
+    this->transform.setScale(scale);
 }
 
-MPVec3 MPModel::getScale() const
+MPVec3 Model::getScale() const
 {
-    return this->state.getScale();
+    return this->transform.getScale();
 }
 
-void MPModel::setRotation(const MPQuaternion &rotation)
+void Model::setRotation(const MPQuaternion &rotation)
 {
-    this->state.setRotation(rotation);
+    this->transform.setRotation(rotation);
 }
 
-MPQuaternion MPModel::getRotation() const
+MPQuaternion Model::getRotation() const
 {
-    return this->state.getRotation();
+    return this->transform.getRotation();
 }
 
-MPMat4 MPModel::getModelMatrix()
+MPMat4 Model::getModelMatrix()
 {
-    return state.getTransform();
+    return transform.getMatrix();
 }
 
-bool MPModel::collidesWithModel(MPModel &model)
+bool Model::collidesWithModel(Model &model)
 {
-    return this->stateCollidesWithModel(this->state, model);
+    return this->wouldCollideWithModel(this->transform, model);
 }
 
-bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
+bool Model::wouldCollideWithModel(Transform3D &transform, Model &model)
 {
-    MPMat4 modelMatrix = state.getTransform();
+    MPMat4 modelMatrix = transform.getMatrix();
     MPMat4 otherModelMatrix = model.getModelMatrix();
     
     MPSphere boundingSphere = MPMeshGetBoundingSphere(this->mesh, &modelMatrix);
@@ -113,4 +115,5 @@ bool MPModel::stateCollidesWithModel(MPState &state, MPModel &model)
     // TODO: precise collision test brute force
     
     return true;
+}
 }

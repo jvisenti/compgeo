@@ -1,63 +1,65 @@
 //
-//  MPState.cpp
+//  MPTransform3D.cpp
 //
 //  Created by John Visentin on 4/3/14.
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 
-#include "MPState.h"
+#include "MPTransform3D.h"
 
+namespace MP
+{
 #pragma mark - public methods
-
-MPState::MPState()
+    
+Transform3D::Transform3D()
 {
     this->init(MPVec3Zero, MPVec3Make(1.0f, 1.0f, 1.0f), MPQuaternionIdentity);
 }
 
-MPState::MPState(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
+Transform3D::Transform3D(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
 {
     this->init(pos, scale, rotation);
 }
 
-MPState::~MPState()
+Transform3D::~Transform3D()
 {
     this->invalidateMatrixCache();
 }
 
-void MPState::setPosition(const MPVec3 &position)
+void Transform3D::setPosition(const MPVec3 &position)
 {
     this->position = position;
     this->invalidateMatrixCache();
 }
 
-MPVec3 MPState::getPosition() const
+MPVec3 Transform3D::getPosition() const
 {
     return this->position;
 }
 
-void MPState::setScale(const MPVec3 &scale)
+void Transform3D::setScale(const MPVec3 &scale)
 {
     this->scale = scale;
     this->invalidateMatrixCache();
 }
 
-MPVec3 MPState::getScale() const
+MPVec3 Transform3D::getScale() const
 {
     return this->scale;
 }
 
-void MPState::setRotation(const MPQuaternion &rotation)
+void Transform3D::setRotation(const MPQuaternion &rotation)
 {
     this->rotation = rotation;
     this->invalidateMatrixCache();
 }
 
-MPQuaternion MPState::getRotation() const
+MPQuaternion Transform3D::getRotation() const
 {
     return this->rotation;
 }
 
-MPMat4 MPState::getTransform()
+MPMat4 Transform3D::getMatrix()
 {
     if (this->matrixCache == nullptr)
     {
@@ -80,7 +82,7 @@ MPMat4 MPState::getTransform()
 
 #pragma mark - private methods
 
-void MPState::init(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
+void Transform3D::init(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation)
 {
     this->matrixCache = nullptr;
     
@@ -89,11 +91,12 @@ void MPState::init(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &r
     this->rotation = rotation;
 }
 
-void MPState::invalidateMatrixCache()
+void Transform3D::invalidateMatrixCache()
 {
     if (this->matrixCache != nullptr)
     {
         delete this->matrixCache;
         this->matrixCache = nullptr;
     }
+}
 }
