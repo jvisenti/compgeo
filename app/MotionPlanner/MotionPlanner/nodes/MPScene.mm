@@ -7,10 +7,10 @@
 //
 
 #import "MPScene.h"
-#import "MPModelNode.h"
 #import "BHGL.h"
 
 #import "MPCube.h"
+#import "MPPyramid.h"
 
 @interface MPScene ()
 
@@ -33,29 +33,42 @@
         [self setupLights];
         
 #pragma mark - TESTING ONLY -- REMOVE
-{
+    {
         MPMesh *mesh = MPMeshCreate((const MPVec3 *)CubeVertices, sizeof(CubeVertices[0]), sizeof(CubeVertices) / sizeof(CubeVertices[0]), (const void *)CubeIndices, sizeof(CubeIndices[0]), sizeof(CubeIndices) / sizeof(CubeIndices[0]));
         
-        MP::Model model(mesh);
-        model.setPosition(MPVec3Make(0.0f, 0.0f, -5.0f));
+        MP::Model *cube = new MP::Model(mesh);
+        cube->setPosition(MPVec3Make(0.0f, 0.0f, -8.0f));
         
-        MPModelNode *node = [[MPModelNode alloc] initWithModel:model];
+        MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:cube];
         
-        node.material.surfaceColor = BHGLColorRed;
-        node.material.ambientColor = BHGLColorWhite;
-        node.material.diffuseColor = BHGLColorWhite;
-        node.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
-        node.material.shininess = 10.0f;
+        activeNode.material.surfaceColor = BHGLColorRed;
+        activeNode.material.ambientColor = BHGLColorWhite;
+        activeNode.material.diffuseColor = BHGLColorWhite;
+        activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+        activeNode.material.shininess = 10.0f;
         
         BHGLBasicAnimation *rotate = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI, 0.0f, 1.0f, 0.0f) withDuration:2.0f];
         rotate.repeats = YES;
         
-        [node runAnimation:rotate];
+        [activeNode runAnimation:rotate];
         
-        [self addChild:node];
+        [self addChild:activeNode];
     
-        self.activeObject = node;
-}
+        self.activeObject = activeNode;
+    
+        MP::Model *pyramid = new MP::Model(mesh);
+        pyramid->setPosition(MPVec3Make(3.0f, 0.0f, -8.0f));
+        
+        MPModelNode *pyramidNode = [[MPModelNode alloc] initWithModel:pyramid];
+        
+        pyramidNode.material.surfaceColor = BHGLColorYellow;
+        pyramidNode.material.ambientColor = BHGLColorWhite;
+        pyramidNode.material.diffuseColor = BHGLColorWhite;
+        pyramidNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+        pyramidNode.material.shininess = 10.0f;
+        
+        [self addChild:pyramidNode];
+    }
     }
     return self;
 }
@@ -88,7 +101,7 @@
     light.type = BHGLLightTypePoint;
     light.ambientColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
     light.color = BHGLColorWhite;
-    light.position = GLKVector3Make(1.0f, 2.0f, -2.0f);
+    light.position = GLKVector3Make(1.0f, 2.0f, -4.0f);
     light.constantAttenuation = 0.6f;
     light.linearAttenuation = 0.02f;
     light.quadraticAttenuation = 0.08f;
@@ -96,6 +109,37 @@
     [self addLight:light];
     
     self.lightUniform = @"u_Lights";
+}
+
+#pragma mark - public interface
+
+- (void)addChild:(BHGLNode *)node
+{
+    [super addChild:node];
+    
+    if ([node isKindOfClass:[MPModelNode class]])
+    {
+        ((MPModelNode *)node).scene = self;
+    }
+}
+
+- (BOOL)transform:(MP::Transform3D &)transform validForModel:(MPModelNode *)model
+{
+    __block BOOL valid = YES;
+    
+    [self.children enumerateObjectsUsingBlock:^(BHGLNode *child, NSUInteger idx, BOOL *stop) {
+        if (child != model && [child isKindOfClass:[MPModelNode class]])
+        {
+            MP::Model *otherModel = ((MPModelNode *)child).model;
+            if (model.model->wouldCollideWithModel(transform, *otherModel))
+            {
+                valid = NO;
+                *stop = YES;
+            }
+        }
+    }];
+    
+    return valid;
 }
 
 @end

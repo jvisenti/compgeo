@@ -7,12 +7,12 @@
 //
 
 #import "MPModelNode.h"
-#import "ConversionUtils.h"
+#import "MPScene.h"
 #import "BHGLCUtils.h"
 
 @interface MPModelNode ()
 {
-    MP::Model _model;
+    MP::Model *_model;
 }
 
 @end
@@ -23,37 +23,69 @@
 
 - (void)setPosition:(GLKVector3)position
 {
-    _model.setPosition(GLKVector3ToMPVec3(position));
+    if (!_model) return;
+    
+    MPVec3 mpPos = GLKVector3ToMPVec3(position);
+    MP::Transform3D next(mpPos, self.model->getScale(), self.model->getRotation());
+    
+    if ([self.scene transform:next validForModel:self])
+    {
+        _model->setPosition(mpPos);
+    }
 }
 
 - (GLKVector3)position
 {
-    return MPVec3ToGLKVector3(self.model.getPosition());
+    if (!_model) return GLKVector3Make(0.0f, 0.0f, 0.0f);
+    
+    return MPVec3ToGLKVector3(self.model->getPosition());
 }
 
 - (void)setScale:(GLKVector3)scale
 {
-    _model.setScale(GLKVector3ToMPVec3(scale));
+    if (!_model) return;
+    
+    MPVec3 mpScale = GLKVector3ToMPVec3(scale);
+    MP::Transform3D next(self.model->getPosition(), mpScale, self.model->getRotation());
+    
+    if ([self.scene transform:next validForModel:self])
+    {
+        _model->setScale(mpScale);
+    }
 }
 
 - (GLKVector3)scale
 {
-    return MPVec3ToGLKVector3(self.model.getScale());
+    if (!_model) return GLKVector3Make(1.0f, 1.0f, 1.0f);
+    
+    return MPVec3ToGLKVector3(self.model->getScale());
 }
 
 - (void)setRotation:(GLKQuaternion)rotation
 {
-    _model.setRotation(GLKQuaternionToMPQuaternion(rotation));
+    if (!_model) return;
+    
+    MPQuaternion mpRot = GLKQuaternionToMPQuaternion(rotation);
+    MP::Transform3D next(self.model->getPosition(), self.model->getScale(), mpRot);
+    
+    if ([self.scene transform:next validForModel:self])
+    {
+        _model->setRotation(mpRot);
+    }    
 }
 
 - (GLKQuaternion)rotation
 {
-    return MPQuaternionToGLKQuaternion(self.model.getRotation());
+    if (!_model) return GLKQuaternionIdentity;
+    
+    return MPQuaternionToGLKQuaternion(self.model->getRotation());
 }
 
 - (GLKMatrix4)modelMatrix
 {
-    return MPMat4ToGLKMatrix4(_model.getModelMatrix());
+    if (!_model) return GLKMatrix4Identity;
+    
+    return MPMat4ToGLKMatrix4(_model->getModelMatrix());
 }
 
 - (void)setMesh:(BHGLMesh *)mesh
@@ -61,11 +93,11 @@
     // does nothing. set new model to change the mesh.
 }
 
-- (void)setModel:(const MP::Model &)model
+- (void)setModel:(const MP::Model *)model
 {
-    _model = model;
+    _model = (MP::Model *)model;
     
-    MPMesh *mesh = _model.getMesh();
+    MPMesh *mesh = _model->getMesh();
     
     BHGLVertexType vType = BHGLVertexTypeCreate(2);
     vType.attribs[0] = BHGLVertexAttribPosition;
@@ -88,14 +120,19 @@
     BHGLVertexTypeFree(vType);
 }
 
-- (const MP::Model &)model
+- (MP::Model *)model
 {
     return _model;
 }
 
+- (void)removeFromParent
+{
+    self.scene = nil;
+}
+
 #pragma mark - public interface
 
-- (id)initWithModel:(const MP::Model &)model
+- (id)initWithModel:(const MP::Model *)model
 {
     if ((self = [super init]))
     {

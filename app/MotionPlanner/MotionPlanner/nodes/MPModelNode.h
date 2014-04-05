@@ -9,11 +9,15 @@
 #import "BHGLModelNode.h"
 #import "MPModel.h"
 
+@class  MPScene;
+
 @interface MPModelNode : BHGLModelNode
 
-- (void)setModel:(const MP::Model &)model;
-- (const MP::Model &)model;
+@property (nonatomic, weak) MPScene *scene;
 
-- (id)initWithModel:(const MP::Model &)model;
+- (void)setModel:(const MP::Model *)model;
+- (MP::Model *)model;
+
+- (id)initWithModel:(const MP::Model *)model;
 
 @end

@@ -7,9 +7,12 @@
 //
 
 #import "BHGLScene.h"
+#import "MPModelNode.h"
 
 @interface MPScene : BHGLScene
 
 @property (nonatomic, strong) BHGLNode *activeObject;
+
+- (BOOL)transform:(MP::Transform3D &)transform validForModel:(MPModelNode *)model;
 
 @end

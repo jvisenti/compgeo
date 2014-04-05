@@ -34,7 +34,7 @@
 		D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED8F18EEED3D00993BAF /* BHGLTextNode.m */; };
 		D416EDAF18EEED3D00993BAF /* BHGLTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED9118EEED3D00993BAF /* BHGLTexture.m */; };
 		D416EDB018EEED3D00993BAF /* NSValue+BHGLTypes.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED9418EEED3D00993BAF /* NSValue+BHGLTypes.m */; };
-		D416EDC218EEEEC800993BAF /* MPGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = D416EDC118EEEEC800993BAF /* MPGLView.m */; };
+		D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDC118EEEEC800993BAF /* MPGLView.mm */; };
 		D416EDC918EEF00F00993BAF /* MPScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDC818EEF00F00993BAF /* MPScene.mm */; };
 		D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDCB18EF168900993BAF /* MPModelNode.mm */; };
 		D416EDF518EF19E000993BAF /* MPMath.c in Sources */ = {isa = PBXBuildFile; fileRef = D416EDEC18EF19E000993BAF /* MPMath.c */; };
@@ -113,7 +113,7 @@
 		D416ED9318EEED3D00993BAF /* NSValue+BHGLTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "NSValue+BHGLTypes.h"; path = "../BHGL/NSValue+BHGLTypes.h"; sourceTree = "<group>"; };
 		D416ED9418EEED3D00993BAF /* NSValue+BHGLTypes.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "NSValue+BHGLTypes.m"; path = "../BHGL/NSValue+BHGLTypes.m"; sourceTree = "<group>"; };
 		D416EDC018EEEEC800993BAF /* MPGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPGLView.h; sourceTree = "<group>"; };
-		D416EDC118EEEEC800993BAF /* MPGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MPGLView.m; sourceTree = "<group>"; };
+		D416EDC118EEEEC800993BAF /* MPGLView.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPGLView.mm; sourceTree = "<group>"; };
 		D416EDC718EEF00F00993BAF /* MPScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPScene.h; sourceTree = "<group>"; };
 		D416EDC818EEF00F00993BAF /* MPScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPScene.mm; sourceTree = "<group>"; };
 		D416EDCA18EF168900993BAF /* MPModelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPModelNode.h; sourceTree = "<group>"; };
@@ -207,7 +207,7 @@
 				D416ED4D18EEEC0300993BAF /* MainMenu.xib */,
 				D416EDF918EF1A2B00993BAF /* ConversionUtils.h */,
 				D416EDC018EEEEC800993BAF /* MPGLView.h */,
-				D416EDC118EEEEC800993BAF /* MPGLView.m */,
+				D416EDC118EEEEC800993BAF /* MPGLView.mm */,
 				D416EDC318EEEFE100993BAF /* nodes */,
 				D416EE0118EF1EB500993BAF /* resources */,
 				D416ED3F18EEEC0300993BAF /* Supporting Files */,
@@ -425,7 +425,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D416EDC218EEEEC800993BAF /* MPGLView.m in Sources */,
+				D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */,
 				D416ED4518EEEC0300993BAF /* main.m in Sources */,
 				D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */,
 				D416EDF718EF19E000993BAF /* MPModel.cpp in Sources */,

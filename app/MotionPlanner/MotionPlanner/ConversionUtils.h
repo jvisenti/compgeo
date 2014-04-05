@@ -10,6 +10,7 @@
 #define MotionPlanner_ConversionUtils_h
 
 #include <GLKit/GLKMath.h>
+#include "MPMath.h"
 
 static inline GLKVector3 MPVec3ToGLKVector3(MPVec3 v)
 {
