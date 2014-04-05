@@ -10,6 +10,10 @@
 #import "BHGL.h"
 #include <Carbon/Carbon.h>
 
+const float kMPSceneMinScale    = 0.5f;
+const float kMPSceneMaxScale    = 2.0f;
+const float kMPSceneScaleFactor = 0.2f;
+
 const float kMPObjectMotionIncrement = 0.05f;
 
 @interface MPGLView ()
@@ -72,9 +76,22 @@ const float kMPObjectMotionIncrement = 0.05f;
     
     BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(-M_PI*dx, 0.0f, 1.0f, 0.0f)];
     
-    [self.scene runAnimation:rotateY];
+    [self.scene.rootNode runAnimation:rotateY];
 }
 
+- (void)scrollWheel:(NSEvent *)theEvent
+{
+    CGFloat dx = [theEvent scrollingDeltaY];
+    
+    float scale = dx < 0 ? 1.0f - kMPSceneScaleFactor : 1.0f + kMPSceneScaleFactor;
+    
+    scale *= self.scene.rootNode.scale.x;
+    scale = fmaxf(kMPSceneMinScale, fminf(scale, kMPSceneMaxScale));
+    
+    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleTo:GLKVector3Make(scale, scale, scale) withDuration:0.1];
+    
+    [self.scene.rootNode runAnimation:scaleAnim];
+}
 
 - (void)keyDown:(NSEvent *)theEvent
 {    
@@ -123,6 +140,8 @@ const float kMPObjectMotionIncrement = 0.05f;
         default:
             break;
     }
+    
+    dp = GLKQuaternionRotateVector3(GLKQuaternionInvert(self.scene.rootNode.rotation), dp);
     
     if (key && ![self.movementAnimations objectForKey:@(key)])
     {
