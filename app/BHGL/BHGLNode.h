@@ -10,6 +10,8 @@
 #import "BHGLAnimatedObject.h"
 #import "BHGLRenderedObject.h"
 
+@class BHGLScene;
+
 @interface BHGLNode : BHGLAnimatedObject <BHGLRenderedObject>
 
 /** An descriptive name for use by your application. */
@@ -20,6 +22,9 @@
 
 /** The node's immediate children in the order they were added. */
 @property (nonatomic, readonly) NSArray *children;
+
+/** The scene in which the node is located. */
+@property (nonatomic, readonly) BHGLScene *scene;
 
 /** The view matrix with which to render the node. Generally this is set by a camera,
     and is not altered directly. Default is the identity matrix.

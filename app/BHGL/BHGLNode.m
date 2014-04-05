@@ -9,14 +9,20 @@
 #import "BHGLMath.h"
 
 @interface BHGLNode ()
+{
+    __weak BHGLScene *_scene;
+}
 
 @property (nonatomic, strong) NSMutableArray *mutableChildren;
 
 - (void)removeChild:(BHGLNode *)node;
+- (void)setParent:(BHGLNode *)parent;
 
 @end
 
 @implementation BHGLNode
+
+@synthesize scene = _scene;
 
 - (id)init
 {
@@ -130,7 +136,7 @@
     if (self.parent)
     {
         [self.parent performSelector:@selector(removeChild:) withObject:self];
-        _parent = nil;
+        self.parent = nil;
     }
 }
 
@@ -183,6 +189,13 @@
 - (void)removeChild:(BHGLNode *)node
 {
     [self.mutableChildren removeObject:node];
+}
+
+- (void)setParent:(BHGLNode *)parent
+{
+    _parent = parent;
+    
+    _scene = parent.scene;
 }
 
 @end

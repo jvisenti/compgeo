@@ -18,6 +18,11 @@
 
 #pragma mark - property overrides
 
+- (BHGLScene *)scene
+{
+    return self;
+}
+
 - (NSArray *)cameras
 {
     return [self.mutableCameras copy];
