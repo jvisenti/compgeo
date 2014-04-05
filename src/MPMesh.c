@@ -70,6 +70,46 @@ void MPMeshRelease(MPMesh *mesh)
     }
 }
 
+size_t MPMeshGetTriangleCount(MPMesh *mesh)
+{
+    return mesh->numIndices / 3;
+}
+
+MPVec3* MPMeshGetTriangle(MPMesh *mesh, size_t n)
+{
+    MPVec3 *vertices = malloc(3 * sizeof(MPVec3));
+    
+    const void *index = (char *)mesh->indexData + (3 * n * mesh->indexSize);
+    
+    switch (mesh->indexSize)
+    {
+        case sizeof(char):
+            vertices[0] = *(MPVec3 *)((char *)mesh->vertexData + ((char *)index)[0] * mesh->stride);
+            vertices[1] = *(MPVec3 *)((char *)mesh->vertexData + ((char *)index)[1] * mesh->stride);
+            vertices[2] = *(MPVec3 *)((char *)mesh->vertexData + ((char *)index)[2] * mesh->stride);
+            break;
+            
+        case sizeof(short):
+            vertices[0] = *(MPVec3 *)((char *)mesh->vertexData + ((short *)index)[0] * mesh->stride);
+            vertices[1] = *(MPVec3 *)((char *)mesh->vertexData + ((short *)index)[1] * mesh->stride);
+            vertices[2] = *(MPVec3 *)((char *)mesh->vertexData + ((short *)index)[2] * mesh->stride);
+            break;
+            
+        case sizeof(int):
+            vertices[0] = *(MPVec3 *)((char *)mesh->vertexData + ((int *)index)[0] * mesh->stride);
+            vertices[1] = *(MPVec3 *)((char *)mesh->vertexData + ((int *)index)[1] * mesh->stride);
+            vertices[2] = *(MPVec3 *)((char *)mesh->vertexData + ((int *)index)[2] * mesh->stride);
+            break;
+            
+        default:
+            free((void *)vertices);
+            vertices = NULL;
+            break;
+    }
+    
+    return vertices;
+}
+
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
 {    
     MPSphere boundingSphere = *(MPSphere *)(mesh->_reserved);

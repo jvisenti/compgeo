@@ -4,6 +4,8 @@
 //  Created by John Visentin on 4/2/14.
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
+// A 3D mesh defined by vertices and indices that form a triangulation of the mesh.
+// Note: it is assumed that the triangulation uses distinct triangles and not strips.
 
 #ifndef _MPMesh_h
 #define _MPMesh_h
@@ -41,6 +43,12 @@ void MPMeshRetain(MPMesh *mesh);
 
 /* decrement the retain counter of the given mesh. the mesh will be freed if its retain count reaches 0. */
 void MPMeshRelease(MPMesh *mesh);
+    
+/* returns the number of triangles in the triangulation of the mesh represented by the index array. */
+size_t MPMeshGetTriangleCount(MPMesh *mesh);
+    
+/* returns the vertices of the nth triangle in the triangulation. */
+MPVec3* MPMeshGetTriangle(MPMesh *mesh, size_t n);
 
 /* returns the bounding sphere of the mesh using the given transform. pass NULL to use identity. */
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform);
