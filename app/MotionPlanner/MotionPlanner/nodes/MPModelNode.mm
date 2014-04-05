@@ -93,9 +93,9 @@
     // does nothing. set new model to change the mesh.
 }
 
-- (void)setModel:(const MP::Model *)model
+- (void)setModel:(MP::Model *)model
 {
-    _model = (MP::Model *)model;
+    _model = model;
     
     MPMesh *mesh = _model->getMesh();
     
@@ -132,7 +132,7 @@
 
 #pragma mark - public interface
 
-- (id)initWithModel:(const MP::Model *)model
+- (id)initWithModel:(MP::Model *)model
 {
     if ((self = [super init]))
     {

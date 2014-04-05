@@ -57,7 +57,12 @@
         self.activeObject = activeNode;
     
         MP::Model *pyramid = new MP::Model(mesh);
-        pyramid->setPosition(MPVec3Make(3.0f, 0.0f, -8.0f));
+        
+        // uncomment to use a pyramid instead
+        //MPMesh *mesh2 = MPMeshCreate((const MPVec3 *)PyramidVertices, sizeof(PyramidVertices[0]), sizeof(PyramidVertices) / sizeof(PyramidVertices[0]), (const void *)PyramidIndices, sizeof(PyramidIndices[0]), sizeof(PyramidIndices) / sizeof(PyramidIndices[0]));
+        //MP::Model *pyramid = new MP::Model(mesh2);
+        
+        pyramid->setPosition(MPVec3Make(2.0f, 0.0f, -8.0f));
         
         MPModelNode *pyramidNode = [[MPModelNode alloc] initWithModel:pyramid];
         

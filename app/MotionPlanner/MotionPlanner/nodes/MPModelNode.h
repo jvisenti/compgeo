@@ -15,9 +15,9 @@
 
 @property (nonatomic, weak) MPScene *scene;
 
-- (void)setModel:(const MP::Model *)model;
+- (void)setModel:(MP::Model *)model;
 - (MP::Model *)model;
 
-- (id)initWithModel:(const MP::Model *)model;
+- (id)initWithModel:(MP::Model *)model;
 
 @end
