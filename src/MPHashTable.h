@@ -10,8 +10,9 @@
 
 #include "MPSearchState.h"
 #include <vector>
+#include <iostream>
 
-#define DEFAULT_HASH_TABLE_SIZE 256
+#define DEFAULT_HASH_TABLE_SIZE 512
 #define DEFAULT_MAX_LOAD_FACTOR 0.7
 
 namespace MP
@@ -21,8 +22,12 @@ namespace MP
 template <typename T>
 struct HashTableElement
 {
+  HashTableElement() { }
+  HashTableElement(SearchState<T> *s, HashTableElement<T> *n)
+  : state(s), next(n) { }
+
   SearchState<T> *state;
-  HashTableElement *next;
+  HashTableElement<T> *next;
 };
 
 template <typename T>
@@ -44,26 +49,59 @@ public:
 
   void insert(SearchState<T> *s)
   {
-    int slot = hash_(s->getValue());
+    // @todo If the load factor is two high, double the size of the hash table,
+    // and re-insert all the elements
+    // ...
+    if(getLoadFactor() > getMaxLoadFactor())
+    {
+      std::cout << "Warning: hash table has exceeded the maximum load factor ("
+		<< getLoadFactor() << ")" << std::endl;
+      increaseTableSize();
+    }
 
-    // @todo
+    int slot = hash_(s->getValue()) % slots_.size();
+    std::cout << "Hashing state to slot " << slot << std::endl;
+
+    HashTableElement<T> *e = slots_[slot];
+    if(e == nullptr)
+      slots_[slot] = new HashTableElement<T>(s, nullptr);
+    else
+    {
+      while(e->next != nullptr)
+	e = e->next;
+
+      e->next = new HashTableElement<T>(s, nullptr);
+    }
+    
+    // @todo should we check if it's already in the table?
+    numElements_++;
   }
 
-  void remove(SearchState<T> *s)
+  bool remove(SearchState<T> *s)
   {
+    // Find the bin where the state should be
+    int slot = hash_(s->getValue());
+
     // @todo
   }
 
   SearchState<T> *get(T t)
   {
     int slot = hash_(t) % slots_.size();
+    std::cout << "Checking slot " << slot << std::endl;
 
     // Search the slot for the appropriate entry
     HashTableElement<T> *e = slots_[slot];
     while(e != nullptr)
     {
+      std::cout << "Comparing (" << e->state->getValue().x_ << ", " 
+		<< e->state->getValue().y_ << ") to (" << t.x_
+		<< ", " << t.y_ << ")" << std::endl;
       if(e->state->getValue() == t)
-	return e;
+      {
+	std::cout << "Found in the hash table" << std::endl;
+	return e->state;
+      }
 
       e = e->next;
     }
@@ -75,8 +113,15 @@ public:
 
   inline void setMaxLoadFactor(double a) { maxLoadFactor_ = a; }
 
+  inline int size() const { return numElements_; }
+
 private:
   inline double getLoadFactor() const { return ((double)numElements_)/slots_.size(); }
+
+  void increaseTableSize()
+  {
+    // @todo
+  }
 
   void clear()
   {

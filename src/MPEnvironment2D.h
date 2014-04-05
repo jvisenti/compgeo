@@ -10,6 +10,7 @@
 
 #include "MPSearchState.h"
 #include "MPEnvironment.h"
+#include "MPHashTable.h"
 #include <vector>
 
 namespace MP
@@ -32,6 +33,13 @@ struct Point2D
 
 typedef SearchState<Point2D> SearchState2D;
 
+inline int point2DHash(Point2D p)
+{
+  const int p1 = 73856093;
+  const int p2 = 19349663;
+  return ((p.x_*p1) ^ (p.y_*p2));
+}
+
 class Environment2D : public Environment<Point2D>
 {
 public:
@@ -42,10 +50,14 @@ public:
   void getSuccessors(SearchState2D *s,
 		     std::vector<SearchState2D *> &successors,
 		     std::vector<double> &costs);
-  
+
+  inline int getNumStates() const { return states_.size(); }
+
 private:
   int xMin_, xMax_;
   int yMin_, yMax_;
+
+  HashTable<Point2D> states_;
 
 };
 
