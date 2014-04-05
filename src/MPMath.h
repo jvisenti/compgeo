@@ -5,10 +5,14 @@
 //  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 
-#ifndef MotionPlanner_MPMath_h
-#define MotionPlanner_MPMath_h
+#ifndef _MPMath_h
+#define _MPMath_h
 
 #include <math.h>
+
+#if defined(__cplusplus)
+extern "C" {
+#endif
 
 typedef union _MPVec3
 {
@@ -82,6 +86,22 @@ static inline MPVec3 MPVec3Normalize(MPVec3 v)
 static inline float MPVec3EuclideanDistance(MPVec3 v1, MPVec3 v2)
 {
     return sqrt((v1.x - v2.x) * (v1.x - v2.x) + (v1.y - v2.y) * (v1.y - v2.y) + (v1.z - v2.z) * (v1.z - v2.z));
+}
+
+static inline float MPVec3DotProcuct(MPVec3 v1, MPVec3 v2)
+{
+    return (v1.v[0] * v2.v[0]) + (v1.v[1] * v2.v[1]) + (v1.v[2] * v2.v[2]);
+}
+
+static inline MPVec3 MPVec3CrossProduct(MPVec3 v1, MPVec3 v2)
+{
+    MPVec3 v;
+    
+    v.v[0] = (v1.v[1] * v2.v[2]) - (v1.v[2] * v2.v[1]);
+    v.v[1] = (v1.v[2] * v2.v[0]) - (v1.v[0] * v2.v[2]);
+    v.v[2] = (v1.v[0] * v2.v[1]) - (v1.v[1] * v2.v[0]);
+    
+    return v;
 }
 
 #pragma mark - quaternion functions
@@ -241,5 +261,14 @@ static inline MPSphere MPSphereMake(MPVec3 center, float radius)
     
     return m;
 }
+
+static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
+{
+    return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
+}
+    
+#if defined(__cplusplus)
+}
+#endif
 
 #endif
