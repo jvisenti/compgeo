@@ -39,6 +39,12 @@ typedef struct _MPSphere
     float radius;
 } MPSphere;
     
+typedef union _MPTriangle
+{
+    struct {MPVec3 v1, v2, v3;};
+    MPVec3 p[3];
+} MPTriangle;
+    
 extern const MPVec3 MPVec3Zero;
 extern const MPQuaternion MPQuaternionIdentity;
 extern const MPMat4 MPMat4Identity;
@@ -269,10 +275,53 @@ static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
     
 #pragma mark - triangle functions
     
-static inline int MPTrianglesIntersect(MPVec3 *t1, MPVec3 *t2)
+static inline void MPTriangleApplyTransform(MPTriangle *t, MPMat4 m)
 {
-    // TODO: implement this
-    return 0;
+    t->p[0] = MPMat4TransformVec3(m, t->p[0]);
+    t->p[1] = MPMat4TransformVec3(m, t->p[1]);
+    t->p[2] = MPMat4TransformVec3(m, t->p[2]);
+}
+    
+/* returns 1 if the line segment v1v2 intersects the line with parametric form
+   x = p0 + tV */
+static inline int MPTriangleEdgeIntersectsLine(MPVec3 v1, MPVec3 v2, MPVec3 p0, MPVec3 v)
+{
+    MPVec3 diff = MPVec3Subtract(v2, v1);
+    
+    float s = ((-v.y) * (p0.x - v1.x) + v.x * (p0.y - v1.y)) / ((-v.y) * diff.x + v.x * diff.y);
+    
+    return (s >= 0 && s <= 1);
+}
+    
+/* a line is represented in parametric form as x = p0 + tV */
+static inline int MPTriangleIntersectsLine(MPTriangle t, MPVec3 p0, MPVec3 v)
+{
+    return (MPTriangleEdgeIntersectsLine(t.v1, t.v2, p0, v) ||
+            MPTriangleEdgeIntersectsLine(t.v1, t.v3, p0, v) ||
+            MPTriangleEdgeIntersectsLine(t.v2, t.v3, p0, v));
+}
+    
+/* adapted from www.applet-magic.com/trintersection.htm */
+static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
+{
+    MPVec3 n1 = MPVec3CrossProduct(MPVec3Subtract(t1.v2, t1.v1), MPVec3Subtract(t1.v3, t1.v1));
+    MPVec3 n2 = MPVec3CrossProduct(MPVec3Subtract(t2.v2, t2.v1), MPVec3Subtract(t2.v3, t2.v1));
+    
+    MPVec3 v = MPVec3CrossProduct(n1, n2);
+    
+    MPVec3 p0;
+    
+    // choose p0.z = 0 and solve for p0.x and p0.y
+    
+    float n1dott1 = (n1.x * t1.v1.x + n1.y * t1.v1.y);
+    float n2dott2 = (n2.x * t2.v1.x + n2.y * t2.v1.y);
+    
+    p0.x = ((-n2.y) * n1dott1 + (n1.y) * n2dott2) / (n1.y * n2.x - n1.x * n2.y);
+    p0.y = ((-n2.x) * n1dott1 + (n1.x) * n2dott2) / (n1.x * n2.y - n1.y * n2.x);
+    
+    // now find if each side of the triangle intersects
+    
+    return MPTriangleIntersectsLine(t1, p0, v) || MPTriangleIntersectsLine(t2, p0, v);
 }
     
 #if defined(__cplusplus)

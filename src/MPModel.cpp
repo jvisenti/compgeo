@@ -115,15 +115,18 @@ bool Model::wouldCollideWithModel(Transform3D &transform, Model &model)
     size_t numTriangles = MPMeshGetTriangleCount(this->mesh);
     size_t numTrianglesOther = MPMeshGetTriangleCount(model.mesh);
     
-    // arrays to hold triangles during iteration
-    MPVec3 tri1[3], tri2[3];
+    // triangles for during iteration
+    MPTriangle tri1, tri2;
     
     for (int i = 0; i < numTriangles; i++)
     {
         for (int j = 0; j < numTrianglesOther; j++)
         {
-            MPMeshGetTriangle(this->mesh, i, tri1);
-            MPMeshGetTriangle(model.mesh, j, tri2);
+            MPMeshGetTriangle(this->mesh, i, tri1.p);
+            MPTriangleApplyTransform(&tri1, modelMatrix);
+            
+            MPMeshGetTriangle(model.mesh, j, tri2.p);
+            MPTriangleApplyTransform(&tri2, otherModelMatrix);
             
             if (MPTrianglesIntersect(tri1, tri2))
             {
