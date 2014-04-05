@@ -11,6 +11,9 @@
 
 @interface MPModelNode : BHGLModelNode
 
-@property (nonatomic, assign) MP::Model &model;
+- (void)setModel:(const MP::Model &)model;
+- (const MP::Model &)model;
+
+- (id)initWithModel:(const MP::Model &)model;
 
 @end

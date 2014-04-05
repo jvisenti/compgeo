@@ -584,7 +584,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				USER_HEADER_SEARCH_PATHS = ../../src;
+				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -604,7 +604,7 @@
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
-				USER_HEADER_SEARCH_PATHS = ../../src;
+				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
