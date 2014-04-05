@@ -71,19 +71,31 @@
     switch (keyCode)
     {
         case kVK_LeftArrow:
+        case kVK_ANSI_A:
             dp.x -= 0.1;
             break;
             
         case kVK_RightArrow:
+        case kVK_ANSI_D:
             dp.x += 0.1;
             break;
             
         case kVK_DownArrow:
+        case kVK_ANSI_S:
             dp.z += 0.1;
             break;
             
         case kVK_UpArrow:
+        case kVK_ANSI_W:
             dp.z -= 0.1;
+            break;
+            
+        case kVK_ANSI_V:
+            dp.y += 0.1;
+            break;
+            
+        case kVK_Space:
+            dp.y -= 0.1;
             break;
             
         default:

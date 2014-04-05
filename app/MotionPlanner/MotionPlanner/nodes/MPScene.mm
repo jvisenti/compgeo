@@ -94,7 +94,7 @@
 - (void)setupCamera
 {
     // TODO: decide on projective or orthographic camera
-    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:10]];
+    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:15]];
     
     // uncomment for ortho camera
     // [self addCamera:[[BHGLCamera alloc] initWithLeft:-2.0f right:2.0f top:2.0f bottom:-2.0f nearClippingPlane:0.1f farClippingPlane:10.0f]];
