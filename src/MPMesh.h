@@ -45,10 +45,11 @@ void MPMeshRetain(MPMesh *mesh);
 void MPMeshRelease(MPMesh *mesh);
     
 /* returns the number of triangles in the triangulation of the mesh represented by the index array. */
-size_t MPMeshGetTriangleCount(MPMesh *mesh);
+size_t MPMeshGetTriangleCount(const MPMesh *mesh);
     
-/* returns the vertices of the nth triangle in the triangulation. */
-MPVec3* MPMeshGetTriangle(MPMesh *mesh, size_t n);
+/* finds vertices of the nth triangle in the triangulation. 
+   when the method returns, the array pointed to by triangle will contain the 3 vertices. */
+void MPMeshGetTriangle(const MPMesh *mesh, size_t n, MPVec3 *triangle);
 
 /* returns the bounding sphere of the mesh using the given transform. pass NULL to use identity. */
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform);
