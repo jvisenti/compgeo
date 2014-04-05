@@ -118,16 +118,6 @@
 
 #pragma mark - public interface
 
-- (void)addChild:(BHGLNode *)node
-{
-    [super addChild:node];
-    
-    if ([node isKindOfClass:[MPModelNode class]])
-    {
-        ((MPModelNode *)node).scene = self;
-    }
-}
-
 - (BOOL)transform:(MP::Transform3D &)transform validForModel:(MPModelNode *)model
 {
     __block BOOL valid = YES;

@@ -19,6 +19,8 @@
 
 @implementation MPModelNode
 
+@dynamic scene;
+
 #pragma mark - overrides
 
 - (void)setPosition:(GLKVector3)position
@@ -123,11 +125,6 @@
 - (MP::Model *)model
 {
     return _model;
-}
-
-- (void)removeFromParent
-{
-    self.scene = nil;
 }
 
 #pragma mark - public interface
