@@ -53,6 +53,8 @@
         [node runAnimation:rotate];
         
         [self addChild:node];
+    
+        self.activeObject = node;
 }
     }
     return self;
@@ -74,7 +76,7 @@
 - (void)setupCamera
 {
     // TODO: decide on projective or orthographic camera
-    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(40) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:20]];
+    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:10]];
     
     // uncomment for ortho camera
     // [self addCamera:[[BHGLCamera alloc] initWithLeft:-2.0f right:2.0f top:2.0f bottom:-2.0f nearClippingPlane:0.1f farClippingPlane:10.0f]];

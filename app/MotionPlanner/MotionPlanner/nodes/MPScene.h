@@ -10,4 +10,6 @@
 
 @interface MPScene : BHGLScene
 
+@property (nonatomic, strong) BHGLNode *activeObject;
+
 @end

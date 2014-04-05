@@ -8,6 +8,7 @@
 
 #import "MPGLView.h"
 #import "BHGL.h"
+#include <Carbon/Carbon.h>
 
 @interface MPGLView ()
 
@@ -46,6 +47,11 @@
     [self setOpenGLContext:context];
 }
 
+- (BOOL)acceptsFirstResponder
+{
+    return YES;
+}
+
 - (void)viewDidMoveToWindow
 {
     if (![self window])
@@ -54,6 +60,39 @@
         
         [[NSApplication sharedApplication] terminate:self];
     }
+}
+
+- (void)keyDown:(NSEvent *)theEvent
+{    
+    unsigned short keyCode = [theEvent keyCode];
+    
+    GLKVector3 dp = GLKVector3Make(0.0f, 0.0f, 0.0f);
+    
+    switch (keyCode)
+    {
+        case kVK_LeftArrow:
+            dp.x -= 0.1;
+            break;
+            
+        case kVK_RightArrow:
+            dp.x += 0.1;
+            break;
+            
+        case kVK_DownArrow:
+            dp.z += 0.1;
+            break;
+            
+        case kVK_UpArrow:
+            dp.z -= 0.1;
+            break;
+            
+        default:
+            break;
+    }
+    
+    BHGLBasicAnimation *trans = [BHGLBasicAnimation translateBy:dp withDuration:0.1];
+    
+    [self.scene.activeObject runAnimation:trans];
 }
 
 - (void)prepareOpenGL
