@@ -74,7 +74,7 @@ const float kMPObjectMotionIncrement = 0.05f;
 {
     CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
     
-    BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(-M_PI*dx, 0.0f, 1.0f, 0.0f)];
+    BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI*dx, 0.0f, 1.0f, 0.0f)];
     
     [self.scene.rootNode runAnimation:rotateY];
 }

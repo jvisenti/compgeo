@@ -11,6 +11,7 @@
 
 @interface MPScene : BHGLScene
 
+@property (nonatomic, readonly) BHGLNode *rootNode;
 @property (nonatomic, strong) BHGLNode *activeObject;
 
 - (BOOL)transform:(MP::Transform3D &)transform validForModel:(MPModelNode *)model;
