@@ -11,8 +11,6 @@
 
 @interface MPModelNode : BHGLModelNode
 
-@property (nonatomic, assign) MPModel &model;
-
-- (id)initWithPODFileNamed:(NSString *)fileName;
+@property (nonatomic, assign) MP::Model &model;
 
 @end

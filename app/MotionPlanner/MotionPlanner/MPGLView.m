@@ -52,7 +52,7 @@
     {
         [self clearGLContext];
         
-        [NSApp terminate:self];
+        [[NSApplication sharedApplication] terminate:self];
     }
 }
 

@@ -8,7 +8,6 @@
 
 #import "MPModelNode.h"
 #import "ConversionUtils.h"
-#import "BHGLPVRExt.h"
 
 @implementation MPModelNode
 
@@ -50,30 +49,6 @@
 }
 
 #pragma mark - public interface
-
-- (id)initWithPODFileNamed:(NSString *)fileName
-{
-    if ((self = [super init]))
-    {
-        BHGLNode *rootNode = [BHGLScene rootNodeFromPODFileNamed:@"Sphere" nodeClass:[MPModelNode class]];
-        
-        if ([rootNode.children count])
-        {
-            BHGLModelNode *sphere = [rootNode.children objectAtIndex:0];
-            
-            self.name = sphere.name;
-            self.mesh = sphere.mesh;
-            self.material = sphere.material;
-            
-            for (BHGLNode *node in sphere.children)
-            {
-                [self addChild:node];
-            }
-        }
-    }
-    
-    return self;
-}
 
 - (void)configureProgram:(BHGLProgram *)program
 {

@@ -154,7 +154,7 @@ void BHGLVertexTypeCopy(BHGLVertexType *dest, const BHGLVertexType *src)
     memcpy(dest->types, src->types, n*sizeof(GLenum));
     memcpy(dest->normalized, src->normalized, n*sizeof(GLboolean));
     memcpy(dest->lengths, src->lengths, n*sizeof(GLubyte));
-    memcpy(dest->offsets, src->offsets, n*sizeof(GLint));
+    memcpy(dest->offsets, src->offsets, n*sizeof(GLvoid *));
     dest->stride = src->stride;    
 }
 
