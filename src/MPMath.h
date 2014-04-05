@@ -267,6 +267,14 @@ static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
     return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
 }
     
+#pragma mark - triangle functions
+    
+static inline int MPTrianglesIntersect(MPVec3 *t1, MPVec3 *t2)
+{
+    // TODO: implement this
+    return 0;
+}
+    
 #if defined(__cplusplus)
 }
 #endif

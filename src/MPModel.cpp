@@ -112,8 +112,26 @@ bool Model::wouldCollideWithModel(Transform3D &transform, Model &model)
         return false;
     }
     
-    // TODO: precise collision test brute force
+    size_t numTriangles = MPMeshGetTriangleCount(this->mesh);
+    size_t numTrianglesOther = MPMeshGetTriangleCount(model.mesh);
     
-    return true;
+    // arrays to hold triangles during iteration
+    MPVec3 tri1[3], tri2[3];
+    
+    for (int i = 0; i < numTriangles; i++)
+    {
+        for (int j = 0; j < numTrianglesOther; j++)
+        {
+            MPMeshGetTriangle(this->mesh, i, tri1);
+            MPMeshGetTriangle(model.mesh, j, tri2);
+            
+            if (MPTrianglesIntersect(tri1, tri2))
+            {
+                return true;
+            }
+        }
+    }
+    
+    return false;
 }
 }
