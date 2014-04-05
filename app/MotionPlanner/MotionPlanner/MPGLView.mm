@@ -10,7 +10,11 @@
 #import "BHGL.h"
 #include <Carbon/Carbon.h>
 
+const float kMPObjectMotionIncrement = 0.05f;
+
 @interface MPGLView ()
+
+@property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
 - (void)updateGL:(NSTimer *)timer;
 
@@ -62,49 +66,125 @@
     }
 }
 
+- (void)mouseDragged:(NSEvent *)theEvent
+{
+    CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
+    
+    BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(-M_PI*dx, 0.0f, 1.0f, 0.0f)];
+    
+    [self.scene runAnimation:rotateY];
+}
+
+
 - (void)keyDown:(NSEvent *)theEvent
 {    
     unsigned short keyCode = [theEvent keyCode];
     
     GLKVector3 dp = GLKVector3Make(0.0f, 0.0f, 0.0f);
     
+    int key = 0;
+    
     switch (keyCode)
     {
         case kVK_LeftArrow:
         case kVK_ANSI_A:
-            dp.x -= 0.1;
+            key = kVK_LeftArrow;
+            dp.x -= kMPObjectMotionIncrement;
             break;
             
         case kVK_RightArrow:
         case kVK_ANSI_D:
-            dp.x += 0.1;
+            key = kVK_RightArrow;
+            dp.x += kMPObjectMotionIncrement;
             break;
             
         case kVK_DownArrow:
         case kVK_ANSI_S:
-            dp.z += 0.1;
+            key = kVK_DownArrow;
+            dp.z += kMPObjectMotionIncrement;
             break;
             
         case kVK_UpArrow:
         case kVK_ANSI_W:
-            dp.z -= 0.1;
+            key = kVK_UpArrow;
+            dp.z -= kMPObjectMotionIncrement;
             break;
             
         case kVK_ANSI_V:
-            dp.y += 0.1;
+            key = kVK_ANSI_V;
+            dp.y += kMPObjectMotionIncrement;
             break;
             
         case kVK_Space:
-            dp.y -= 0.1;
+            key = kVK_Space;
+            dp.y -= kMPObjectMotionIncrement;
             break;
             
         default:
             break;
     }
     
-    BHGLBasicAnimation *trans = [BHGLBasicAnimation translateBy:dp withDuration:0.1];
+    if (key && ![self.movementAnimations objectForKey:@(key)])
+    {
+        __weak BHGLNode *wnode = self.scene.activeObject;
+        BHGLBasicAnimation *trans = [BHGLBasicAnimation runBlock:^{
+            wnode.position = GLKVector3Add(wnode.position, dp);
+        }];
+        trans.repeats = YES;
+        
+        [self.scene.activeObject runAnimation:trans];
+        
+        [self.movementAnimations setObject:trans forKey:@(key)];
+    }
+}
+
+- (void)keyUp:(NSEvent *)theEvent
+{
+    unsigned short keyCode = [theEvent keyCode];
+
+    int key = 0;
     
-    [self.scene.activeObject runAnimation:trans];
+    switch (keyCode)
+    {
+        case kVK_LeftArrow:
+        case kVK_ANSI_A:
+            key = kVK_LeftArrow;
+            break;
+            
+        case kVK_RightArrow:
+        case kVK_ANSI_D:
+            key = kVK_RightArrow;
+            break;
+            
+        case kVK_DownArrow:
+        case kVK_ANSI_S:
+            key = kVK_DownArrow;
+            break;
+            
+        case kVK_UpArrow:
+        case kVK_ANSI_W:
+            key = kVK_UpArrow;
+            break;
+            
+        case kVK_ANSI_V:
+            key = kVK_ANSI_V;
+            break;
+            
+        case kVK_Space:
+            key = kVK_Space;
+            break;
+            
+        default:
+            break;
+    }
+    
+    BHGLAnimation *anim = [self.movementAnimations objectForKey:@(key)];
+    
+    if (anim)
+    {
+        [self.scene.activeObject removeAnimation:anim];
+        [self.movementAnimations removeObjectForKey:@(key)];
+    }
 }
 
 - (void)prepareOpenGL
@@ -145,6 +225,15 @@
 }
 
 #pragma mark - private interface
+
+- (NSMutableDictionary *)movementAnimations
+{
+    if (!_movementAnimations)
+    {
+        _movementAnimations = [NSMutableDictionary dictionaryWithCapacity:6];
+    }
+    return _movementAnimations;
+}
 
 - (void)updateGL:(NSTimer *)timer
 {
