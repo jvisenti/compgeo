@@ -13,13 +13,6 @@
 #if defined(__cplusplus)
 extern "C" {
 #endif
-    
-typedef union _MPVec2
-{
-    struct {float x, y;};
-    struct {float w, h;};
-    float v[2];
-} MPVec2;
 
 typedef union _MPVec3
 {
@@ -52,6 +45,12 @@ typedef union _MPTriangle
     MPVec3 p[3];
 } MPTriangle;
     
+typedef union _MPLineSegment
+{
+    struct {MPVec3 p1, p2;};
+    MPVec3 p[2];
+} MPLineSegment;
+    
 extern const MPVec3 MPVec3Zero;
 extern const MPQuaternion MPQuaternionIdentity;
 extern const MPMat4 MPMat4Identity;
@@ -61,50 +60,6 @@ static inline int MPFloatZero(float f)
     return fabs(f) <= 1e-5;
 }
 
-#pragma mark - vector2 functions
-    
-static inline MPVec2 MPVec2Make(float x, float y)
-{
-    MPVec2 v;
-    v.v[0] = x; v.v[1] = y;
-    return v;
-}
-    
-static inline MPVec2 MPVec2FromVec3(MPVec3 v3)
-{
-    return MPVec2Make(v3.v[0], v3.v[1]);
-}
-    
-static inline float MPVec2SignedArea(MPVec2 a, MPVec2 b, MPVec2 c)
-{
-    
-    MPVec2 p1 = MPVec2Make(b.x - a.x, b.y - a.y);
-    MPVec2 p2 = MPVec2Make(c.x - a.x, c.y - a.y);
-    
-    return p1.x * p2.y - p1.y * p2.x;
-}
-
-static inline int MPVec2CCW(MPVec2 a, MPVec2 b, MPVec2 c)
-{
-    return MPVec2SignedArea(a, b, c) > 0;
-}
-    
-static inline int MPVec2Collinear(MPVec2 a, MPVec2 b, MPVec2 c)
-{
-    return MPVec2SignedArea(a, b, c) == 0;
-}
-
-static inline int MPVec2ProperLineIntersection(MPVec2 a, MPVec2 b, MPVec2 c, MPVec2 d)
-{
-    int abOpposite = MPVec2CCW(a, b, c) != MPVec2CCW(a, b, d);
-    int cdOpposite = MPVec2CCW(c, d, a) != MPVec2CCW(c, d, b);
-    
-    int cCollinear = MPVec2Collinear(a, b, c);
-    int dCollinear = MPVec2Collinear(a, b, d);
-    
-    return abOpposite && cdOpposite && !cCollinear && !dCollinear;
-}
-    
 #pragma mark - vector3 functions
 
 static inline MPVec3 MPVec3Make(float x, float y, float z)
@@ -164,6 +119,13 @@ static inline MPVec3 MPVec3CrossProduct(MPVec3 v1, MPVec3 v2)
     v.v[2] = (v1.v[0] * v2.v[1]) - (v1.v[1] * v2.v[0]);
     
     return v;
+}
+    
+static inline MPVec3 MPVec3Project(MPVec3 a, MPVec3 b)
+{
+    float scale = MPVec3DotProduct(a, b) / MPVec3DotProduct(b, b);
+    
+    return MPVec3MultiplyScalar(b, scale);
 }
 
 #pragma mark - quaternion functions
@@ -338,15 +300,85 @@ static inline void MPTriangleApplyTransform(MPTriangle *t, MPMat4 m)
     t->p[2] = MPMat4TransformVec3(m, t->p[2]);
 }
     
+/* returns the line segment resulting from projecting the vertices of t onto v. */
+static inline MPLineSegment MPTriangleProject(MPTriangle t, MPVec3 v)
+{
+    // indices into triangle
+    int max = 0;
+    int min = 0;
+    
+    int i;
+    for (i = 0; i < 3; i++)
+    {
+        if (MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[max])) > 0)
+        {
+            max = i;
+        }
+        
+        else if (MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[min])) < 0)
+        {
+            min = i;
+        }
+    }
+    
+    MPLineSegment line;
+    line.p1 = MPVec3Project(t.p[min], v);
+    line.p2 = MPVec3Project(t.p[max], v);
+    
+    return line;
+}
+    
+/* results undefined if t1, t2 are not coplanar. used method of separating axis */
+static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
+{
+    int intersection = 1;
+    
+    MPLineSegment t1s, t2s;
+    
+    MPVec3 edges[6];
+    edges[0] = MPVec3Subtract(t1.v1, t1.v2);
+    edges[1] = MPVec3Subtract(t1.v1, t1.v3);
+    edges[2] = MPVec3Subtract(t1.v2, t1.v3);
+    
+    edges[3] = MPVec3Subtract(t2.v1, t2.v2);
+    edges[4] = MPVec3Subtract(t2.v1, t2.v3);
+    edges[5] = MPVec3Subtract(t2.v2, t2.v3);
+    
+    // project each triangle to every possible edge. if it exists,
+    // axis of separation will be perpendicular to one of the edges of the triangles
+    int i;
+    for (i = 0; i < 6; i++)
+    {
+        t1s = MPTriangleProject(t1, edges[i]);
+        t2s = MPTriangleProject(t2, edges[i]);
+        
+        if (MPVec3DotProduct(MPVec3Subtract(t1s.p2, t1s.p1), MPVec3Subtract(t2s.p1, t1s.p1)) > 0)
+        {
+            // t1s < t2s on this edge i.e. a.___.b c.___.d
+            intersection = MPVec3DotProduct(MPVec3Subtract(t1s.p2, t1s.p1), MPVec3Subtract(t2s.p1, t1s.p2)) < 0;
+        }
+        else
+        {
+            // t1s > t2s on this edge i.e. c.___.d a.___.b
+            intersection = MPVec3DotProduct(MPVec3Subtract(t2s.p2, t2s.p1), MPVec3Subtract(t1s.p1, t2s.p2)) < 0;
+        }
+        
+        // if we found an axis of separation, we're done
+        if (!intersection) break;
+    }
+    
+    return intersection;
+}
+    
 /* returns 1 if the line segment v1v2 intersects the line with parametric form
    x = p0 + tV */
 static inline int MPTriangleEdgeIntersectsLine(MPVec3 v1, MPVec3 v2, MPVec3 p0, MPVec3 v)
 {
     MPVec3 diff = MPVec3Subtract(v2, v1);
     
-    float s = ((-v.y) * (p0.x - v1.x) + v.x * (p0.y - v1.y)) / ((-v.y) * diff.x + v.x * diff.y);
+    float s = (-v.y * (p0.x - v1.x) + v.x * (p0.y - v1.y)) / (-v.y * diff.x + v.x * diff.y);
     
-    return (s >= 0.0f && s <= 1.0f);
+    return (s >= 0.0 && s <= 1.0);
 }
     
 /* a line is represented in parametric form as x = p0 + tV */
@@ -363,52 +395,37 @@ static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     MPVec3 n1 = MPVec3CrossProduct(MPVec3Subtract(t1.v2, t1.v1), MPVec3Subtract(t1.v3, t1.v1));
     MPVec3 n2 = MPVec3CrossProduct(MPVec3Subtract(t2.v2, t2.v1), MPVec3Subtract(t2.v3, t2.v1));
     
+    float n1dott1 = MPVec3DotProduct(n1, t1.v1);
+    float n2dott2 = MPVec3DotProduct(n2, t2.v1);
+    
     // parallel to line of intersection of planes
     MPVec3 v = MPVec3CrossProduct(n1, n2);
     
-    MPVec3 p0;
-    
+    // check if planes are parallel
     if (MPVec3EqualToVec3(v, MPVec3Zero))
     {
-        float d = MPVec3DotProduct(n1, t1.v1);
-        float diff = MPVec3DotProduct(n1, t2.v1) - d;
+        float diff = MPVec3DotProduct(n1, t2.v1) - n1dott1;
         
         if (!MPFloatZero(diff))
         {
             // triangles are in parallel planes and not coplanar, so no intersection
             return 0;
         }
-        else
-        {
-            // triangles are coplanar, so use 2D interseciton test
-            MPVec2 t1v1 = MPVec2FromVec3(t1.v1);
-            MPVec2 t1v2 = MPVec2FromVec3(t1.v2);
-            MPVec2 t1v3 = MPVec2FromVec3(t1.v3);
 
-            MPVec2 t2v1 = MPVec2FromVec3(t2.v1);
-            MPVec2 t2v2 = MPVec2FromVec3(t2.v2);
-            MPVec2 t2v3 = MPVec2FromVec3(t2.v3);
-
-            return (MPVec2ProperLineIntersection(t1v1, t1v2, t2v1, t2v2) ||
-                    MPVec2ProperLineIntersection(t1v1, t1v2, t2v1, t2v3) ||
-                    MPVec2ProperLineIntersection(t1v1, t1v2, t2v2, t2v3) ||
-                    MPVec2ProperLineIntersection(t1v1, t1v3, t2v1, t2v2) ||
-                    MPVec2ProperLineIntersection(t1v1, t1v3, t2v1, t2v3) ||
-                    MPVec2ProperLineIntersection(t1v1, t1v3, t2v2, t2v3) ||
-                    MPVec2ProperLineIntersection(t1v2, t1v3, t2v1, t2v2) ||
-                    MPVec2ProperLineIntersection(t1v2, t1v3, t2v1, t2v3) ||
-                    MPVec2ProperLineIntersection(t1v2, t1v3, t2v2, t2v3));
-        }
-        
+        // triangles are coplanar, so use 2D intersection test
+        return MPCoplanarTrianglesIntersect(t1, t2);
     }
     
+    // TODO: non-coplanar case appears to have bugs...
+    
+    // a point on the line of intersection of the two planes
+    MPVec3 p0;
+    
     // let p0.z = 0 and solve for p0.x and p0.y
+    p0.z = 0.0f;
     
-    float n1dott1 = MPVec3DotProduct(n1, t1.v1);
-    float n2dott2 = MPVec3DotProduct(n2, t2.v1);
-    
-    p0.x = ((-n2.y) * n1dott1 + (n1.y) * n2dott2) / (n1.y * n2.x - n1.x * n2.y);
-    p0.y = ((-n2.x) * n1dott1 + (n1.x) * n2dott2) / (n1.x * n2.y - n1.y * n2.x);
+    p0.x = (n1.y * n2dott2 - n2.y * n1dott1) / (n1.y * n2.x - n1.x * n2.y);
+    p0.y = (n1.x * n2dott2 - n2.x * n1dott1) / (n1.x * n2.y - n1.y * n2.x);
     
     return MPTriangleIntersectsLine(t1, p0, v) || MPTriangleIntersectsLine(t2, p0, v);
 }
