@@ -41,7 +41,7 @@
         MPMesh *mesh = MPMeshCreate((const MPVec3 *)CubeVertices, sizeof(CubeVertices[0]), sizeof(CubeVertices) / sizeof(CubeVertices[0]), (const void *)CubeIndices, sizeof(CubeIndices[0]), sizeof(CubeIndices) / sizeof(CubeIndices[0]));
         
         MP::Model *cube = new MP::Model(mesh);
-        cube->setPosition(MPVec3Make(0.0f, 0.0f, 0.0f));
+        cube->setPosition(MPVec3Make(-1.0f, 0.0f, 0.0f));
         
         MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:cube];
         
@@ -66,7 +66,7 @@
         //MPMesh *mesh2 = MPMeshCreate((const MPVec3 *)PyramidVertices, sizeof(PyramidVertices[0]), sizeof(PyramidVertices) / sizeof(PyramidVertices[0]), (const void *)PyramidIndices, sizeof(PyramidIndices[0]), sizeof(PyramidIndices) / sizeof(PyramidIndices[0]));
         //MP::Model *pyramid = new MP::Model(mesh2);
         
-        pyramid->setPosition(MPVec3Make(2.0f, 0.0f, 0.0f));
+        pyramid->setPosition(MPVec3Make(1.0f, 0.0f, 0.0f));
         
         MPModelNode *pyramidNode = [[MPModelNode alloc] initWithModel:pyramid];
         
