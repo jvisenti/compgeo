@@ -54,7 +54,7 @@
         BHGLBasicAnimation *rotate = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI, 0.0f, 1.0f, 0.0f) withDuration:2.0f];
         rotate.repeats = YES;
         
-//        [activeNode runAnimation:rotate];
+        [activeNode runAnimation:rotate];
         
         [self addChild:activeNode];
     

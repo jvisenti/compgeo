@@ -421,11 +421,25 @@ static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     // a point on the line of intersection of the two planes
     MPVec3 p0;
     
-    // let p0.z = 0 and solve for p0.x and p0.y
-    p0.z = 0.0f;
+    int axis0 = 0;
     
-    p0.x = (n1.y * n2dott2 - n2.y * n1dott1) / (n1.y * n2.x - n1.x * n2.y);
-    p0.y = (n1.x * n2dott2 - n2.x * n1dott1) / (n1.x * n2.y - n1.y * n2.x);
+    if (!MPFloatZero(v.y))
+    {
+        axis0 = 1;
+    }
+    else if (!MPFloatZero(v.z))
+    {
+        axis0 = 2;
+    }
+    
+    int axis1 = (axis0 - 1) % 3;
+    int axis2 = (axis0 + 1) % 3;
+    
+    // let p0.z = the z of one of the pts in one of the planes, and solve for p0.x and p0.y
+    p0.v[axis0] = 0.0f;
+    
+    p0.v[axis1] = (n1.v[axis2] * n2dott2 - n2.v[axis2] * n1dott1) / (n1.v[axis2] * n2.v[axis1] - n1.v[axis1] * n2.v[axis2]);
+    p0.v[axis2] = (n1.v[axis1] * n2dott2 - n2.v[axis1] * n1dott1) / (n1.v[axis1] * n2.v[axis2] - n1.v[axis2] * n2.v[axis1]);
     
     return MPTriangleIntersectsLine(t1, p0, v) || MPTriangleIntersectsLine(t2, p0, v);
 }
