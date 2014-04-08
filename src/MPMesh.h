@@ -18,9 +18,7 @@ extern "C" {
 #endif
 
 typedef struct _MPMesh
-{
-    unsigned short retainCount;
-    
+{    
     const MPVec3 *vertexData;
     size_t stride;
     size_t numVertices;

@@ -11,6 +11,12 @@
 
 #pragma mark - private definitions
 
+typedef struct _MPMeshPrivate
+{
+    unsigned short refCount;
+    MPSphere boundingSphere;
+} MPMeshPrivate;
+
 MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh);
 
 #pragma mark - public functions
@@ -18,8 +24,6 @@ MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh);
 MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices, const void *indexData, size_t indexSize, size_t numIndices)
 {
     MPMesh *mesh = malloc(sizeof(MPMesh));
-    
-    mesh->retainCount = 0;
     
     mesh->vertexData = vertexData;
     mesh->stride = stride;
@@ -29,8 +33,12 @@ MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices
     mesh->indexSize = indexSize;
     mesh->numIndices = numIndices;
     
-    mesh->_reserved = malloc(sizeof(MPSphere));
-    *(MPSphere *)(mesh->_reserved) = _MPMeshComputeBoundingSphere(mesh);
+    MPMeshPrivate *priv = malloc(sizeof(MPMeshPrivate));
+    
+    priv->refCount = 0;
+    priv->boundingSphere = _MPMeshComputeBoundingSphere(mesh);
+    
+    mesh->_reserved = priv;
     
     return mesh;
 }
@@ -48,25 +56,27 @@ void MPMeshRetain(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    mesh->retainCount++;
+    ((MPMeshPrivate *)mesh->_reserved)->refCount++;
 }
 
 void MPMeshRelease(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    if (!mesh->retainCount)
+    unsigned short refCount = ((MPMeshPrivate *)mesh->_reserved)->refCount;
+    
+    if (!refCount)
     {
         printf("warning: releasing unretained mesh!\n");
     }
     
-    if (mesh->retainCount < 2)
+    if (refCount < 2)
     {
         MPMeshFree(mesh);
     }
     else
     {
-        mesh->retainCount--;
+        ((MPMeshPrivate *)mesh->_reserved)->refCount--;
     }
 }
 
@@ -108,7 +118,7 @@ void MPMeshGetTriangle(const MPMesh *mesh, size_t n, MPVec3 *triangle)
 
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
 {    
-    MPSphere boundingSphere = *(MPSphere *)(mesh->_reserved);
+    MPSphere boundingSphere = ((MPMeshPrivate *)mesh->_reserved)->boundingSphere;
     
     if (transform != NULL)
     {
