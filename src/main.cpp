@@ -7,6 +7,7 @@
 
 #include "MPHeap.h"
 #include "MPEnvironment2D.h"
+#include "MPDijkstraPlanner.h"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -59,6 +60,8 @@ void test2D()
 
   // Make a [-10, 10] x [-20, 20] 2D grid world environment
   MP::Environment2D env(-10, 10, -20, 20);
+  env.readMap("map.txt");
+  /*
   MP::SearchState2D *start = new MP::SearchState2D();
   start->setValue(MP::Point2D(0, 0));
   std::vector<MP::SearchState2D *> succ;
@@ -86,5 +89,15 @@ void test2D()
 	      << ") with cost " << costs2[i] << std::endl;
   }
   std::cout << env.getNumStates() << " different states stored so far" << std::endl;
+  */
+
+  MP::DijkstraPlanner<MP::Point2D> planner(&env);
+  std::vector<MP::Point2D> plan;
+  if(planner.plan(MP::Point2D(0, 0), MP::Point2D(4, 4), plan))
+  {
+    std::cout << "Plan succeeded with " << plan.size() << " waypoints" << std::endl;
+    env.writeMap("map_out.txt", plan);
+  }
+  else std::cout << "Plan failed!" << std::endl;
 }
 

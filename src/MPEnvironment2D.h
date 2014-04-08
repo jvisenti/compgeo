@@ -10,8 +10,8 @@
 
 #include "MPSearchState.h"
 #include "MPEnvironment.h"
-#include "MPHashTable.h"
 #include <vector>
+#include <fstream>
 
 namespace MP
 {
@@ -50,14 +50,19 @@ public:
   void getSuccessors(SearchState2D *s,
 		     std::vector<SearchState2D *> &successors,
 		     std::vector<double> &costs);
+  
+  bool getCost(SearchState2D *s, SearchState2D *t, double &cost);
 
-  inline int getNumStates() const { return states_.size(); }
+  void readMap(const std::string &file);
+
+  /* Write the map to a file, with the path from asterix symbols */
+  void writeMap(const std::string &file, const std::vector<Point2D> &path);
 
 private:
   int xMin_, xMax_;
   int yMin_, yMax_;
 
-  HashTable<Point2D> states_;
+  HashTable<Point2D> obstacles_;
 
 };
 

@@ -113,15 +113,9 @@ public:
 
   inline void setMaxLoadFactor(double a) { maxLoadFactor_ = a; }
 
-  inline int size() const { return numElements_; }
-
-private:
   inline double getLoadFactor() const { return ((double)numElements_)/slots_.size(); }
 
-  void increaseTableSize()
-  {
-    // @todo
-  }
+  inline int size() const { return numElements_; }
 
   void clear()
   {
@@ -136,6 +130,12 @@ private:
 	hit = next;
       }
     }
+  }
+
+private:
+  void increaseTableSize()
+  {
+    // @todo
   }
 
   int numElements_;

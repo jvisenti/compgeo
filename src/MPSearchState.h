@@ -8,6 +8,8 @@
 #ifndef _MPSearchState_h
 #define _MPSearchState_h
 
+#define INFINITE_COST 1000000.0f
+
 namespace MP
 {
 
@@ -18,7 +20,7 @@ template <typename T>
 class SearchState
 {
 public:
-  SearchState() : heapIndex_(-1) { }
+  SearchState() : heapIndex_(-1), g_(INFINITE_COST), parent_(nullptr) { }
 
   virtual ~SearchState() { }
 
@@ -30,9 +32,20 @@ public:
 
   inline void setValue(T value) { value_ = value; }
 
+  inline double getPathCost() const { return g_; }
+
+  inline void setPathCost(int g) { g_ = g; }
+
+  inline SearchState<T> *getParent() { return parent_; }
+
+  inline void setParent(SearchState<T> *p) { parent_ = p; }
+
 protected:
   int heapIndex_;
   T value_;
+
+  double g_;
+  SearchState<T> *parent_;
   
 };
 
