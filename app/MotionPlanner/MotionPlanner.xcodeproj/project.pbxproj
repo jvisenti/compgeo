@@ -43,6 +43,8 @@
 		D416EE0418EF1EBE00993BAF /* lighting.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D416EE0218EF1EBE00993BAF /* lighting.fsh */; };
 		D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */ = {isa = PBXBuildFile; fileRef = D416EE0318EF1EBE00993BAF /* lighting.vsh */; };
 		D416EEA518EF942A00993BAF /* MPTransform3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EEA318EF942A00993BAF /* MPTransform3D.cpp */; };
+		D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = D416EEC718F4BDFD00993BAF /* BHGLView.m */; };
+		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -129,6 +131,9 @@
 		D416EE0318EF1EBE00993BAF /* lighting.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = lighting.vsh; path = MotionPlanner/lighting.vsh; sourceTree = SOURCE_ROOT; };
 		D416EEA318EF942A00993BAF /* MPTransform3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPTransform3D.cpp; path = ../../src/MPTransform3D.cpp; sourceTree = "<group>"; };
 		D416EEA418EF942A00993BAF /* MPTransform3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTransform3D.h; path = ../../src/MPTransform3D.h; sourceTree = "<group>"; };
+		D416EEC618F4BDFD00993BAF /* BHGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BHGLView.h; path = ../BHGL/BHGLView.h; sourceTree = "<group>"; };
+		D416EEC718F4BDFD00993BAF /* BHGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BHGLView.m; path = ../BHGL/BHGLView.m; sourceTree = "<group>"; };
+		D416EEC918F4BE6D00993BAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -136,6 +141,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */,
 				D416ED6F18EEED2B00993BAF /* GLKit.framework in Frameworks */,
 				D416ED6D18EEED2600993BAF /* OpenGL.framework in Frameworks */,
 				D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */,
@@ -178,6 +184,7 @@
 		D416ED3718EEEC0300993BAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				D416EEC918F4BE6D00993BAF /* QuartzCore.framework */,
 				D416ED6E18EEED2B00993BAF /* GLKit.framework */,
 				D416ED6C18EEED2600993BAF /* OpenGL.framework */,
 				D416ED3818EEEC0300993BAF /* Cocoa.framework */,
@@ -281,6 +288,8 @@
 				D416ED9218EEED3D00993BAF /* BHGLTypes.h */,
 				D416ED9318EEED3D00993BAF /* NSValue+BHGLTypes.h */,
 				D416ED9418EEED3D00993BAF /* NSValue+BHGLTypes.m */,
+				D416EEC618F4BDFD00993BAF /* BHGLView.h */,
+				D416EEC718F4BDFD00993BAF /* BHGLView.m */,
 			);
 			name = BHGL;
 			sourceTree = "<group>";
@@ -424,6 +433,7 @@
 				D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */,
 				D416ED4518EEEC0300993BAF /* main.m in Sources */,
 				D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */,
+				D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */,
 				D416EDF718EF19E000993BAF /* MPModel.cpp in Sources */,
 				D416EDAF18EEED3D00993BAF /* BHGLTexture.m in Sources */,
 				D416EDAD18EEED3D00993BAF /* BHGLScene.m in Sources */,

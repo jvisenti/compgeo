@@ -321,6 +321,8 @@ static inline MPLine MPLineMake(MPVec3 p0, MPVec3 v)
     
 static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
 {
+    // TODO: assumes a->b and c->d, but should also work for b->a or d->c
+    
     int intersection;
     
     int l1degenerate = MPVec3EqualToVec3(l1.p1, l1.p2);

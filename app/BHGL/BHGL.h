@@ -16,4 +16,6 @@
 
 #if TARGET_OS_IPHONE
 #include "BHGLViewController.h"
+#else
+#include "BHGLView.h"
 #endif

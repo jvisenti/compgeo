@@ -6,10 +6,10 @@
 //  Copyright (c) 2014 Brockenhaus Studio. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import "BHGLView.h"
 #import "MPScene.h"
 
-@interface MPGLView : NSOpenGLView
+@interface MPGLView : BHGLView
 
 @property (nonatomic, strong) MPScene *scene;
 

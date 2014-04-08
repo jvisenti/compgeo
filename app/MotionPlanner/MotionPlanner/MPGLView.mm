@@ -14,17 +14,17 @@ const float kMPSceneMinScale    = 0.5f;
 const float kMPSceneMaxScale    = 2.0f;
 const float kMPSceneScaleFactor = 0.2f;
 
-const float kMPObjectMotionIncrement = 0.05f;
+const float kMPObjectMotionIncrement = 0.02f;
 
 @interface MPGLView ()
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
-- (void)updateGL:(NSTimer *)timer;
-
 @end
 
 @implementation MPGLView
+
+@dynamic scene;
 
 #pragma mark - public interface
 
@@ -58,16 +58,6 @@ const float kMPObjectMotionIncrement = 0.05f;
 - (BOOL)acceptsFirstResponder
 {
     return YES;
-}
-
-- (void)viewDidMoveToWindow
-{
-    if (![self window])
-    {
-        [self clearGLContext];
-        
-        [[NSApplication sharedApplication] terminate:self];
-    }
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent
@@ -208,10 +198,9 @@ const float kMPObjectMotionIncrement = 0.05f;
 
 - (void)prepareOpenGL
 {
-    self.scene = [[MPScene alloc] init];
+    [super prepareOpenGL];
     
-    NSTimer *timer = [NSTimer timerWithTimeInterval:1.0/60.0 target:self selector:@selector(updateGL:) userInfo:nil repeats:YES];
-    [[NSRunLoop currentRunLoop] addTimer:timer forMode:NSRunLoopCommonModes];
+    self.scene = [[MPScene alloc] init];
     
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -226,23 +215,6 @@ const float kMPObjectMotionIncrement = 0.05f;
     glClearColor(0.6f, 0.8f, 1.0f, 0.0f);
 }
 
-/** Simply sets the new viewport */
-- (void)reshape
-{
-    [super reshape];
-    
-    glViewport(0, 0, self.bounds.size.width, self.bounds.size.height);
-}
-
-- (void)drawRect:(NSRect)dirtyRect
-{
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    
-    [self.scene render];
-    
-    [[self openGLContext] flushBuffer];
-}
-
 #pragma mark - private interface
 
 - (NSMutableDictionary *)movementAnimations
@@ -252,16 +224,6 @@ const float kMPObjectMotionIncrement = 0.05f;
         _movementAnimations = [NSMutableDictionary dictionaryWithCapacity:6];
     }
     return _movementAnimations;
-}
-
-- (void)updateGL:(NSTimer *)timer
-{
-    if(![[NSApplication sharedApplication] isHidden])
-    {
-        [self.scene updateRecursive:[timer timeInterval]];
-        
-        [self setNeedsDisplay:YES];
-    }
 }
 
 @end
