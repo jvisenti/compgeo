@@ -9,6 +9,7 @@
 #define _MPMath_h
 
 #include <math.h>
+#include <stdio.h>
 
 #if defined(__cplusplus)
 extern "C" {
@@ -45,15 +46,17 @@ typedef union _MPTriangle
     MPVec3 p[3];
 } MPTriangle;
     
-typedef union _MPLineSegment
+typedef union _MPLine
 {
-    struct {MPVec3 p1, p2;};
+    struct {MPVec3 p1, p2;}; // segment from p1 to p2
+    struct {MPVec3 p0, v;};  // infinite line of form p0 + vt
     MPVec3 p[2];
-} MPLineSegment;
+} MPLine;
     
 extern const MPVec3 MPVec3Zero;
 extern const MPQuaternion MPQuaternionIdentity;
 extern const MPMat4 MPMat4Identity;
+extern const float Inf;
     
 static inline int MPFloatZero(float f)
 {
@@ -296,9 +299,9 @@ static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
     return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
 }
     
-#pragma mark - line segment functions
+#pragma mark - line functions
     
-static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
+static inline int MPCollinearLineSegmentsIntersect(MPLine l1, MPLine l2)
 {
     int intersection;
     
@@ -316,6 +319,12 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
     return intersection;
 }
     
+    /* l1,l2 of the form p0 + Vt, q0 + Us. */
+static inline MPVec3 MPLineGetIntersection(MPLine l1, MPLine l2, float *t, float *s)
+{
+    
+}
+    
 #pragma mark - triangle functions
     
 static inline void MPTriangleApplyTransform(MPTriangle *t, MPMat4 m)
@@ -326,7 +335,7 @@ static inline void MPTriangleApplyTransform(MPTriangle *t, MPMat4 m)
 }
     
 /* returns the line segment resulting from projecting the vertices of t onto v. */
-static inline MPLineSegment MPTriangleProject(MPTriangle t, MPVec3 v)
+static inline MPLine MPTriangleProject(MPTriangle t, MPVec3 v)
 {
     // indices into triangle
     int max = 0;
@@ -346,7 +355,7 @@ static inline MPLineSegment MPTriangleProject(MPTriangle t, MPVec3 v)
         }
     }
     
-    MPLineSegment line;
+    MPLine line;
     line.p1 = MPVec3Project(t.p[min], v);
     line.p2 = MPVec3Project(t.p[max], v);
     
@@ -358,7 +367,7 @@ static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
 {
     int intersection = 1;
     
-    MPLineSegment t1s, t2s;
+    MPLine t1s, t2s;
     
     MPVec3 edges[6];
     edges[0] = MPVec3Subtract(t1.v1, t1.v2);
@@ -390,16 +399,38 @@ static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
    L(t) = p0 + tV */
 static inline int MPTriangleEdgeIntersectsLine(MPVec3 v1, MPVec3 v2, MPVec3 p0, MPVec3 v)
 {
-    MPVec3 diff = MPVec3Subtract(v2, v1);
+    MPVec3 edge = MPVec3Subtract(v2, v1);
     
-    if (MPFloatEqual(fabsf(MPVec3DotProduct(diff, v)), MPVec3Length(diff) * MPVec3Length(v)))
+    if (MPFloatEqual(fabsf(MPVec3DotProduct(edge, v)), MPVec3Length(edge) * MPVec3Length(v)))
     {
         // lines are parallel, so no intersection
         return 0;
     }
     
-    // TODO: how to solve this w/o divide by 0...
-    float s = (-v.y * (p0.x - v1.x) + v.x * (p0.y - v1.y)) / (-v.y * diff.x + v.x * diff.y);
+    MPVec3 diff = MPVec3Subtract(p0, v1);
+    
+    // find an axis for which v is non-zero
+    int a0 = 0;
+    
+    if (!MPFloatZero(v.y))      a0 = 1;
+    else if (!MPFloatZero(v.z)) a0 = 2;
+    
+    float t = (edge.v[a0] - diff.v[a0]) / v.v[a0];
+    
+    int a1 = (a0 + 3 - 1) % 3;
+    int a2 = (a0 + 1) % 3;
+    
+    float s;
+    float denom = (edge.v[a1] - t * v.v[a1]);
+    
+    if (!MPFloatZero(denom))
+    {
+        s = diff.v[a1] / denom;
+    }
+    else
+    {
+        s = diff.v[a2] / (edge.v[a2] - t * v.v[a2]);
+    }
     
     return (s >= 0.0 && s <= 1.0);
 }
@@ -457,7 +488,7 @@ static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     p0.v[a0] = 0.0f;
     
     // solve for the other two coordinates
-    int a1 = (a0 - 1) % 3;
+    int a1 = (a0 + 3 - 1) % 3;
     int a2 = (a0 + 1) % 3;
     
     p0.v[a1] = (n1.v[a2] * n2dott2 - n2.v[a2] * n1dott1) / (n1.v[a2] * n2.v[a1] - n1.v[a1] * n2.v[a2]);
