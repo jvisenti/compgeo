@@ -305,6 +305,20 @@ static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
     
 #pragma mark - line functions
     
+static inline MPLineSegment MPLineSegmentMake(MPVec3 p1, MPVec3 p2)
+{
+    MPLineSegment l;
+    l.p1 = p1; l.p2 = p2;
+    return l;
+}
+    
+static inline MPLine MPLineMake(MPVec3 p0, MPVec3 v)
+{
+    MPLine l;
+    l.p0 = p0; l.v = v;
+    return l;
+}
+    
 /* returns 1 if l intersects the plane of points perpendicular to n, one of which is v0. */
 static inline int MPLineSegmentIntersectsPlane(MPLineSegment l, MPVec3 n, MPVec3 v0)
 {
@@ -316,6 +330,8 @@ static inline int MPLineSegmentIntersectsPlane(MPLineSegment l, MPVec3 n, MPVec3
     
 static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
 {
+    // TODO: degenerate cases
+    
     int intersection;
     
     if (MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)) > 0)
@@ -332,11 +348,9 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
     return intersection;
 }
     
-/* l1,l2 of the form p0 + Vt, q0 + Us. Results undefined if l1, l2 not coplanar. */
-static inline MPVec3 MPCoplanarLinesGetIntersection(MPLine l1, MPLine l2, float *t, float *s)
+/* l1,l2 of the form p0 + Vt, q0 + Us. */
+static inline MPVec3 MPLineGetIntersection(MPLine l1, MPLine l2, float *t, float *s)
 {
-    // TODO: this needs to be cleaned up and tested
-    
     if (MPFloatEqual(fabsf(MPVec3DotProduct(l1.v, l2.v)), MPVec3Length(l1.v) * MPVec3Length(l2.v)))
     {
         // lines are parallel, so no intersection
@@ -344,6 +358,9 @@ static inline MPVec3 MPCoplanarLinesGetIntersection(MPLine l1, MPLine l2, float 
         *s = Inf;
         return MPVec3Make(Inf, Inf, Inf);
     }
+    
+    // NOTE: should probably check if lines are skew as well
+    // (doesn't matter in context of triangle intersection though)
     
     MPVec3 diff = MPVec3Subtract(l2.p0, l1.p0);
     
@@ -448,11 +465,53 @@ static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     return intersection;
 }
     
-/* a line is represented in parametric form as L(t) = p0 + tV */
-static inline int MPTriangleIntersectsLine(MPTriangle t, MPVec3 p0, MPVec3 v)
+/* if intersection exists, returns 1 and intersection is the segment of intersection.
+   if no intersection exists, returns 0 and intersection is unchanged. */
+static inline int MPTriangleIntersectsLine(MPTriangle tri, MPLine l, MPLineSegment *intersection)
 {
-    // only need to test 2 of the sides
-    return 0;//MPTriangleEdgeIntersectsLine(t.v1, t.v2, p0, v) || MPTriangleEdgeIntersectsLine(t.v1, t.v3, p0, v);
+    MPVec3 edges[3];
+    edges[0] = MPVec3Subtract(tri.v1, tri.v2);
+    edges[1] = MPVec3Subtract(tri.v1, tri.v3);
+    edges[2] = MPVec3Subtract(tri.v2, tri.v3);
+    
+    MPVec3 intersections[3];
+    
+    float t[3];
+    float s;
+    
+    intersections[0] = MPLineGetIntersection(MPLineMake(tri.v1, edges[0]), l, &t[0], &s);
+    intersections[1] = MPLineGetIntersection(MPLineMake(tri.v1, edges[1]), l, &t[1], &s);
+    intersections[2] = MPLineGetIntersection(MPLineMake(tri.v2, edges[2]), l, &t[2], &s);
+    
+    // not all 3 edges can intersect, so at least one must not
+    int noInt;
+    
+    // TODO: use epsilon because float arithmetic?
+    if (t[0] < 0.0 || t[0] > 1.0)       noInt = 0;
+    else if (t[1] < 0.0 || t[1] > 1.0)  noInt = 1;
+    else if (t[2] < 0.0 || t[2] > 1.0)  noInt = 2;
+    
+    int t1 = (noInt + 3 - 1) % 3;
+    int t2 = (noInt + 1) % 3;
+    
+    if (t[t1] >= 0.0 && t[t1] <= 1.0 && t[t2] >= 0.0 && t[t2] <= 1.0)
+    {
+        // TODO: is this necessary?
+        if (MPVec3DotProduct(l.v, MPVec3Subtract(intersections[t2], intersections[t1])) > 0)
+        {
+            intersection->p1 = intersections[t1];
+            intersection->p2 = intersections[t2];
+        }
+        else
+        {
+            intersection->p1 = intersections[t2];
+            intersection->p2 = intersections[t1];
+        }
+
+        return 1;
+    }
+
+    return 0;
 }
     
 static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
@@ -464,11 +523,14 @@ static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     float n1dott1 = MPVec3DotProduct(n1, t1.v1);
     float n2dott2 = MPVec3DotProduct(n2, t2.v1);
     
+    // intersection line of the two planes
+    MPLine pInt;
+    
     // parallel to line of intersection of planes
-    MPVec3 v = MPVec3CrossProduct(n1, n2);
+    pInt.v = MPVec3CrossProduct(n1, n2);
     
     // check if planes are parallel
-    if (MPVec3EqualToVec3(v, MPVec3Zero))
+    if (MPVec3EqualToVec3(pInt.v, MPVec3Zero))
     {
         float diff = MPVec3DotProduct(n1, t2.v1) - n1dott1;
         
@@ -482,32 +544,36 @@ static inline int MPTrianglesIntersect(MPTriangle t1, MPTriangle t2)
         return 0;
     }
     
-    if (!MPCollinearLineSegmentsIntersect(MPTriangleProject(t1, v), MPTriangleProject(t2, v)))
-    {
-        // projections of triangles onto intersection line don't even intersect, so no intersection
-        return 0;
-    }
-    
-    // a point on the line of intersection of the two planes
-    MPVec3 p0;
+//    if (!MPCollinearLineSegmentsIntersect(MPTriangleProject(t1, pInt.v), MPTriangleProject(t2, pInt.v)))
+//    {
+//        // projections of triangles onto intersection line don't even intersect, so no intersection
+//        return 0;
+//    }
     
     // find an axis for which v is non-zero
     int a0 = 0;
     
-    if (!MPFloatZero(v.y))      a0 = 1;
-    else if (!MPFloatZero(v.z)) a0 = 2;
+    if (!MPFloatZero(pInt.v.y))      a0 = 1;
+    else if (!MPFloatZero(pInt.v.z)) a0 = 2;
     
     // let one coordinate of p0 be 0
-    p0.v[a0] = 0.0f;
+    pInt.p0.v[a0] = 0.0f;
     
     // solve for the other two coordinates
     int a1 = (a0 + 3 - 1) % 3;
     int a2 = (a0 + 1) % 3;
     
-    p0.v[a1] = (n1.v[a2] * n2dott2 - n2.v[a2] * n1dott1) / (n1.v[a2] * n2.v[a1] - n1.v[a1] * n2.v[a2]);
-    p0.v[a2] = (n1.v[a1] * n2dott2 - n2.v[a1] * n1dott1) / (n1.v[a1] * n2.v[a2] - n1.v[a2] * n2.v[a1]);
+    pInt.p0.v[a1] = (n1.v[a2] * n2dott2 - n2.v[a2] * n1dott1) / (n1.v[a2] * n2.v[a1] - n1.v[a1] * n2.v[a2]);
+    pInt.p0.v[a2] = (n1.v[a1] * n2dott2 - n2.v[a1] * n1dott1) / (n1.v[a1] * n2.v[a2] - n1.v[a2] * n2.v[a1]);
     
-    return MPTriangleIntersectsLine(t1, p0, v) && MPTriangleIntersectsLine(t2, p0, v);
+    MPLineSegment t1s, t2s;
+    
+    if (MPTriangleIntersectsLine(t1, pInt, &t1s) && MPTriangleIntersectsLine(t2, pInt, &t2s))
+    {
+        return MPCollinearLineSegmentsIntersect(t1s, t2s);
+    }
+    
+    return 0;
 }
     
 #if defined(__cplusplus)
