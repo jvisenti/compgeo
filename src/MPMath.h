@@ -319,15 +319,6 @@ static inline MPLine MPLineMake(MPVec3 p0, MPVec3 v)
     return l;
 }
     
-/* returns 1 if l intersects the plane of points perpendicular to n, one of which is v0. */
-static inline int MPLineSegmentIntersectsPlane(MPLineSegment l, MPVec3 n, MPVec3 v0)
-{
-    float dot1 = MPVec3DotProduct(n, MPVec3Subtract(l.p1, v0));
-    float dot2 = MPVec3DotProduct(n, MPVec3Subtract(l.p2, v0));
-    
-    return (dot1 >= 0 && dot2 <= 0) || (dot1 <=0 && dot2 >= 0);
-}
-    
 static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
 {
     int intersection;
