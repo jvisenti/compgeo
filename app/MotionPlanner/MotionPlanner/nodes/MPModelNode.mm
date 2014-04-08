@@ -30,7 +30,7 @@
     MPVec3 mpPos = GLKVector3ToMPVec3(position);
     MP::Transform3D next(mpPos, self.model->getScale(), self.model->getRotation());
     
-    if ([self.scene transform:next validForModel:self])
+    if (!self.scene || [self.scene transform:next validForModel:self])
     {
         _model->setPosition(mpPos);
     }
@@ -50,7 +50,7 @@
     MPVec3 mpScale = GLKVector3ToMPVec3(scale);
     MP::Transform3D next(self.model->getPosition(), mpScale, self.model->getRotation());
     
-    if ([self.scene transform:next validForModel:self])
+    if (!self.scene || [self.scene transform:next validForModel:self])
     {
         _model->setScale(mpScale);
     }
@@ -70,7 +70,7 @@
     MPQuaternion mpRot = GLKQuaternionToMPQuaternion(rotation);
     MP::Transform3D next(self.model->getPosition(), self.model->getScale(), mpRot);
     
-    if ([self.scene transform:next validForModel:self])
+    if (!self.scene || [self.scene transform:next validForModel:self])
     {
         _model->setRotation(mpRot);
     }    

@@ -53,18 +53,18 @@
         
         BHGLBasicAnimation *rotate = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI, 0.0f, 1.0f, 0.0f) withDuration:2.0f];
         rotate.repeats = YES;
-        
+                
         [activeNode runAnimation:rotate];
         
         [self addChild:activeNode];
     
         self.activeObject = activeNode;
     
-        MP::Model *pyramid = new MP::Model(mesh);
+//        MP::Model *pyramid = new MP::Model(mesh);
         
         // uncomment to use a pyramid instead
-        //MPMesh *mesh2 = MPMeshCreate((const MPVec3 *)PyramidVertices, sizeof(PyramidVertices[0]), sizeof(PyramidVertices) / sizeof(PyramidVertices[0]), (const void *)PyramidIndices, sizeof(PyramidIndices[0]), sizeof(PyramidIndices) / sizeof(PyramidIndices[0]));
-        //MP::Model *pyramid = new MP::Model(mesh2);
+        MPMesh *mesh2 = MPMeshCreate((const MPVec3 *)PyramidVertices, sizeof(PyramidVertices[0]), sizeof(PyramidVertices) / sizeof(PyramidVertices[0]), (const void *)PyramidIndices, sizeof(PyramidIndices[0]), sizeof(PyramidIndices) / sizeof(PyramidIndices[0]));
+        MP::Model *pyramid = new MP::Model(mesh2);
         
         pyramid->setPosition(MPVec3Make(1.0f, 0.0f, 0.0f));
         
