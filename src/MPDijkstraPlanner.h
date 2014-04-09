@@ -90,8 +90,7 @@ protected:
   /* Relax the edge (u, v) where cost is the cost of traversing that edge */
   void relax(SearchState<T> *u, SearchState<T> *v)
   {
-    // @todo set to INFINITE_COST
-    double cost = 0.0;
+    double cost = INFINITE_COST;
     this->environment_->getCost(u, v, cost);
     if(v->getPathCost() > u->getPathCost() + cost)
     {

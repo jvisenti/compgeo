@@ -56,7 +56,8 @@ public:
   void readMap(const std::string &file);
 
   /* Write the map to a file, with the path from asterix symbols */
-  void writeMap(const std::string &file, const std::vector<Point2D> &path);
+  void writeMap(const std::string &file, const std::vector<Point2D> &path, 
+		  const Point2D &start, const Point2D &goal);
 
 private:
   int xMin_, xMax_;

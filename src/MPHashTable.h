@@ -60,7 +60,7 @@ public:
     }
 
     int slot = hash_(s->getValue()) % slots_.size();
-    std::cout << "Hashing state to slot " << slot << std::endl;
+    /* std::cout << "Hashing state to slot " << slot << std::endl; */
 
     HashTableElement<T> *e = slots_[slot];
     if(e == nullptr)
@@ -88,18 +88,18 @@ public:
   SearchState<T> *get(T t)
   {
     int slot = hash_(t) % slots_.size();
-    std::cout << "Checking slot " << slot << std::endl;
+    /* std::cout << "Checking slot " << slot << std::endl; */
 
     // Search the slot for the appropriate entry
     HashTableElement<T> *e = slots_[slot];
     while(e != nullptr)
     {
-      std::cout << "Comparing (" << e->state->getValue().x_ << ", " 
-		<< e->state->getValue().y_ << ") to (" << t.x_
-		<< ", " << t.y_ << ")" << std::endl;
+      /* std::cout << "Comparing (" << e->state->getValue().x_ << ", "  */
+      /* 		<< e->state->getValue().y_ << ") to (" << t.x_ */
+      /* 		<< ", " << t.y_ << ")" << std::endl; */
       if(e->state->getValue() == t)
       {
-	std::cout << "Found in the hash table" << std::endl;
+	/* std::cout << "Found in the hash table" << std::endl; */
 	return e->state;
       }
 

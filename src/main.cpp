@@ -12,16 +12,20 @@
 #include <cmath>
 #include <cstdlib>
 
-void test2D();
+void testHeap();
+
+void test2DPlanner();
 
 int main(int argc, char** argv)
 {
-  test2D();
+  //testHeap();
+
+  test2DPlanner();
 
   return 0;
 }
 
-void test2D()
+void testHeap()
 {
   // Initialize the data
   std::vector<MP::HeapElement<MP::Point2D> > data;
@@ -57,46 +61,22 @@ void test2D()
     std::cout << h.state->getHeapIndex() << ": (" << h.state->getValue().x_ << ", " 
 	      << h.state->getValue().y_ << ")" << std::endl;
   }
+}
 
+void test2DPlanner()
+{
   // Make a [-10, 10] x [-20, 20] 2D grid world environment
   MP::Environment2D env(-10, 10, -20, 20);
+  // Read a map from a file
   env.readMap("map.txt");
-  /*
-  MP::SearchState2D *start = new MP::SearchState2D();
-  start->setValue(MP::Point2D(0, 0));
-  std::vector<MP::SearchState2D *> succ;
-  std::vector<double> costs;
-  env.getSuccessors(start, succ, costs);
-  std::cout << "State (" << start->getValue().x_ << ", " << start->getValue().y_ << ") has "
-	    << "the following neighbors: " << std::endl;
-  for(int i = 0; i < succ.size(); ++i)
-  {
-    std::cout << "(" << succ[i]->getValue().x_ << ", " << succ[i]->getValue().y_
-	      << ") with cost " << costs[i] << std::endl;
-  }
-
-  std::cout << env.getNumStates() << " different states stored so far" << std::endl;
-  std::cout << std::endl;
-
-  std::vector<MP::SearchState2D *> succ2;
-  std::vector<double> costs2;
-  env.getSuccessors(succ[3], succ2, costs2);
-  std::cout << "State (" << succ[3]->getValue().x_ << ", " << succ[3]->getValue().y_ << ") has "
-	    << "the following neighbors: " << std::endl;
-  for(int i = 0; i < succ2.size(); ++i)
-  {
-    std::cout << "(" << succ2[i]->getValue().x_ << ", " << succ2[i]->getValue().y_
-	      << ") with cost " << costs2[i] << std::endl;
-  }
-  std::cout << env.getNumStates() << " different states stored so far" << std::endl;
-  */
-
   MP::DijkstraPlanner<MP::Point2D> planner(&env);
   std::vector<MP::Point2D> plan;
-  if(planner.plan(MP::Point2D(0, 0), MP::Point2D(4, 4), plan))
+  MP::Point2D start(0, 0);
+  MP::Point2D goal(4, 4);
+  if(planner.plan(start, goal, plan))
   {
     std::cout << "Plan succeeded with " << plan.size() << " waypoints" << std::endl;
-    env.writeMap("map_out.txt", plan);
+    env.writeMap("map_out.txt", plan, start, goal);
   }
   else std::cout << "Plan failed!" << std::endl;
 }

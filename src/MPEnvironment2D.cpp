@@ -98,9 +98,9 @@ void Environment2D::readMap(const std::string &file)
 	    << yMin << ", " << yMax << "]" << std::endl;
 
   int cell;
-  for(int y = yMin; y < yMax; ++y)
+  for(int y = yMin; y <= yMax; ++y)
   {
-    for(int x = xMin; x < xMax; ++x)
+    for(int x = xMin; x <= xMax; ++x)
     {
       f >> cell;
       //std::cout << cell << " ";
@@ -118,16 +118,17 @@ void Environment2D::readMap(const std::string &file)
   f.close();
 }
 
-void Environment2D::writeMap(const std::string &file, const std::vector<Point2D> &path)
+void Environment2D::writeMap(const std::string &file, const std::vector<Point2D> &path,
+			     const Point2D &start, const Point2D &goal)
 {
   std::ofstream f(file);
 
   std::cout << "Writing map [" << xMin_ << ", " << xMax_ << "] x ["
 	    << yMin_ << ", " << yMax_ << "]" << std::endl;
   
-  for(int y = yMin_; y < yMax_; ++y)
+  for(int y = yMin_; y <= yMax_; ++y)
   {
-    for(int x = xMin_; x < xMax_; ++x)
+    for(int x = xMin_; x <= xMax_; ++x)
     {
       Point2D p(x, y);
       bool onPath = false;
@@ -140,7 +141,11 @@ void Environment2D::writeMap(const std::string &file, const std::vector<Point2D>
 	  break;
 	}
       }
-      if(onPath)
+      if(p == start)
+	f << "S ";
+      else if(p == goal)
+	f << "G ";
+      else if(onPath)
 	f << "* ";
       else if(obstacles_.get(p))
 	f << "1 ";
