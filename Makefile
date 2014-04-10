@@ -9,10 +9,10 @@ CFLAGS += -Wall
 CPPFLAGS = $(CFLAGS)
 
 CC = gcc $(CFLAGS)
-CXX = g++ -std=c++11 $(CPPFLAGS)
+CXX = clang++ -std=c++11 -stdlib=libc++ $(CPPFLAGS)
 
 C_SOURCES = MPMath.c MPMesh.c
-CXX_SOURCES = main.cpp MPTransform3D.cpp MPModel.cpp
+CXX_SOURCES = main.cpp MPEnvironment2D.cpp MPEnvironment3D.cpp MPTransform3D.cpp MPModel.cpp
 
 SRC_PATH = src
 OBJ_PATH = obj
@@ -31,7 +31,7 @@ $(PROGS): $(C_OBJ_FILES) $(CXX_OBJ_FILES)
 ## straight c rules
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.c
 	$(CC) -c $< -o $@
-    
+
 ## c++ rules
 $(OBJ_PATH)/%.o: $(SRC_PATH)/%.cpp
 	$(CXX) -c $< -o $@
