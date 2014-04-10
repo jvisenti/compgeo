@@ -15,11 +15,14 @@
 extern "C" {
 #endif
     
+// we can change this if we want
+#define MP_FLT_EPSILON FLT_EPSILON
+    
 static const float Inf = FLT_MAX;
     
 static inline int MPFloatZero(float f)
 {
-    return fabs(f) <= FLT_EPSILON;
+    return fabs(f) <= MP_FLT_EPSILON;
 }
 
 static inline int MPFloatEqual(float a, float b)
@@ -29,12 +32,12 @@ static inline int MPFloatEqual(float a, float b)
 
 static inline int MPFloatLess(float a, float b)
 {
-    return (b - a) > FLT_EPSILON;
+    return (b - a) > MP_FLT_EPSILON;
 }
 
 static inline int MPFloatGreater(float a, float b)
 {
-    return (a - b) > FLT_EPSILON;
+    return (a - b) > MP_FLT_EPSILON;
 }
 
 static inline int MPFloatLessEq(float a, float b)

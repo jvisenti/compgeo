@@ -38,6 +38,9 @@ const float kMPObjectMotionIncrement = 0.02f;
         // Must specify the 3.2 Core Profile to use OpenGL 3.2
         NSOpenGLPFAOpenGLProfile,
         NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFASupersample,
+        NSOpenGLPFASampleBuffers, 1,
+        NSOpenGLPFASamples, 4,
         0
     };
     
@@ -200,7 +203,10 @@ const float kMPObjectMotionIncrement = 0.02f;
 {
     [super prepareOpenGL];
     
-    self.scene = [[MPScene alloc] init];
+    MP::Environment3D *envrionment = new MP::Environment3D(MP::EnvironmentPresetDefault);
+    self.scene = [[MPScene alloc] initWithEnvironment:envrionment];
+    
+    glEnable(GL_MULTISAMPLE);
     
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
