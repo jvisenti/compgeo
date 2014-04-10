@@ -8,14 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
-		D416ED4318EEEC0300993BAF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D416ED4118EEEC0300993BAF /* InfoPlist.strings */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
 		D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4B18EEEC0300993BAF /* MPAppDelegate.m */; };
 		D416ED4F18EEEC0300993BAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D416ED4D18EEEC0300993BAF /* MainMenu.xib */; };
 		D416ED5818EEEC0300993BAF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED5718EEEC0300993BAF /* XCTest.framework */; };
 		D416ED5918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
-		D416ED6118EEEC0300993BAF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D416ED5F18EEEC0300993BAF /* InfoPlist.strings */; };
-		D416ED6318EEEC0300993BAF /* MotionPlannerTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED6218EEEC0300993BAF /* MotionPlannerTests.m */; };
 		D416ED6D18EEED2600993BAF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED6C18EEED2600993BAF /* OpenGL.framework */; };
 		D416ED6F18EEED2B00993BAF /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED6E18EEED2B00993BAF /* GLKit.framework */; };
 		D416EDA118EEED3D00993BAF /* BHGLAnimatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED7318EEED3D00993BAF /* BHGLAnimatedObject.m */; };
@@ -37,7 +34,6 @@
 		D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDC118EEEEC800993BAF /* MPGLView.mm */; };
 		D416EDC918EEF00F00993BAF /* MPScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDC818EEF00F00993BAF /* MPScene.mm */; };
 		D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = D416EDCB18EF168900993BAF /* MPModelNode.mm */; };
-		D416EDF518EF19E000993BAF /* MPMath.c in Sources */ = {isa = PBXBuildFile; fileRef = D416EDEC18EF19E000993BAF /* MPMath.c */; };
 		D416EDF618EF19E000993BAF /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D416EDEE18EF19E000993BAF /* MPMesh.c */; };
 		D416EDF718EF19E000993BAF /* MPModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EDF018EF19E000993BAF /* MPModel.cpp */; };
 		D416EE0418EF1EBE00993BAF /* lighting.fsh in Resources */ = {isa = PBXBuildFile; fileRef = D416EE0218EF1EBE00993BAF /* lighting.fsh */; };
@@ -64,7 +60,6 @@
 		D416ED3C18EEEC0300993BAF /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		D416ED3D18EEEC0300993BAF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		D416ED4018EEEC0300993BAF /* MotionPlanner-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MotionPlanner-Info.plist"; sourceTree = "<group>"; };
-		D416ED4218EEEC0300993BAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		D416ED4418EEEC0300993BAF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		D416ED4618EEEC0300993BAF /* MotionPlanner-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MotionPlanner-Prefix.pch"; sourceTree = "<group>"; };
 		D416ED4A18EEEC0300993BAF /* MPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPAppDelegate.h; sourceTree = "<group>"; };
@@ -72,9 +67,6 @@
 		D416ED4E18EEEC0300993BAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		D416ED5618EEEC0300993BAF /* MotionPlannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionPlannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416ED5718EEEC0300993BAF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		D416ED5E18EEEC0300993BAF /* MotionPlannerTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "MotionPlannerTests-Info.plist"; sourceTree = "<group>"; };
-		D416ED6018EEEC0300993BAF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		D416ED6218EEEC0300993BAF /* MotionPlannerTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MotionPlannerTests.m; sourceTree = "<group>"; };
 		D416ED6C18EEED2600993BAF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D416ED6E18EEED2B00993BAF /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		D416ED7118EEED3D00993BAF /* BHGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BHGL.h; path = ../BHGL/BHGL.h; sourceTree = "<group>"; };
@@ -119,7 +111,6 @@
 		D416EDC818EEF00F00993BAF /* MPScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPScene.mm; sourceTree = "<group>"; };
 		D416EDCA18EF168900993BAF /* MPModelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPModelNode.h; sourceTree = "<group>"; };
 		D416EDCB18EF168900993BAF /* MPModelNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPModelNode.mm; sourceTree = "<group>"; };
-		D416EDEC18EF19E000993BAF /* MPMath.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MPMath.c; path = ../../src/MPMath.c; sourceTree = "<group>"; };
 		D416EDED18EF19E000993BAF /* MPMath.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPMath.h; path = ../../src/MPMath.h; sourceTree = "<group>"; };
 		D416EDEE18EF19E000993BAF /* MPMesh.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = MPMesh.c; path = ../../src/MPMesh.c; sourceTree = "<group>"; };
 		D416EDEF18EF19E000993BAF /* MPMesh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPMesh.h; path = ../../src/MPMesh.h; sourceTree = "<group>"; };
@@ -134,6 +125,7 @@
 		D416EEC618F4BDFD00993BAF /* BHGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BHGLView.h; path = ../BHGL/BHGLView.h; sourceTree = "<group>"; };
 		D416EEC718F4BDFD00993BAF /* BHGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BHGLView.m; path = ../BHGL/BHGLView.m; sourceTree = "<group>"; };
 		D416EEC918F4BE6D00993BAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D416EECB18F6E2AA00993BAF /* MPFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFloat.h; path = ../../src/MPFloat.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -166,7 +158,6 @@
 				D416ED7018EEED3300993BAF /* BHGL */,
 				D416EDEB18EF19D000993BAF /* MotionPlannerSrc */,
 				D416ED3E18EEEC0300993BAF /* MotionPlanner */,
-				D416ED5C18EEEC0300993BAF /* MotionPlannerTests */,
 				D416ED3718EEEC0300993BAF /* Frameworks */,
 				D416ED3618EEEC0300993BAF /* Products */,
 			);
@@ -224,27 +215,8 @@
 			isa = PBXGroup;
 			children = (
 				D416ED4018EEEC0300993BAF /* MotionPlanner-Info.plist */,
-				D416ED4118EEEC0300993BAF /* InfoPlist.strings */,
 				D416ED4418EEEC0300993BAF /* main.m */,
 				D416ED4618EEEC0300993BAF /* MotionPlanner-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		D416ED5C18EEEC0300993BAF /* MotionPlannerTests */ = {
-			isa = PBXGroup;
-			children = (
-				D416ED6218EEEC0300993BAF /* MotionPlannerTests.m */,
-				D416ED5D18EEEC0300993BAF /* Supporting Files */,
-			);
-			path = MotionPlannerTests;
-			sourceTree = "<group>";
-		};
-		D416ED5D18EEEC0300993BAF /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				D416ED5E18EEEC0300993BAF /* MotionPlannerTests-Info.plist */,
-				D416ED5F18EEEC0300993BAF /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -308,8 +280,8 @@
 		D416EDEB18EF19D000993BAF /* MotionPlannerSrc */ = {
 			isa = PBXGroup;
 			children = (
-				D416EDEC18EF19E000993BAF /* MPMath.c */,
 				D416EDED18EF19E000993BAF /* MPMath.h */,
+				D416EECB18F6E2AA00993BAF /* MPFloat.h */,
 				D416EDEE18EF19E000993BAF /* MPMesh.c */,
 				D416EDEF18EF19E000993BAF /* MPMesh.h */,
 				D416EDF018EF19E000993BAF /* MPModel.cpp */,
@@ -408,7 +380,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D416ED4318EEEC0300993BAF /* InfoPlist.strings in Resources */,
 				D416EE0418EF1EBE00993BAF /* lighting.fsh in Resources */,
 				D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */,
 				D416ED4F18EEEC0300993BAF /* MainMenu.xib in Resources */,
@@ -419,7 +390,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D416ED6118EEEC0300993BAF /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,7 +411,6 @@
 				D416EDC918EEF00F00993BAF /* MPScene.mm in Sources */,
 				D416EDA918EEED3D00993BAF /* BHGLMesh.m in Sources */,
 				D416EEA518EF942A00993BAF /* MPTransform3D.cpp in Sources */,
-				D416EDF518EF19E000993BAF /* MPMath.c in Sources */,
 				D416EDAB18EEED3D00993BAF /* BHGLNode.m in Sources */,
 				D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */,
 				D416EDA118EEED3D00993BAF /* BHGLAnimatedObject.m in Sources */,
@@ -463,7 +432,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D416ED6318EEEC0300993BAF /* MotionPlannerTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -478,28 +446,12 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		D416ED4118EEEC0300993BAF /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D416ED4218EEEC0300993BAF /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
 		D416ED4D18EEEC0300993BAF /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				D416ED4E18EEEC0300993BAF /* Base */,
 			);
 			name = MainMenu.xib;
-			sourceTree = "<group>";
-		};
-		D416ED5F18EEEC0300993BAF /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D416ED6018EEEC0300993BAF /* en */,
-			);
-			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
