@@ -6,10 +6,10 @@
 //
 //  Defines a TRS transform of an object in 3D space
 
-#ifndef __MotionPlanner__MPTransform3D__
-#define __MotionPlanner__MPTransform3D__
+#ifndef __MPTransform3D__
+#define __MPTransform3D__
 
-#import "MPMath.h"
+#include "MPMath.h"
 
 namespace MP
 {

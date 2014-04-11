@@ -7,8 +7,8 @@
 
 #include "MPEnvironment3D.h"
 
-#include "MPCube.h"
-#include "MPPyramid.h"
+#include "geometry/MPCube.h"
+#include "geometry/MPPyramid.h"
 
 namespace MP
 {
