@@ -30,8 +30,10 @@ Environment3D* Reader::generateEnvironment3D() const
     
     try
     {
+        // import all referenced meshes
         while ((token = tokens.getNext()) == "import")
         {
+            // NOTE: retains meshes
             this->importMeshes_(tokens, importedMeshes);
         }
         
@@ -42,7 +44,15 @@ Environment3D* Reader::generateEnvironment3D() const
         
         tokens.match("Environment");
         
-        return this->generateEnvironment3D_(tokens, importedMeshes);
+        Environment3D *environment = this->generateEnvironment3D_(tokens, importedMeshes);
+        
+        // release all imported meshes
+        for(std::map<std::string, MPMesh *>::iterator it = importedMeshes.begin(); it != importedMeshes.end(); ++it)
+        {
+            MPMeshRelease(it->second);
+        }
+        
+        return environment;
     }
     catch (std::runtime_error e)
     {
@@ -61,8 +71,10 @@ Model* Reader::generateModel() const
     
     try
     {
+        // import all referenced meshes
         while ((token = tokens.getNext()) == "import")
         {
+            // NOTE: retains meshes
             this->importMeshes_(tokens, importedMeshes);
         }
         
@@ -73,7 +85,15 @@ Model* Reader::generateModel() const
         
         tokens.match("Model");
         
-        return this->generateModel_(tokens, importedMeshes);
+        Model *model = this->generateModel_(tokens, importedMeshes);
+        
+        // release all imported meshes
+        for(std::map<std::string, MPMesh *>::iterator it = importedMeshes.begin(); it != importedMeshes.end(); ++it)
+        {
+            MPMeshRelease(it->second);
+        }
+        
+        return model;
     }
     catch (std::runtime_error e)
     {
@@ -219,6 +239,7 @@ Model* Reader::generateModel_(Tokenizer &tokens, const std::map<std::string, MPM
                     
                     if (kv != meshes.end())
                     {
+                        // mesh has been imported already, so use it
                         model->setMesh(kv->second);
                     }
                     else
@@ -309,6 +330,7 @@ void Reader::importMeshes_(Tokenizer &tokens, std::map<std::string, MPMesh *> &m
     Reader meshReader(importFile);
     
     MPMesh *mesh = meshReader.generateMesh();
+    MPMeshRetain(mesh);
     
     meshes.insert(std::make_pair(alias, mesh));
 }
@@ -323,7 +345,7 @@ MPVec3 Reader::loadVector3_(Tokenizer &tokens) const
     
     MPVec3 vec;
     
-    for (int i = 0; (token = tokens.getNext()) != "}"; ++i)
+    for (int i = 0; (token = tokens.getNext()) != "}" && i < 3; ++i)
     {
         if (!std::regex_match(token.begin(), token.end(), FloatLit))
         {
@@ -344,6 +366,8 @@ void Reader::loadVertices(Tokenizer &tokens, void **vertexData, size_t &stride, 
     
     count = atol(tokens.match(IntLit).c_str());
     size_t elementsPerVertex = atol(tokens.match(IntLit).c_str());
+    
+    // currently enforcing that vertex elements be float types
     stride = elementsPerVertex * sizeof(float);
     
     float *values = (float *)malloc(count * elementsPerVertex * sizeof(float));
@@ -352,9 +376,10 @@ void Reader::loadVertices(Tokenizer &tokens, void **vertexData, size_t &stride, 
     tokens.match("=");
     tokens.match("{");
     
+    // arrays have elements delimited by a comma
     tokens.setTokenDelimiter(',');
     
-    for (int i = 0; (token = tokens.getNext()) != "}"; ++i)
+    for (int i = 0; (token = tokens.getNext()) != "}" && i < count * elementsPerVertex; ++i)
     {
         if (!std::regex_match(token.begin(), token.end(), FloatLit))
         {
@@ -364,6 +389,7 @@ void Reader::loadVertices(Tokenizer &tokens, void **vertexData, size_t &stride, 
         values[i] = atof(token.c_str());
     }
     
+    // set delimiter back to default
     tokens.setTokenDelimiter(' ');
 }
 
@@ -372,6 +398,8 @@ void Reader::loadIndices(Tokenizer &tokens, void **indexData, size_t &size, size
     std::string token;
     
     count = atol(tokens.match(IntLit).c_str());
+    
+    // currently enforcing that indices be unsigned ints
     size = sizeof(unsigned int);
     
     unsigned int *values = (unsigned int *)malloc(count * sizeof(unsigned int));
@@ -380,9 +408,10 @@ void Reader::loadIndices(Tokenizer &tokens, void **indexData, size_t &size, size
     tokens.match("=");
     tokens.match("{");
     
+    // arrays have elements delimited by a comma
     tokens.setTokenDelimiter(',');
     
-    for (int i = 0; (token = tokens.getNext()) != "}"; ++i)
+    for (int i = 0; (token = tokens.getNext()) != "}" && i < count; ++i)
     {
         if (!std::regex_match(token.begin(), token.end(), IntLit))
         {
@@ -392,6 +421,7 @@ void Reader::loadIndices(Tokenizer &tokens, void **indexData, size_t &size, size
         values[i] = (unsigned int)atoi(token.c_str());
     }
     
+    // set delimiter back to default
     tokens.setTokenDelimiter(' ');
 }
 

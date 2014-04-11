@@ -4,6 +4,7 @@
 //  Created by John Visentin on 4/10/14.
 //  Copyright (c) 2014 Brockenhaus Studio. All rights reserved.
 //
+// A file reader for loading mesh/model/environment data.
 
 #ifndef __MPReader__
 #define __MPReader__
