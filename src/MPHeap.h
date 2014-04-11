@@ -183,13 +183,6 @@ private:
   /* Clear all elements in the heap */
   void clear()
   {
-    for(int i = 0; i < size(); ++i)
-    {
-      // Delete the allocated state @todo this could be problematic if others hold 
-      // a pointer to this state
-      delete data_[i].state;
-      data_[i].state = 0;
-    }
     data_.clear();
   }
 

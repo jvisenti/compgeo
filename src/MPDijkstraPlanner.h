@@ -21,7 +21,7 @@ class DijkstraPlanner : public Planner<T>
 {
 public:
   DijkstraPlanner(Environment<T> *environment) 
-    : Planner<T>(environment), CLOSED_(environment->getHashFunction())
+    : Planner<T>(environment), CLOSED_(environment->getHashFunction()), stateExpansions_(0)
   {
   }
 
@@ -33,7 +33,10 @@ public:
   {
     SearchState<T> *s = this->environment_->addState(start);
     SearchState<T> *g = this->environment_->addState(goal);
+    stateExpansions_ = 0;
     bool success = dijkstraSearch(s, g);
+    std::cout << "Dijkstra's search terminated after "
+	      << stateExpansions_ << " state expansions" << std::endl;
 
     if(success)
     {
@@ -64,11 +67,12 @@ public:
       // Check if x is the goal state
       if(x->getValue() == goalState->getValue())
       {
-        std::cout << "Dijkstra's search found goal state" << std::endl;
+        /* std::cout << "Dijkstra's search found goal state" << std::endl; */
         return true;
       }
       std::vector<SearchState<T> *> neighbors;
       std::vector<double> costs;
+      stateExpansions_++;
       this->environment_->getSuccessors(x, neighbors, costs);
       for(auto it = neighbors.begin(); it != neighbors.end(); ++it)
       {
@@ -80,7 +84,7 @@ public:
           CLOSED_.insert(*it);
           Q.insertState(*it, (*it)->getPathCost());
         }
-        else std::cout << "Already visited!" << std::endl;
+        /* else std::cout << "Already visited!" << std::endl; */
       }
     }
     return false;
@@ -100,6 +104,8 @@ protected:
   }
 
   HashTable<T> CLOSED_;
+
+  int stateExpansions_;
 
 };
 

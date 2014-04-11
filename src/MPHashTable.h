@@ -117,6 +117,8 @@ public:
 
   inline int size() const { return numElements_; }
 
+  inline int getNumSlots() const { return (int)slots_.size(); }
+
   void clear()
   {
     for(auto it = slots_.begin(); it != slots_.end(); ++it)
@@ -131,6 +133,8 @@ public:
       }
     }
   }
+
+  inline HashTableElement<T> *getSlot(int i) { return slots_[i]; }
 
 private:
   void increaseTableSize()
