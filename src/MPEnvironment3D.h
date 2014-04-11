@@ -17,20 +17,15 @@
 
 namespace MP
 {
-    
-typedef enum
-{
-    EnvironmentPresetDefault = 0
-} EnvironmentPreset;
 
 typedef SearchState<Transform3D> SearchState3D;
 
 class Environment3D : public Environment<Transform3D>
 {
 public:
+  Environment3D();
   Environment3D(const MPVec3 &size);
   Environment3D(const MPVec3 &origin, const MPVec3 &size);
-  Environment3D(EnvironmentPreset preset);
     
   ~Environment3D();
 

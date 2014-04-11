@@ -7,9 +7,6 @@
 
 #include "MPEnvironment3D.h"
 
-#include "geometry/MPCube.h"
-#include "geometry/MPPyramid.h"
-
 namespace MP
 {
     
@@ -35,45 +32,19 @@ static int transform3DHash(Transform3D t)
     return ((x*p1) ^ (y*p2) ^ (z*p3));
 }
 
+Environment3D::Environment3D()
+: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Zero), activeObject_(nullptr)
+{
+}
+    
 Environment3D::Environment3D(const MPVec3 &size)
-  : Environment<Transform3D>(transform3DHash), origin_(MPVec3Make(0.0f, 0.0f, 0.0f)), size_(size), activeObject_(nullptr)
+  : Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(size), activeObject_(nullptr)
 {
 }
     
 Environment3D::Environment3D(const MPVec3 &origin, const MPVec3 &size)
   : Environment<Transform3D>(transform3DHash), origin_(origin), size_(size), activeObject_(nullptr)
 {
-}
-    
-Environment3D::Environment3D(EnvironmentPreset preset)
-  : Environment<Transform3D>(transform3DHash)
-{
-    switch (preset)
-    {
-        case EnvironmentPresetDefault:
-        {
-            this->origin_   = MPVec3Make(0.0f, 0.0f, 0.0f);
-            this->size_     = MPVec3Make(10.0f, 5.0f, 5.0f);
-            
-            MPMesh *cubeMesh = MPMeshCreate((const MPVec3 *)CubeVertices, sizeof(CubeVertices[0]), sizeof(CubeVertices) / sizeof(CubeVertices[0]), (const void *)CubeIndices, sizeof(CubeIndices[0]), sizeof(CubeIndices) / sizeof(CubeIndices[0]));
-            MPMesh *pyramidMesh = MPMeshCreate((const MPVec3 *)PyramidVertices, sizeof(PyramidVertices[0]), sizeof(PyramidVertices) / sizeof(PyramidVertices[0]), (const void *)PyramidIndices, sizeof(PyramidIndices[0]), sizeof(PyramidIndices) / sizeof(PyramidIndices[0]));
-            
-            Model *cube = new Model(cubeMesh);
-            cube->setPosition(MPVec3Make(-1.0f, 0.0f, 0.0f));
-            
-            Model *pyramid = new Model(pyramidMesh);
-            pyramid->setPosition(MPVec3Make(1.0f, 0.0f, 0.0f));
-            
-            this->setActiveObject(cube);
-            this->addObstacle(pyramid);
-            
-            break;
-        }
-            
-        default:
-            std::cout << "invalid environment preset" << std::endl;
-            break;
-    }
 }
 
 Environment3D::~Environment3D()

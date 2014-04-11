@@ -12,7 +12,7 @@ CC = gcc $(CFLAGS)
 CXX = clang++ -std=c++11 -stdlib=libc++ $(CPPFLAGS)
 
 C_SOURCES = MPMesh.c
-CXX_SOURCES = main.cpp MPEnvironment2D.cpp MPEnvironment3D.cpp MPTransform3D.cpp MPModel.cpp MPReader.cpp
+CXX_SOURCES = main.cpp MPEnvironment2D.cpp MPEnvironment3D.cpp MPTransform3D.cpp MPModel.cpp MPReader.cpp MPTokenizer.cpp
 
 SRC_PATH = src
 OBJ_PATH = obj

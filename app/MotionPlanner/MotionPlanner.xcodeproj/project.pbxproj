@@ -43,6 +43,7 @@
 		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
 		D416EECE18F6E55A00993BAF /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EECC18F6E55A00993BAF /* MPEnvironment3D.cpp */; };
 		D416EED118F77E1900993BAF /* MPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EECF18F77E1900993BAF /* MPReader.cpp */; };
+		D4F24EA418F88395002F3CB0 /* MPTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -132,6 +133,8 @@
 		D416EECD18F6E55A00993BAF /* MPEnvironment3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment3D.h; path = ../../src/MPEnvironment3D.h; sourceTree = "<group>"; };
 		D416EECF18F77E1900993BAF /* MPReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPReader.cpp; path = ../../src/MPReader.cpp; sourceTree = "<group>"; };
 		D416EED018F77E1900993BAF /* MPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPReader.h; path = ../../src/MPReader.h; sourceTree = "<group>"; };
+		D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPTokenizer.cpp; path = ../../src/MPTokenizer.cpp; sourceTree = "<group>"; };
+		D4F24EA318F88395002F3CB0 /* MPTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTokenizer.h; path = ../../src/MPTokenizer.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -298,6 +301,8 @@
 				D416EECD18F6E55A00993BAF /* MPEnvironment3D.h */,
 				D416EECF18F77E1900993BAF /* MPReader.cpp */,
 				D416EED018F77E1900993BAF /* MPReader.h */,
+				D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */,
+				D4F24EA318F88395002F3CB0 /* MPTokenizer.h */,
 				D416EDF418EF19E000993BAF /* MPUtils.h */,
 			);
 			name = MotionPlannerSrc;
@@ -434,6 +439,7 @@
 				D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */,
 				D416EDA718EEED3D00993BAF /* BHGLLight.m in Sources */,
 				D416EDA218EEED3D00993BAF /* BHGLAnimation.m in Sources */,
+				D4F24EA418F88395002F3CB0 /* MPTokenizer.cpp in Sources */,
 				D416EDA518EEED3D00993BAF /* BHGLCUtils.c in Sources */,
 				D416EDA318EEED3D00993BAF /* BHGLBasicAnimation.m in Sources */,
 				D416EDB018EEED3D00993BAF /* NSValue+BHGLTypes.m in Sources */,

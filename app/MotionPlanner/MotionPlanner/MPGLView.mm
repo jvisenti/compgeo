@@ -8,6 +8,7 @@
 
 #import "MPGLView.h"
 #import "BHGL.h"
+#import "MPReader.h"
 #include <Carbon/Carbon.h>
 
 const float kMPSceneMinScale    = 0.5f;
@@ -203,7 +204,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 {
     [super prepareOpenGL];
     
-    MP::Environment3D *envrionment = new MP::Environment3D(MP::EnvironmentPresetDefault);
+    MP::Reader reader("/Users/Rob/Projects/compgeo/src/geometry/scene.env");
+    MP::Environment3D *envrionment = reader.generateEnvironment3D();    
     self.scene = [[MPScene alloc] initWithEnvironment:envrionment];
     
     glEnable(GL_MULTISAMPLE);
