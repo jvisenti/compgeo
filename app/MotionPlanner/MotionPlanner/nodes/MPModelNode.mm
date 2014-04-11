@@ -99,6 +99,8 @@
 {
     _model = model;
     
+    if (!model) return;
+    
     MPMesh *mesh = _model->getMesh();
     
     if (mesh)
