@@ -9,6 +9,7 @@
 #define __MPReader__
 
 #include "MPEnvironment3D.h"
+#include "MPTokenizer.h"
 
 namespace MP
 {
@@ -20,9 +21,15 @@ public:
     ~Reader();
     
     Environment3D* generateEnvironment3D() const;
+    Model* generateModel() const;
+    MPMesh* generateMesh() const;
 
 private:
-    std::string file;
+    std::string file_;
+    
+    Environment3D* generateEnvironment3D_(Tokenizer &tokens) const;
+    MPMesh* generateMesh_(Tokenizer &tokens) const;
+    Model* generateModel_(Tokenizer &tokens) const;
 };
     
 }

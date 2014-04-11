@@ -118,9 +118,9 @@ bool Model::wouldCollideWithModel(Transform3D &transform, Model &model)
     // triangles for during iteration
     MPTriangle tri1, tri2;
     
-    for (int i = 0; i < numTriangles; i++)
+    for (int i = 0; i < numTriangles; ++i)
     {
-        for (int j = 0; j < numTrianglesOther; j++)
+        for (int j = 0; j < numTrianglesOther; ++j)
         {
             MPMeshGetTriangle(this->mesh, i, tri1.p);
             MPTriangleApplyTransform(&tri1, modelMatrix);

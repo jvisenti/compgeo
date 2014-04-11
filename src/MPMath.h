@@ -415,7 +415,7 @@ static inline MPLineSegment MPTriangleProject(MPTriangle t, MPVec3 v)
     int min = 0;
     
     int i;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
         if (MPFloatGreater(MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[max])), 0.0))
         {
@@ -454,7 +454,7 @@ static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     // project each triangle to every possible edge. if it exists,
     // axis of separation will be perpendicular to one of the edges of the triangles
     int i;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < 6; ++i)
     {
         t1s = MPTriangleProject(t1, edges[i]);
         t2s = MPTriangleProject(t2, edges[i]);
@@ -483,7 +483,7 @@ static inline int MPTriangleIntersectsLine(MPTriangle tri, MPLine l, MPLineSegme
     float s;
     
     int i;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
         intersections[i] = MPLineGetIntersection(MPLineMake(tri.p[i], edges[i]), l, &t[i], &s);
     }
