@@ -67,6 +67,7 @@ public:
     // Restore the min-heap property
     heapify(0);
 
+    temp.state->setHeapIndex(INVALID_INDEX);
     return temp;
   }
 

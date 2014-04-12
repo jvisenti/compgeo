@@ -105,10 +105,11 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
 {
   // If the distance between the two states is > stepSize_, then there is no edge
   // (i.e. primitive motion) between them
-  //double distance = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition());
-    MPVec3 difference = MPVec3Subtract(s->getValue().getPosition(), t->getValue().getPosition());
-    if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
+  MPVec3 difference = MPVec3Subtract(s->getValue().getPosition(), t->getValue().getPosition());
+  
+  if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
   {
+    float distance = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition());
     // @todo variable costs?
     cost = 1.0f;
     return true;
@@ -116,7 +117,7 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
   std::cout << "Error: no edge between (" << s->getValue().getPosition().x*stepSize_ <<
     ", " << s->getValue().getPosition().y*stepSize_ << ", " << 
     s->getValue().getPosition().z*stepSize_ << ") and (" << t->getValue().getPosition().x*stepSize_
-    << ", " << t->getValue().getPosition().y*stepSize_ << ", " << t->getValue().getPosition().z*stepSize_ << ")" << std::endl;
+	    << ", " << t->getValue().getPosition().y*stepSize_ << ", " << t->getValue().getPosition().z*stepSize_ << ")" << std::endl;
   return false;
 }
 
@@ -138,8 +139,8 @@ bool Environment3D::inBounds(int x, int y, int z)
     
 bool Environment3D::stateValid(Transform3D &T) const
 {
-    Transform3D worldT = T;
-    worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
+  Transform3D worldT = T;
+  worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
     
     return this->isValid(worldT);
 }
