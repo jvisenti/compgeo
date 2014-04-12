@@ -168,6 +168,7 @@
     if (_environment != nullptr)
     {
         valid = _environment->isValidForModel(transform, model);
+        valid = valid && !_environment->getActiveObject()->wouldCollideWithModel(transform, *self.boundingBox.model);
     }
     
     return valid;
