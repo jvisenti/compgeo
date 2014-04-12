@@ -43,6 +43,7 @@ bool Dijkstra3D::plan(Transform3D start, Transform3D goal, std::vector<Transform
     {
       plannerToWorld(*it);
     }
+      std::cout << "Dijkstra 3D planner succeeded with " << plan.size() << " states" << std::endl;
     return true;
   }
   else return false;
@@ -50,11 +51,12 @@ bool Dijkstra3D::plan(Transform3D start, Transform3D goal, std::vector<Transform
 
 void Dijkstra3D::plannerToWorld(Transform3D &T)
 {
-  float eps = static_cast<Environment3D *>(this->environment_)->getStepSize();
-  MPVec3 pos = T.getPosition();
-  pos.x *= eps;
-  pos.y *= eps;
-  pos.z *= eps;
+    float eps = static_cast<Environment3D *>(this->environment_)->getStepSize();
+    MPVec3 pos = T.getPosition();
+    pos.x *= eps;
+    pos.y *= eps;
+    pos.z *= eps;
+    T.setPosition(pos);
 }
 
 }

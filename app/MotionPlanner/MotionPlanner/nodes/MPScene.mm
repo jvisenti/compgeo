@@ -143,11 +143,15 @@
         {
             MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:environment->getActiveObject()];
             
-            activeNode.material.surfaceColor = BHGLColorRed;
+            activeNode.material.surfaceColor = BHGLColorMake(1.0f, 0.0f, 0.0f, 0.2f);
             activeNode.material.ambientColor = BHGLColorWhite;
             activeNode.material.diffuseColor = BHGLColorWhite;
             activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
             activeNode.material.shininess = 10.0f;
+            
+            activeNode.material.blendEnabled = GL_TRUE;
+            activeNode.material.blendSrcRGB = GL_SRC_ALPHA;
+            activeNode.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
             
             [self addChild:activeNode];
             
@@ -161,11 +165,15 @@
                 
                 MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
                 
-                obstacleNode.material.surfaceColor = BHGLColorYellow;
+                obstacleNode.material.surfaceColor = BHGLColorMake(1.0f, 1.0f, 0.0f, 0.2f);
                 obstacleNode.material.ambientColor = BHGLColorWhite;
                 obstacleNode.material.diffuseColor = BHGLColorWhite;
                 obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
                 obstacleNode.material.shininess = 10.0f;
+                
+                obstacleNode.material.blendEnabled = GL_TRUE;
+                obstacleNode.material.blendSrcRGB = GL_SRC_ALPHA;
+                obstacleNode.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
                 
                 [self addChild:obstacleNode];
             }

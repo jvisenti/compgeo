@@ -50,6 +50,8 @@ public:
       std::reverse(plan.begin(), plan.end());
       return true;
     }
+      
+      std::cout << "Dijkstra's search failed :(" << std::endl;
 
     return false;
   }

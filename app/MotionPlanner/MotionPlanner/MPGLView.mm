@@ -9,7 +9,8 @@
 #import "MPGLView.h"
 #import "BHGL.h"
 #import "MPReader.h"
-#include <Carbon/Carbon.h>
+#import "MPDijkstra3D.h"
+#import <Carbon/Carbon.h>
 
 const float kMPSceneMinScale    = 0.5f;
 const float kMPSceneMaxScale    = 2.0f;
@@ -18,6 +19,9 @@ const float kMPSceneScaleFactor = 0.2f;
 const float kMPObjectMotionIncrement = 0.02f;
 
 @interface MPGLView ()
+
+@property (nonatomic, assign) MP::Dijkstra3D *planner;
+@property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
@@ -189,6 +193,57 @@ const float kMPObjectMotionIncrement = 0.02f;
             key = kVK_Space;
             break;
             
+        case kVK_ANSI_P:
+        {
+            MP::Transform3D start(MPVec3Make(-1, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
+            MP::Transform3D goal(MPVec3Make(1, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
+            
+            if(!self.planner->plan(start, goal, self.plan))
+            {
+                NSLog(@"plan failed :(");
+            }
+            else
+            {
+                size_t dataSize = 3* self.plan.size() * sizeof(GLfloat);
+                GLfloat *vertices = (GLfloat *)malloc(dataSize);
+                
+                for (int i = 0; i < self.plan.size(); ++i)
+                {
+                    memcpy(&vertices[3*i], self.plan.at(i).getPosition().v, 3 * sizeof(GLfloat));
+                }
+                
+                BHGLVertexType vType = BHGLVertexTypeCreate(1);
+                vType.attribs[0] = BHGLVertexAttribPosition;
+                vType.types[0] = GL_FLOAT;
+                vType.lengths[0] = 3;
+                vType.normalized[0] = GL_FALSE;
+                vType.offsets[0] = (GLvoid *)0;
+                vType.stride = 3 * sizeof(GLfloat);
+                
+                BHGLMesh *mesh = [[BHGLMesh alloc] initWithVertexData:(const GLvoid *)vertices vertexDataSize:dataSize vertexType:&vType];
+                mesh.primitiveMode = GL_LINE_STRIP;
+                
+                BHGLVertexTypeFree(vType);
+                
+                BHGLModelNode *planModel = [[BHGLModelNode alloc] init];
+                planModel.mesh = mesh;
+                
+                [self.scene addChild:planModel];
+                
+                BHGLBasicAnimation *anim = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
+                    float t = current / duration;
+                    int i = (int)(t * (self.plan.size()-1));
+                    
+                    object.position = MPVec3ToGLKVector3(self.plan.at(i).getPosition());
+                    object.rotation = MPQuaternionToGLKQuaternion(self.plan.at(i).getRotation());
+                    object.scale = MPVec3ToGLKVector3(self.plan.at(i).getScale());
+                    
+                } duration:10.0];
+                
+                [self.scene.activeObject runAnimation:anim];
+            }
+        }
+            
         default:
             break;
     }
@@ -214,7 +269,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     glEnable(GL_POLYGON_SMOOTH);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     
-    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_DEPTH_TEST);
     
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -248,8 +303,13 @@ const float kMPObjectMotionIncrement = 0.02f;
             std::string filePath = std::string([chosenFile cStringUsingEncoding:NSUTF8StringEncoding]);
             
             MP::Reader reader(filePath);
-            MP::Environment3D *envrionment = reader.generateEnvironment3D();
-            self.scene = [[MPScene alloc] initWithEnvironment:envrionment];            
+            MP::Environment3D *environment = reader.generateEnvironment3D();
+            environment->setStepSize(0.1);
+            
+            self.scene = [[MPScene alloc] initWithEnvironment:environment];
+            
+            delete self.planner;
+            self.planner = new MP::Dijkstra3D(environment);
         }
     }];
 }
