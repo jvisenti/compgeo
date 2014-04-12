@@ -205,9 +205,7 @@ const float kMPObjectMotionIncrement = 0.02f;
 - (void)prepareOpenGL
 {
     [super prepareOpenGL];
-    
-    self.scene = [[MPScene alloc] init];
-    
+        
     glEnable(GL_MULTISAMPLE);
     
     glEnable(GL_LINE_SMOOTH);
