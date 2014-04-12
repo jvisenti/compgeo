@@ -12,9 +12,7 @@
 #ifndef _MPEnvironment3D_h
 #define _MPEnvironment3D_h
 
-#include "MPSearchState.h"
 #include "MPEnvironment.h"
-#include "MPTransform3D.h"
 #include "MPModel.h"
 #include <cmath>
 
@@ -23,24 +21,11 @@ namespace MP
 
 static bool operator==(const Transform3D &lhs, const Transform3D &rhs)
 {
-  // Only consider the (x, y, z) projection of the transform
-  // Also, assume that the coordinates are integer-valued
-  return (((int)lhs.getPosition().x == (int)rhs.getPosition().x) &&
-	  ((int)lhs.getPosition().y == (int)rhs.getPosition().y) &&
-	  ((int)lhs.getPosition().z == (int)rhs.getPosition().z));
-}
-
-static int transform3DHash(Transform3D t)
-{
-  const int p1 = 73856093;
-  const int p2 = 19349663;
-  const int p3 = 83492791;
-
-  // Assume that the coordinates are integer-valued
-  int x = (int)t.getPosition().x;
-  int y = (int)t.getPosition().y;
-  int z = (int)t.getPosition().z;
-  return ((x*p1) ^ (x*p2) ^ (x*p3));
+    // Only consider the (x, y, z) projection of the transform
+    // Also, assume that the coordinates are integer-valued
+    return (((int)lhs.getPosition().x == (int)rhs.getPosition().x) &&
+            ((int)lhs.getPosition().y == (int)rhs.getPosition().y) &&
+            ((int)lhs.getPosition().z == (int)rhs.getPosition().z));
 }
 
 typedef SearchState<Transform3D> SearchState3D;
@@ -48,8 +33,10 @@ typedef SearchState<Transform3D> SearchState3D;
 class Environment3D : public Environment<Transform3D>
 {
 public:
+  Environment3D();
+  Environment3D(const MPVec3 &size);
   Environment3D(const MPVec3 &origin, const MPVec3 &size);
-
+    
   ~Environment3D();
 
   void getSuccessors(SearchState3D *s, std::vector<SearchState3D *> &successors, std::vector<double> &costs);
@@ -63,6 +50,14 @@ public:
   void setSize(const MPVec3 &size) { size_ = size; }
 
   MPVec3 getSize() const { return size_; }
+    
+  void setActiveObject(Model *activeObject) { activeObject_ = activeObject; }
+    
+  Model* getActiveObject() const { return activeObject_; }
+    
+  void addObstacle(Model *obstacle) { obstacles_.push_back(obstacle); }
+    
+  const std::vector<Model *>& getObstacles() const { return obstacles_; }
 
   double getStepSize() const { return stepSize_; }
 

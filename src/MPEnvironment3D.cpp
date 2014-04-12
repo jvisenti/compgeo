@@ -9,7 +9,30 @@
 
 namespace MP
 {
+    
+int transform3DHash(Transform3D t)
+{
+    const int p1 = 73856093;
+    const int p2 = 19349663;
+    const int p3 = 83492791;
+    
+    // Assume that the coordinates are integer-valued
+    int x = (int)t.getPosition().x;
+    int y = (int)t.getPosition().y;
+    int z = (int)t.getPosition().z;
+    return ((x*p1) ^ (y*p2) ^ (z*p3));
+}
 
+Environment3D::Environment3D()
+: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Zero), activeObject_(nullptr)
+{
+}
+    
+Environment3D::Environment3D(const MPVec3 &size)
+  : Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(size), activeObject_(nullptr)
+{
+}
+    
 Environment3D::Environment3D(const MPVec3 &origin, const MPVec3 &size)
   : Environment<Transform3D>(transform3DHash), origin_(origin), size_(size), activeObject_(nullptr)
 {
