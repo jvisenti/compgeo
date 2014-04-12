@@ -321,7 +321,7 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
     if (l1degenerate || l2degenerate)
     {
         // single points can't properly intersect
-        return 0;
+        intersection = 0;
     }
     else if (MPFloatGreater(MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)), 0.0))
     {
