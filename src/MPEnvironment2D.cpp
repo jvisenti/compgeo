@@ -3,6 +3,19 @@
 namespace MP
 {
 
+int point2DHash(Point2D p)
+{
+  const int p1 = 73856093;
+  const int p2 = 19349663;
+  return ((p.x_*p1) ^ (p.y_*p2));
+}
+
+double euclideanHeuristic(Point2D start, Point2D goal)
+{
+  return std::sqrt(std::pow(goal.x_ - start.x_, 2) +
+		   std::pow(goal.y_ - start.y_, 2));
+}
+
 Environment2D::Environment2D(int xMin, int xMax, int yMin, int yMax)
   : Environment<Point2D>(point2DHash), xMin_(xMin), xMax_(xMax), yMin_(yMin), yMax_(yMax),
     obstacles_(point2DHash)

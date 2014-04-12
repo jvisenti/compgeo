@@ -8,6 +8,7 @@
 #include "MPHeap.h"
 #include "MPEnvironment2D.h"
 #include "MPDijkstraPlanner.h"
+#include "MPAStarPlanner.h"
 #include <iostream>
 #include <cmath>
 #include <cstdlib>
@@ -69,9 +70,10 @@ void test2DPlanner()
     MP::Environment2D env(-10, 10, -20, 20);
     // Read a map from a file
     env.readMap("map.txt");
-    MP::DijkstraPlanner<MP::Point2D> planner(&env);
+    //MP::DijkstraPlanner<MP::Point2D> planner(&env);
+    MP::AStarPlanner<MP::Point2D> planner(&env, MP::euclideanHeuristic);
     std::vector<MP::Point2D> plan;
-    MP::Point2D start(0, 0);
+    MP::Point2D start(0, -2);
     MP::Point2D goal(4, 4);
     if(planner.plan(start, goal, plan))
     {

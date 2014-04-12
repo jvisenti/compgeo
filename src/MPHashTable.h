@@ -12,7 +12,7 @@
 #include <vector>
 #include <iostream>
 
-#define DEFAULT_HASH_TABLE_SIZE 512
+#define DEFAULT_HASH_TABLE_SIZE 1024
 #define DEFAULT_MAX_LOAD_FACTOR 0.7
 
 namespace MP

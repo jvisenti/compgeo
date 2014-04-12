@@ -51,7 +51,8 @@ public:
       return true;
     }
       
-      std::cout << "Dijkstra's search failed :(" << std::endl;
+    std::cout << "Dijkstra's search failed after " << stateExpansions_
+	      << " state expansions" << std::endl;
 
     return false;
   }
