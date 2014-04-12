@@ -6,8 +6,8 @@
 //
 //  An 3D object prepresented by its mesh (vertices) and a state (pose)
 
-#ifndef __MotionPlanner__MPModel__
-#define __MotionPlanner__MPModel__
+#ifndef __MPModel__
+#define __MPModel__
 
 #include "MPMesh.h"
 #include "MPTransform3D.h"

@@ -9,7 +9,7 @@
 #define _MPMath_h
 
 #include <math.h>
-#include <stdio.h>
+#include "MPFloat.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -57,21 +57,10 @@ typedef struct _MPLine
     MPVec3 p0, v;  // line of form p0 + vt
 } MPLine;
     
-extern const MPVec3 MPVec3Zero;
-extern const MPQuaternion MPQuaternionIdentity;
-extern const MPMat4 MPMat4Identity;
-extern const float Inf;
+static const MPVec3 MPVec3Zero = {{0.0f, 0.0f, 0.0f}};
+static const MPQuaternion MPQuaternionIdentity = {{0.0f, 0.0f, 0.0f, 1.0f}};
+static const MPMat4 MPMat4Identity = {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}};
     
-static inline int MPFloatZero(float f)
-{
-    return fabs(f) <= 1e-5;
-}
-    
-static inline int MPFloatEqual(float a, float b)
-{
-    return MPFloatZero(a - b);
-}
-
 #pragma mark - vector3 functions
 
 static inline MPVec3 MPVec3Make(float x, float y, float z)
@@ -300,7 +289,7 @@ static inline MPSphere MPSphereMake(MPVec3 center, float radius)
 
 static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
 {
-    return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
+    return MPFloatLessEq(MPVec3EuclideanDistance(s1.center, s2.center), s1.radius + s2.radius);
 }
     
 #pragma mark - line functions
@@ -338,7 +327,7 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
         float dot1 = MPVec3DotProduct(dir, MPVec3Subtract(l1.p1, l2.p1));
         float dot2 = MPVec3DotProduct(dir, MPVec3Subtract(l1.p1, l2.p2));
         
-        intersection = (dot1 < 0 && dot2 > 0) || (dot1 > 0 && dot2 < 0);
+        intersection = (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0)) || (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0.0));
     }
     else if (l2degenerate)
     {
@@ -346,17 +335,17 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
         float dot1 = MPVec3DotProduct(dir, MPVec3Subtract(l2.p1, l1.p1));
         float dot2 = MPVec3DotProduct(dir, MPVec3Subtract(l2.p1, l1.p2));
         
-        intersection = (dot1 < 0 && dot2 > 0) || (dot1 > 0 && dot2 < 0);
+        intersection = (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0.0)) || (MPFloatLess(dot1, 0.0f) && MPFloatGreater(dot2, 0.0));
     }
-    else if (MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)) > 0)
+    else if (MPFloatGreater(MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)), 0.0))
     {
         // t1s < t2s on this edge i.e. a.___.b c.___.d
-        intersection = MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p2)) < 0;
+        intersection = MPFloatLess(MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p2)), 0.0);
     }
     else
     {
         // t1s > t2s on this edge i.e. c.___.d a.___.b
-        intersection = MPVec3DotProduct(MPVec3Subtract(l2.p2, l2.p1), MPVec3Subtract(l1.p1, l2.p2)) < 0;
+        intersection = MPFloatLess(MPVec3DotProduct(MPVec3Subtract(l2.p2, l2.p1), MPVec3Subtract(l1.p1, l2.p2)), 0.0);
     }
     
     return intersection;
@@ -426,14 +415,14 @@ static inline MPLineSegment MPTriangleProject(MPTriangle t, MPVec3 v)
     int min = 0;
     
     int i;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
-        if (MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[max])) > 0)
+        if (MPFloatGreater(MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[max])), 0.0))
         {
             max = i;
         }
         
-        else if (MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[min])) < 0)
+        else if (MPFloatLess(MPVec3DotProduct(v, MPVec3Subtract(t.p[i], t.p[min])), 0.0))
         {
             min = i;
         }
@@ -465,7 +454,7 @@ static inline int MPCoplanarTrianglesIntersect(MPTriangle t1, MPTriangle t2)
     // project each triangle to every possible edge. if it exists,
     // axis of separation will be perpendicular to one of the edges of the triangles
     int i;
-    for (i = 0; i < 6; i++)
+    for (i = 0; i < 6; ++i)
     {
         t1s = MPTriangleProject(t1, edges[i]);
         t2s = MPTriangleProject(t2, edges[i]);
@@ -494,7 +483,7 @@ static inline int MPTriangleIntersectsLine(MPTriangle tri, MPLine l, MPLineSegme
     float s;
     
     int i;
-    for (i = 0; i < 3; i++)
+    for (i = 0; i < 3; ++i)
     {
         intersections[i] = MPLineGetIntersection(MPLineMake(tri.p[i], edges[i]), l, &t[i], &s);
     }
@@ -503,14 +492,14 @@ static inline int MPTriangleIntersectsLine(MPTriangle tri, MPLine l, MPLineSegme
     int noInt;
     
     // TODO: use epsilon because float arithmetic?
-    if (t[0] < 0.0 || t[0] > 1.0)       noInt = 0;
-    else if (t[1] < 0.0 || t[1] > 1.0)  noInt = 1;
-    else if (t[2] < 0.0 || t[2] > 1.0)  noInt = 2;
+    if (MPFloatLess(t[0], 0.0) || MPFloatGreater(t[0], 1.0))       noInt = 0;
+    else if (MPFloatLess(t[1], 0.0) || MPFloatGreater(t[1], 1.0))  noInt = 1;
+    else                                                           noInt = 2;
     
     int t1 = (noInt + 3 - 1) % 3;
     int t2 = (noInt + 1) % 3;
     
-    if (t[t1] >= 0.0 && t[t1] <= 1.0 && t[t2] >= 0.0 && t[t2] <= 1.0)
+    if (MPFloatGreaterEq(t[t1], 0.0) && MPFloatLessEq(t[t1], 1.0) && MPFloatGreaterEq(t[t2], 0.0) && MPFloatLessEq(t[t2], 1.0))
     {
         if (MPVec3DotProduct(l.v, MPVec3Subtract(intersections[t2], intersections[t1])) > 0)
         {

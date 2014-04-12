@@ -8,6 +8,7 @@
 
 #import "MPGLView.h"
 #import "BHGL.h"
+#import "MPReader.h"
 #include <Carbon/Carbon.h>
 
 const float kMPSceneMinScale    = 0.5f;
@@ -19,6 +20,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 @interface MPGLView ()
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
+
+- (IBAction)openFile:(NSMenuItem *)sender;
 
 @end
 
@@ -38,6 +41,9 @@ const float kMPObjectMotionIncrement = 0.02f;
         // Must specify the 3.2 Core Profile to use OpenGL 3.2
         NSOpenGLPFAOpenGLProfile,
         NSOpenGLProfileVersion3_2Core,
+        NSOpenGLPFASupersample,
+        NSOpenGLPFASampleBuffers, 1,
+        NSOpenGLPFASamples, 4,
         0
     };
     
@@ -199,8 +205,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 - (void)prepareOpenGL
 {
     [super prepareOpenGL];
-    
-    self.scene = [[MPScene alloc] init];
+        
+    glEnable(GL_MULTISAMPLE);
     
     glEnable(GL_LINE_SMOOTH);
     glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
@@ -224,6 +230,28 @@ const float kMPObjectMotionIncrement = 0.02f;
         _movementAnimations = [NSMutableDictionary dictionaryWithCapacity:6];
     }
     return _movementAnimations;
+}
+
+- (void)openFile:(NSMenuItem *)sender
+{
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    
+    [openPanel setCanChooseFiles:YES];
+    [openPanel setCanChooseDirectories:NO];
+    [openPanel setAllowsMultipleSelection:NO];
+    
+    [openPanel beginWithCompletionHandler:^(NSInteger result) {
+        if (result == NSFileHandlingPanelOKButton)
+        {
+            NSString *chosenFile = [[openPanel URL] path];
+            
+            std::string filePath = std::string([chosenFile cStringUsingEncoding:NSUTF8StringEncoding]);
+            
+            MP::Reader reader(filePath);
+            MP::Environment3D *envrionment = reader.generateEnvironment3D();
+            self.scene = [[MPScene alloc] initWithEnvironment:envrionment];            
+        }
+    }];
 }
 
 @end

@@ -158,7 +158,7 @@ MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh)
     left = right = bottom = top = back = front = (MPVec3 *)mesh->vertexData;
     
     int i;
-    for (i = 0; i < mesh->numVertices; i++)
+    for (i = 0; i < mesh->numVertices; ++i)
     {
         MPVec3 *current = (MPVec3 *)((char *)mesh->vertexData + (i * mesh->stride));
         

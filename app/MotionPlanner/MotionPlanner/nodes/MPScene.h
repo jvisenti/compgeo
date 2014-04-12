@@ -7,13 +7,18 @@
 //
 
 #import "BHGLScene.h"
+#import "MPEnvironment3D.h"
 #import "MPModelNode.h"
 
 @interface MPScene : BHGLScene
 
-@property (nonatomic, readonly) BHGLNode *rootNode;
-@property (nonatomic, strong) BHGLNode *activeObject;
+@property (nonatomic, assign) const MP::Environment3D *environment;
 
-- (BOOL)transform:(MP::Transform3D &)transform validForModel:(MPModelNode *)model;
+@property (nonatomic, readonly) BHGLNode *rootNode;
+@property (nonatomic, readonly) MPModelNode *activeObject;
+
+- (id)initWithEnvironment:(const MP::Environment3D *)environment;
+
+- (BOOL)transform:(MP::Transform3D &)transform validForModel:(MP::Model *)model;
 
 @end
