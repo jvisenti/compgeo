@@ -21,6 +21,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
+- (IBAction)openFile:(NSMenuItem *)sender;
+
 @end
 
 @implementation MPGLView
@@ -204,9 +206,7 @@ const float kMPObjectMotionIncrement = 0.02f;
 {
     [super prepareOpenGL];
     
-    MP::Reader reader("/Users/Rob/Projects/compgeo/src/geometry/scene.env");
-    MP::Environment3D *envrionment = reader.generateEnvironment3D();    
-    self.scene = [[MPScene alloc] initWithEnvironment:envrionment];
+    self.scene = [[MPScene alloc] init];
     
     glEnable(GL_MULTISAMPLE);
     
@@ -232,6 +232,28 @@ const float kMPObjectMotionIncrement = 0.02f;
         _movementAnimations = [NSMutableDictionary dictionaryWithCapacity:6];
     }
     return _movementAnimations;
+}
+
+- (void)openFile:(NSMenuItem *)sender
+{
+    NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+    
+    [openPanel setCanChooseFiles:YES];
+    [openPanel setCanChooseDirectories:NO];
+    [openPanel setAllowsMultipleSelection:NO];
+    
+    [openPanel beginWithCompletionHandler:^(NSInteger result) {
+        if (result == NSFileHandlingPanelOKButton)
+        {
+            NSString *chosenFile = [[openPanel URL] path];
+            
+            std::string filePath = std::string([chosenFile cStringUsingEncoding:NSUTF8StringEncoding]);
+            
+            MP::Reader reader(filePath);
+            MP::Environment3D *envrionment = reader.generateEnvironment3D();
+            self.scene = [[MPScene alloc] initWithEnvironment:envrionment];            
+        }
+    }];
 }
 
 @end

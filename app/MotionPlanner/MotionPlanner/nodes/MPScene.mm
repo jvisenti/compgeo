@@ -84,6 +84,35 @@
     self.lightUniform = @"u_Lights";
 }
 
+- (void)dealloc
+{
+    if (self.environment)
+    {
+        if (self.environment->getActiveObject())
+        {
+//            TODO: need to free these somehow
+//            free((void *)self.environment->getActiveObject()->getMesh()->vertexData);
+//            free((void *)self.environment->getActiveObject()->getMesh()->indexData);
+            
+            delete self.environment->getActiveObject();
+        }
+        
+        const std::vector<MP::Model *> &obstacles = self.environment->getObstacles();
+        for(std::vector<MP::Model * const>::iterator it = obstacles.begin(); it != obstacles.end(); ++it)
+        {
+            MP::Model *otherModel = *it;
+            
+//            TODO: need to free these somehow
+//            free((void *)otherModel->getMesh()->vertexData);
+//            free((void *)otherModel->getMesh()->indexData);
+            
+            delete otherModel;
+        }
+        
+        delete self.environment;
+    }
+}
+
 #pragma mark - property overrides
 
 - (void)addChild:(BHGLNode *)node

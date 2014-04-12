@@ -10,6 +10,8 @@
 
 @interface BHGLNode ()
 {
+    
+    __weak BHGLNode *_parent;
     __weak BHGLScene *_scene;
 }
 
@@ -22,6 +24,7 @@
 
 @implementation BHGLNode
 
+@synthesize parent = _parent;
 @synthesize scene = _scene;
 
 - (id)init
