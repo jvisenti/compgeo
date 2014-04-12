@@ -308,6 +308,7 @@ static inline MPLine MPLineMake(MPVec3 p0, MPVec3 v)
     return l;
 }
     
+/* returns 1 if l1,l2 PROPERLY intersect, 0 otherwise */
 static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
 {
     // TODO: assumes a->b and c->d, but should also work for b->a or d->c
@@ -317,25 +318,10 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
     int l1degenerate = MPVec3EqualToVec3(l1.p1, l1.p2);
     int l2degenerate = MPVec3EqualToVec3(l2.p1, l2.p2);
     
-    if (l1degenerate && l2degenerate)
+    if (l1degenerate || l2degenerate)
     {
-        intersection = MPVec3EqualToVec3(l1.p1, l2.p1);
-    }
-    else if (l1degenerate)
-    {
-        MPVec3 dir = MPVec3Subtract(l2.p2, l2.p1);
-        float dot1 = MPVec3DotProduct(dir, MPVec3Subtract(l1.p1, l2.p1));
-        float dot2 = MPVec3DotProduct(dir, MPVec3Subtract(l1.p1, l2.p2));
-        
-        intersection = (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0)) || (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0.0));
-    }
-    else if (l2degenerate)
-    {
-        MPVec3 dir = MPVec3Subtract(l1.p2, l1.p1);
-        float dot1 = MPVec3DotProduct(dir, MPVec3Subtract(l2.p1, l1.p1));
-        float dot2 = MPVec3DotProduct(dir, MPVec3Subtract(l2.p1, l1.p2));
-        
-        intersection = (MPFloatLess(dot1, 0.0) && MPFloatGreater(dot2, 0.0)) || (MPFloatLess(dot1, 0.0f) && MPFloatGreater(dot2, 0.0));
+        // single points can't properly intersect
+        intersection = 0;
     }
     else if (MPFloatGreater(MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)), 0.0))
     {

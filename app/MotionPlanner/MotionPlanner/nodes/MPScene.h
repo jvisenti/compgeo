@@ -12,13 +12,22 @@
 
 @interface MPScene : BHGLScene
 
-@property (nonatomic, assign) const MP::Environment3D *environment;
-
+@property (atomic, readonly, getter = isUserInteractionEnabled) BOOL userInteractionEnabled;
 @property (nonatomic, readonly) BHGLNode *rootNode;
-@property (nonatomic, readonly) MPModelNode *activeObject;
 
-- (id)initWithEnvironment:(const MP::Environment3D *)environment;
+- (id)initWithEnvironment:(MP::Environment3D *)environment;
+
+- (void)setEnvironment:(MP::Environment3D *)environment;
+- (const MP::Environment3D *)getEnvironment;
 
 - (BOOL)transform:(MP::Transform3D &)transform validForModel:(MP::Model *)model;
+
+- (BOOL)planTo:(const MP::Transform3D &)goal;
+- (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal;
+
+- (void)executePlan;
+
+- (void)animateActiveObject:(BHGLAnimation *)animation;
+- (void)removeAnimationFromActiveObject:(BHGLAnimation *)animation;
 
 @end

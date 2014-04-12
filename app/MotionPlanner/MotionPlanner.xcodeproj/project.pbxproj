@@ -45,6 +45,8 @@
 		D416EECE18F6E55A00993BAF /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EECC18F6E55A00993BAF /* MPEnvironment3D.cpp */; };
 		D416EED118F77E1900993BAF /* MPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D416EECF18F77E1900993BAF /* MPReader.cpp */; };
 		D4F24EA418F88395002F3CB0 /* MPTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */; };
+		D4F24EA918F97CF6002F3CB0 /* MPCube.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EA818F97CF6002F3CB0 /* MPCube.mm */; };
+		D4F24EAC18F98913002F3CB0 /* MPPathNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EAB18F98913002F3CB0 /* MPPathNode.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -138,6 +140,10 @@
 		D416EED018F77E1900993BAF /* MPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPReader.h; path = ../../src/MPReader.h; sourceTree = "<group>"; };
 		D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPTokenizer.cpp; path = ../../src/MPTokenizer.cpp; sourceTree = "<group>"; };
 		D4F24EA318F88395002F3CB0 /* MPTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTokenizer.h; path = ../../src/MPTokenizer.h; sourceTree = "<group>"; };
+		D4F24EA718F97CF6002F3CB0 /* MPCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCube.h; sourceTree = "<group>"; };
+		D4F24EA818F97CF6002F3CB0 /* MPCube.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPCube.mm; sourceTree = "<group>"; };
+		D4F24EAA18F98913002F3CB0 /* MPPathNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPPathNode.h; sourceTree = "<group>"; };
+		D4F24EAB18F98913002F3CB0 /* MPPathNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPPathNode.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -285,6 +291,10 @@
 				D416EDC818EEF00F00993BAF /* MPScene.mm */,
 				D416EDCA18EF168900993BAF /* MPModelNode.h */,
 				D416EDCB18EF168900993BAF /* MPModelNode.mm */,
+				D4F24EAA18F98913002F3CB0 /* MPPathNode.h */,
+				D4F24EAB18F98913002F3CB0 /* MPPathNode.mm */,
+				D4F24EA718F97CF6002F3CB0 /* MPCube.h */,
+				D4F24EA818F97CF6002F3CB0 /* MPCube.mm */,
 			);
 			path = nodes;
 			sourceTree = "<group>";
@@ -428,12 +438,14 @@
 				5C64E05518F8D4E60089A27C /* MPDijkstra3D.cpp in Sources */,
 				D416EECE18F6E55A00993BAF /* MPEnvironment3D.cpp in Sources */,
 				D416EDAF18EEED3D00993BAF /* BHGLTexture.m in Sources */,
+				D4F24EAC18F98913002F3CB0 /* MPPathNode.mm in Sources */,
 				D416EDAD18EEED3D00993BAF /* BHGLScene.m in Sources */,
 				D416EDAC18EEED3D00993BAF /* BHGLProgram.m in Sources */,
 				D416EDC918EEF00F00993BAF /* MPScene.mm in Sources */,
 				D416EDA918EEED3D00993BAF /* BHGLMesh.m in Sources */,
 				D416EEA518EF942A00993BAF /* MPTransform3D.cpp in Sources */,
 				D416EDAB18EEED3D00993BAF /* BHGLNode.m in Sources */,
+				D4F24EA918F97CF6002F3CB0 /* MPCube.mm in Sources */,
 				D416EED118F77E1900993BAF /* MPReader.cpp in Sources */,
 				D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */,
 				D416EDA118EEED3D00993BAF /* BHGLAnimatedObject.m in Sources */,

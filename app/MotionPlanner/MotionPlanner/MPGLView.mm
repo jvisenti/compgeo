@@ -12,16 +12,14 @@
 #import "MPDijkstra3D.h"
 #import <Carbon/Carbon.h>
 
-const float kMPSceneMinScale    = 0.5f;
-const float kMPSceneMaxScale    = 2.0f;
-const float kMPSceneScaleFactor = 0.2f;
+#define kMPSceneScaleFactor 0.2f
 
-const float kMPObjectMotionIncrement = 0.02f;
+#define kMPObjectMotionIncrement 0.02f
+
+// TODO: maybe this should be based on the total size of the environment or active object or something
+#define kMPEnvironmentStepSize 0.1
 
 @interface MPGLView ()
-
-@property (nonatomic, assign) MP::Dijkstra3D *planner;
-@property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
@@ -85,10 +83,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     float scale = dx < 0 ? 1.0f - kMPSceneScaleFactor : 1.0f + kMPSceneScaleFactor;
     
-    scale *= self.scene.rootNode.scale.x;
-    scale = fmaxf(kMPSceneMinScale, fminf(scale, kMPSceneMaxScale));
-    
-    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleTo:GLKVector3Make(scale, scale, scale) withDuration:0.1];
+    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleBy:GLKVector3Make(scale, scale, scale) withDuration:0.1];
     
     [self.scene.rootNode runAnimation:scaleAnim];
 }
@@ -145,13 +140,13 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     if (key && ![self.movementAnimations objectForKey:@(key)])
     {
-        __weak BHGLNode *wnode = self.scene.activeObject;
-        BHGLBasicAnimation *trans = [BHGLBasicAnimation runBlock:^{
-            wnode.position = GLKVector3Add(wnode.position, dp);
-        }];
+        BHGLBasicAnimation *trans = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
+            object.position = GLKVector3Add(object.position, dp);
+
+        } duration:0.0];
         trans.repeats = YES;
         
-        [self.scene.activeObject runAnimation:trans];
+        [self.scene animateActiveObject:trans];
         
         [self.movementAnimations setObject:trans forKey:@(key)];
     }
@@ -195,52 +190,12 @@ const float kMPObjectMotionIncrement = 0.02f;
             
         case kVK_ANSI_P:
         {
-            MP::Transform3D start(MPVec3Make(-1, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
+            // TODO: be able to plan to any state
             MP::Transform3D goal(MPVec3Make(1, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
             
-            if(!self.planner->plan(start, goal, self.plan))
+            if ([self.scene planTo:goal])
             {
-                NSLog(@"plan failed :(");
-            }
-            else
-            {
-                size_t dataSize = 3* self.plan.size() * sizeof(GLfloat);
-                GLfloat *vertices = (GLfloat *)malloc(dataSize);
-                
-                for (int i = 0; i < self.plan.size(); ++i)
-                {
-                    memcpy(&vertices[3*i], self.plan.at(i).getPosition().v, 3 * sizeof(GLfloat));
-                }
-                
-                BHGLVertexType vType = BHGLVertexTypeCreate(1);
-                vType.attribs[0] = BHGLVertexAttribPosition;
-                vType.types[0] = GL_FLOAT;
-                vType.lengths[0] = 3;
-                vType.normalized[0] = GL_FALSE;
-                vType.offsets[0] = (GLvoid *)0;
-                vType.stride = 3 * sizeof(GLfloat);
-                
-                BHGLMesh *mesh = [[BHGLMesh alloc] initWithVertexData:(const GLvoid *)vertices vertexDataSize:dataSize vertexType:&vType];
-                mesh.primitiveMode = GL_LINE_STRIP;
-                
-                BHGLVertexTypeFree(vType);
-                
-                BHGLModelNode *planModel = [[BHGLModelNode alloc] init];
-                planModel.mesh = mesh;
-                
-                [self.scene addChild:planModel];
-                
-                BHGLBasicAnimation *anim = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
-                    float t = current / duration;
-                    int i = (int)(t * (self.plan.size()-1));
-                    
-                    object.position = MPVec3ToGLKVector3(self.plan.at(i).getPosition());
-                    object.rotation = MPQuaternionToGLKQuaternion(self.plan.at(i).getRotation());
-                    object.scale = MPVec3ToGLKVector3(self.plan.at(i).getScale());
-                    
-                } duration:10.0];
-                
-                [self.scene.activeObject runAnimation:anim];
+                [self.scene executePlan];
             }
         }
             
@@ -252,7 +207,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     if (anim)
     {
-        [self.scene.activeObject removeAnimation:anim];
+        [self.scene removeAnimationFromActiveObject:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
 }
@@ -260,6 +215,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 - (void)prepareOpenGL
 {
     [super prepareOpenGL];
+    
+    self.scene = [[MPScene alloc] init];
         
     glEnable(GL_MULTISAMPLE);
     
@@ -269,7 +226,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     glEnable(GL_POLYGON_SMOOTH);
     glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
     
-//    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_DEPTH_TEST);
     
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
@@ -304,12 +261,13 @@ const float kMPObjectMotionIncrement = 0.02f;
             
             MP::Reader reader(filePath);
             MP::Environment3D *environment = reader.generateEnvironment3D();
-            environment->setStepSize(0.1);
             
-            self.scene = [[MPScene alloc] initWithEnvironment:environment];
-            
-            delete self.planner;
-            self.planner = new MP::Dijkstra3D(environment);
+            if (environment)
+            {
+                environment->setStepSize(kMPEnvironmentStepSize);
+                
+                self.scene.environment = environment;
+            }
         }
     }];
 }
