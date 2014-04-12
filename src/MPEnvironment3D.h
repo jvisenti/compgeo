@@ -62,11 +62,14 @@ public:
   double getStepSize() const { return stepSize_; }
 
   void setStepSize(double s) { stepSize_ = s; }
+    
+  bool isValid(Transform3D &T) const;
+  bool isValidForModel(Transform3D &T, Model *model) const;
 
 private:
   bool inBounds(int x, int y, int z);
-
-  bool isValid(Transform3D &T);
+    
+  bool stateValid(Transform3D &T) const;
 
   MPVec3 origin_;
   MPVec3 size_;

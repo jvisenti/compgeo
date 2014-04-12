@@ -110,7 +110,7 @@ public:
     HeapElement<T> e;
     e.key = k;
     e.state = s;
-    e.state->setHeapIndex(data_.size());
+    e.state->setHeapIndex((int)data_.size());
     data_.push_back(e);
     // Percolate up
     int i = size()-1;
@@ -130,7 +130,7 @@ public:
   }
 
   /* Returns the number of elements in the heap */
-  inline int size() const { return data_.size(); }
+  inline int size() const { return (int)data_.size(); }
 
   void print()
   {

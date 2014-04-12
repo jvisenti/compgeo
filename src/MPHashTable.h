@@ -80,7 +80,7 @@ public:
   bool remove(SearchState<T> *s)
   {
     // Find the bin where the state should be
-    int slot = hash_(s->getValue());
+    // int slot = hash_(s->getValue());
 
     // @todo
   }

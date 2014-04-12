@@ -70,7 +70,7 @@ void Environment3D::getSuccessors(SearchState3D *s,
 	  position.z = (float)(zs+k);
 	  T.setPosition(position);
 	  // Check if active object collides with any obstacle at this state
-	  if(!isValid(T))
+	  if(!stateValid(T))
 	  {
 	    std::cout << "(" << (xs+i)*stepSize_ << ", " << (ys+j)*stepSize_
 		      << ", " << (zs+k)*stepSize_ << ") is an invalid state"
@@ -135,23 +135,33 @@ bool Environment3D::inBounds(int x, int y, int z)
 
   return false;
 }
-
-bool Environment3D::isValid(Transform3D &T)
+    
+bool Environment3D::stateValid(Transform3D &T) const
 {
     Transform3D worldT = T;
     worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
     
-  bool valid = true;
-  for(auto it = obstacles_.begin(); it != obstacles_.end(); ++it)
-  {
-    if(activeObject_->wouldCollideWithModel(worldT, **it))
-    {
-      valid = false;
-      break;
-    }
-  }
+    return this->isValid(worldT);
+}
 
-  return valid;
+bool Environment3D::isValid(Transform3D &T) const
+{
+    return this->isValidForModel(T, activeObject_);
+}
+    
+bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
+{
+    bool valid = true;
+    for(auto it = obstacles_.begin(); it != obstacles_.end(); ++it)
+    {
+        if(model->wouldCollideWithModel(T, **it))
+        {
+            valid = false;
+            break;
+        }
+    }
+    
+    return valid;
 }
 
 }
