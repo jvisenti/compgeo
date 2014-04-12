@@ -12,7 +12,7 @@
 #include <vector>
 #include <iostream>
 
-#define DEFAULT_HASH_TABLE_SIZE 512
+#define DEFAULT_HASH_TABLE_SIZE 1024
 #define DEFAULT_MAX_LOAD_FACTOR 0.7
 
 namespace MP
@@ -80,7 +80,7 @@ public:
   bool remove(SearchState<T> *s)
   {
     // Find the bin where the state should be
-    int slot = hash_(s->getValue());
+    // int slot = hash_(s->getValue());
 
     // @todo
   }
@@ -117,6 +117,8 @@ public:
 
   inline int size() const { return numElements_; }
 
+  inline int getNumSlots() const { return (int)slots_.size(); }
+
   void clear()
   {
     for(auto it = slots_.begin(); it != slots_.end(); ++it)
@@ -131,6 +133,8 @@ public:
       }
     }
   }
+
+  inline HashTableElement<T> *getSlot(int i) { return slots_[i]; }
 
 private:
   void increaseTableSize()

@@ -23,7 +23,7 @@ Transform3D::Transform3D(const MPVec3 &pos, const MPVec3 &scale, const MPQuatern
 
 Transform3D::~Transform3D()
 {
-    this->invalidateMatrixCache();
+//    this->invalidateMatrixCache();
 }
 
 void Transform3D::setPosition(const MPVec3 &position)
