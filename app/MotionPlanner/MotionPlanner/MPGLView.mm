@@ -12,11 +12,9 @@
 #import "MPDijkstra3D.h"
 #import <Carbon/Carbon.h>
 
-const float kMPSceneMinScale    = 0.5f;
-const float kMPSceneMaxScale    = 2.0f;
-const float kMPSceneScaleFactor = 0.2f;
+#define kMPSceneScaleFactor 0.2f
 
-const float kMPObjectMotionIncrement = 0.02f;
+#define kMPObjectMotionIncrement 0.02f
 
 // TODO: maybe this should be based on the total size of the environment or active object or something
 #define kMPEnvironmentStepSize 0.1
@@ -85,10 +83,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     float scale = dx < 0 ? 1.0f - kMPSceneScaleFactor : 1.0f + kMPSceneScaleFactor;
     
-    scale *= self.scene.rootNode.scale.x;
-    scale = fmaxf(kMPSceneMinScale, fminf(scale, kMPSceneMaxScale));
-    
-    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleTo:GLKVector3Make(scale, scale, scale) withDuration:0.1];
+    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleBy:GLKVector3Make(scale, scale, scale) withDuration:0.1];
     
     [self.scene.rootNode runAnimation:scaleAnim];
 }

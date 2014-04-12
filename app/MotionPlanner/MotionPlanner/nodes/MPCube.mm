@@ -95,7 +95,6 @@ const GLuint Indices[] = {
 
 #pragma mark - private methods
 
-static MPMesh *SharedMesh;
 + (MPMesh *)sharedMesh
 {
     static MPMesh *SharedMesh;

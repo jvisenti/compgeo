@@ -13,6 +13,8 @@
 #import "MPDijkstra3D.h"
 #import "MPUtils.h"
 
+#define kMPSceneMaxSize 4.0f
+
 #define kMPPlanStatesPerSec 5
 
 @interface MPScene ()
@@ -22,8 +24,6 @@
 
 @property (nonatomic, assign) MP::Dijkstra3D *planner;
 @property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
-
-@property (nonatomic, strong) BHGLLight *light;
 
 @property (nonatomic, weak) MPCube *boundingBox;
 @property (nonatomic, weak) MPPathNode *pathNode;
@@ -50,8 +50,6 @@
         [self setupProgram];
         [self setupCamera];
         [self setupLights];
-        
-        self.rootNode.position = GLKVector3Make(0.0f, 0.0f, -8.0f);
     }
     return self;
 }
@@ -89,6 +87,15 @@
 }
 
 #pragma mark - public interface
+
+- (void)configureProgram:(BHGLProgram *)program
+{
+    [super configureProgram:program];
+    
+    GLKVector3 eye = GLKVector3Make(0.0f, 0.0f, 1.0f);
+    
+    glUniform3fv([self.program uniformPosition:@"u_EyeDirection"], 1, eye.v);
+}
 
 - (void)setEnvironment:(MP::Environment3D *)environment
 {
@@ -141,6 +148,11 @@
         _environment = environment;
         
         [self updateBoundingBox];
+        
+        float maxAxis = 2.0f * fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
+        float scale = kMPSceneMaxSize / maxAxis;
+        
+        self.rootNode.scale = GLKVector3Make(scale, scale, scale);
     }
 }
 
@@ -234,21 +246,22 @@
 {
     [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:15]];
     
+    self.activeCamera.position = GLKVector3Make(0.0f, 2.0f, 10.0f);
     self.activeCamera.target = self.rootNode;
 }
 
 - (void)setupLights
 {
-    self.light = [[BHGLLight alloc] init];
-    self.light.type = BHGLLightTypePoint;
-    self.light.ambientColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
-    self.light.color = BHGLColorWhite;
-    self.light.position = GLKVector3Make(1.0f, 2.0f, -4.0f);
-    self.light.constantAttenuation = 0.6f;
-    self.light.linearAttenuation = 0.08f;
-    self.light.quadraticAttenuation = 0.06f;
+    BHGLLight *light = [[BHGLLight alloc] init];
+    light.type = BHGLLightTypePoint;
+    light.ambientColor = BHGLColorMake(0.8f, 0.8f, 0.8f, 1.0f);
+    light.color = BHGLColorWhite;
+    light.position = GLKVector3Make(1.0f, 2.0f, 2.0f);
+    light.constantAttenuation = 0.0f;
+    light.linearAttenuation = 0.02f;
+    light.quadraticAttenuation = 0.017f;
     
-    [self addLight:self.light];
+    [self addLight:light];
     
     self.lightUniform = @"u_Lights";
 }
