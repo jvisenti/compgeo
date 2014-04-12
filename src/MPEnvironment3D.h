@@ -16,6 +16,7 @@
 #include "MPEnvironment.h"
 #include "MPTransform3D.h"
 #include "MPModel.h"
+#include <cmath>
 
 namespace MP
 {
@@ -63,9 +64,19 @@ public:
 
   MPVec3 getSize() const { return size_; }
 
+  double getStepSize() const { return stepSize_; }
+
+  void setStepSize(double s) { stepSize_ = s; }
+
 private:
+  bool inBounds(int x, int y, int z);
+
+  bool isValid(Transform3D &T);
+
   MPVec3 origin_;
   MPVec3 size_;
+
+  double stepSize_;
 
   Model *activeObject_;
   std::vector<Model *> obstacles_;

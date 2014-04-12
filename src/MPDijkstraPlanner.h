@@ -29,7 +29,7 @@ public:
   {
   }
 
-  bool plan(T start, T goal, std::vector<T> &plan)
+  virtual bool plan(T start, T goal, std::vector<T> &plan)
   {
     SearchState<T> *s = this->environment_->addState(start);
     SearchState<T> *g = this->environment_->addState(goal);
@@ -65,7 +65,7 @@ public:
       SearchState<T> *x = Q.remove().state;
       CLOSED_.insert(x);
       // Check if x is the goal state
-      if(x->getValue() == goalState->getValue())
+      if(equals(x->getValue(), goalState->getValue()))
       {
         /* std::cout << "Dijkstra's search found goal state" << std::endl; */
         return true;
@@ -88,6 +88,11 @@ public:
       }
     }
     return false;
+  }
+
+  virtual bool equals(T a, T b)
+  {
+    return (a == b);
   }
 
 protected:
