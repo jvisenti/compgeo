@@ -10,9 +10,8 @@
 #import "BHGLBasicAnimation.h"
 
 @interface BHGLCamera ()
-{
-    GLKMatrix4 *_cachedProjectionMatrix;
-}
+
+@property (atomic, assign) GLKMatrix4 *cachedProjectionMatrix;
 
 - (void)invalidateProjectionMatrixCache;
 
@@ -27,9 +26,14 @@
         _type = BHGLCameraTypePerspective;
         self.up = GLKVector3Make(0.0f, 1.0f, 0.0f);
         
-        _cachedProjectionMatrix = NULL;
+        self.cachedProjectionMatrix = NULL;
     }
     return self;
+}
+
+- (void)dealloc
+{
+    [self invalidateProjectionMatrixCache];
 }
 
 - (id)initWithFieldOfView:(float)fov aspectRatio:(float)aspectRatio nearClippingPlane:(float)near farClippingPlane:(float)far
@@ -124,7 +128,7 @@
 
 - (GLKMatrix4)projectionMatrix
 {
-    if (!_cachedProjectionMatrix)
+    if (!self.cachedProjectionMatrix)
     {
         GLKMatrix4 proj = GLKMatrix4Identity;
         
@@ -137,12 +141,12 @@
             proj = GLKMatrix4MakeOrtho(self.left, self.right, self.bottom, self.top, self.near, self.far);
         }
         
-        _cachedProjectionMatrix = (GLKMatrix4 *)malloc(sizeof(GLKMatrix4));
-        memcpy(_cachedProjectionMatrix, &proj, sizeof(GLKMatrix4));
+        self.cachedProjectionMatrix = (GLKMatrix4 *)malloc(sizeof(GLKMatrix4));
+        memcpy(self.cachedProjectionMatrix, &proj, sizeof(GLKMatrix4));
     }
     
     
-    return *_cachedProjectionMatrix;
+    return *self.cachedProjectionMatrix;
 }
 
 - (GLKMatrix4)viewMatrix
@@ -181,10 +185,10 @@
 
 - (void)invalidateProjectionMatrixCache
 {
-    if (_cachedProjectionMatrix)
+    if (self.cachedProjectionMatrix)
     {
-        free(_cachedProjectionMatrix);
-        _cachedProjectionMatrix = NULL;
+        free(self.cachedProjectionMatrix);
+        self.cachedProjectionMatrix = NULL;
     }
 }
 

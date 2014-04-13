@@ -9,9 +9,8 @@
 #import "BHGLMath.h"
 
 @interface BHGLAnimatedObject ()
-{
-    GLKMatrix4 *_cachedModelMatrix;
-}
+
+@property (atomic, assign) GLKMatrix4 *cachedModelMatrix;
 
 @property (nonatomic, strong) NSMutableArray *animationQueue;
 @property (nonatomic, strong) NSMutableArray *animations;
@@ -30,15 +29,20 @@
         self.rotation = GLKQuaternionIdentity;
         self.scale = GLKVector3Make(1.0f, 1.0f, 1.0f);
         
-        _cachedModelMatrix = NULL;
+        self.cachedModelMatrix = NULL;
     }
     
     return self;
 }
 
+- (void)dealloc
+{
+    [self invalidateModelMatrixCache];
+}
+
 - (GLKMatrix4)modelMatrix
 {
-    if (!_cachedModelMatrix)
+    if (!self.cachedModelMatrix)
     {
         GLKMatrix4 scale = GLKMatrix4MakeScale(self.scale.x, self.scale.y, self.scale.z);
         GLKMatrix4 rotation = GLKMatrix4MakeWithQuaternion(self.rotation);
@@ -50,11 +54,11 @@
         mat.m[13] += self.position.y;
         mat.m[14] += self.position.z;
     
-        _cachedModelMatrix = (GLKMatrix4 *)malloc(sizeof(GLKMatrix4));
-        memcpy(_cachedModelMatrix, &mat, sizeof(GLKMatrix4));
+        self.cachedModelMatrix = (GLKMatrix4 *)malloc(sizeof(GLKMatrix4));
+        memcpy(self.cachedModelMatrix, &mat, sizeof(GLKMatrix4));
     }
     
-    return *_cachedModelMatrix;
+    return *self.cachedModelMatrix;
 }
 
 - (void)setPosition:(GLKVector3)position
@@ -150,10 +154,10 @@
 
 - (void)invalidateModelMatrixCache
 {
-    if (_cachedModelMatrix)
+    if (self.cachedModelMatrix)
     {
-        free(_cachedModelMatrix);
-        _cachedModelMatrix = NULL;
+        free(self.cachedModelMatrix);
+        self.cachedModelMatrix = NULL;
     }
 }
 
