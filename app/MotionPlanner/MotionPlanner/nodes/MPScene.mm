@@ -10,7 +10,7 @@
 #import "BHGL.h"
 #import "MPCube.h"
 #import "MPPathNode.h"
-#import "MPDijkstra3D.h"
+#import "MPAStar3D.h"
 #import "MPUtils.h"
 
 #define kMPSceneMaxSize 4.0f
@@ -22,7 +22,7 @@
     MP::Environment3D *_environment;
 }
 
-@property (nonatomic, assign) MP::Dijkstra3D *planner;
+@property (nonatomic, assign) MP::AStar3D *planner;
 @property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
 
 @property (nonatomic, weak) MPCube *boundingBox;
@@ -142,7 +142,7 @@
                 [self addChild:obstacleNode];
             }
             
-            self.planner = new MP::Dijkstra3D(environment);
+            self.planner = new MP::AStar3D(environment, MP::distanceHeuristic);
         }
         
         _environment = environment;

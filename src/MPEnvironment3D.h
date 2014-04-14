@@ -19,14 +19,7 @@
 namespace MP
 {
 
-static bool operator==(const Transform3D &lhs, const Transform3D &rhs)
-{
-    // Only consider the (x, y, z) projection of the transform
-    // Also, assume that the coordinates are integer-valued
-    return (((int)lhs.getPosition().x == (int)rhs.getPosition().x) &&
-            ((int)lhs.getPosition().y == (int)rhs.getPosition().y) &&
-            ((int)lhs.getPosition().z == (int)rhs.getPosition().z));
-}
+extern bool operator==(const Transform3D &lhs, const Transform3D &rhs);
 
 typedef SearchState<Transform3D> SearchState3D;
 
@@ -66,7 +59,7 @@ public:
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;
 
-private:
+protected:
   bool inBounds(int x, int y, int z);
     
   bool stateValid(Transform3D &T) const;

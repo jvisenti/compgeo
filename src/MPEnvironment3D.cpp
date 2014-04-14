@@ -10,6 +10,15 @@
 namespace MP
 {
     
+bool operator==(const Transform3D &lhs, const Transform3D &rhs)
+{
+    // Only consider the (x, y, z) projection of the transform
+    // Also, assume that the coordinates are integer-valued
+    return (((int)lhs.getPosition().x == (int)rhs.getPosition().x) &&
+            ((int)lhs.getPosition().y == (int)rhs.getPosition().y) &&
+            ((int)lhs.getPosition().z == (int)rhs.getPosition().z));
+}
+    
 int transform3DHash(Transform3D t)
 {
     const int p1 = 73856093;
@@ -111,7 +120,7 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
   {
     float distance = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition());
     // @todo variable costs?
-    cost = 1.0f;
+    cost = distance;
     return true;
   }
   std::cout << "Error: no edge between (" << s->getValue().getPosition().x*stepSize_ <<
