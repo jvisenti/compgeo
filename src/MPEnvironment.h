@@ -53,7 +53,17 @@ public:
 protected:
   void clear()
   {
-    // @todo clear all the allocated states
+    // The environment is responsible for allocating and deallocating states
+    for(int i = 0; i < states_.getNumSlots(); ++i)
+    {
+      HashTableElement<T> *it = states_.getSlot(i);
+      while(it != nullptr)
+      {
+	delete it->state;
+	it->state = 0;
+	it = it->next;
+      }
+    }
   }
 
   HashTable<T> states_;

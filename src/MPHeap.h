@@ -67,6 +67,7 @@ public:
     // Restore the min-heap property
     heapify(0);
 
+    temp.state->setHeapIndex(INVALID_INDEX);
     return temp;
   }
 
@@ -110,7 +111,7 @@ public:
     HeapElement<T> e;
     e.key = k;
     e.state = s;
-    e.state->setHeapIndex(data_.size());
+    e.state->setHeapIndex((int)data_.size());
     data_.push_back(e);
     // Percolate up
     int i = size()-1;
@@ -130,7 +131,7 @@ public:
   }
 
   /* Returns the number of elements in the heap */
-  inline int size() const { return data_.size(); }
+  inline int size() const { return (int)data_.size(); }
 
   void print()
   {
@@ -183,13 +184,6 @@ private:
   /* Clear all elements in the heap */
   void clear()
   {
-    for(int i = 0; i < size(); ++i)
-    {
-      // Delete the allocated state @todo this could be problematic if others hold 
-      // a pointer to this state
-      delete data_[i].state;
-      data_[i].state = 0;
-    }
     data_.clear();
   }
 

@@ -11,9 +11,10 @@
 #include "MPSearchState.h"
 #include <vector>
 #include <iostream>
+#include <cassert>
 
-#define DEFAULT_HASH_TABLE_SIZE 512
-#define DEFAULT_MAX_LOAD_FACTOR 0.7
+#define DEFAULT_HASH_TABLE_SIZE 1024
+#define DEFAULT_MAX_LOAD_FACTOR 0.75
 
 namespace MP
 {
@@ -49,14 +50,13 @@ public:
 
   void insert(SearchState<T> *s)
   {
-    // @todo If the load factor is two high, double the size of the hash table,
+    // If the load factor is two high, double the size of the hash table,
     // and re-insert all the elements
-    // ...
     if(getLoadFactor() > getMaxLoadFactor())
     {
       std::cout << "Warning: hash table has exceeded the maximum load factor ("
 		<< getLoadFactor() << ")" << std::endl;
-      increaseTableSize();
+      doubleTableSize();
     }
 
     int slot = hash_(s->getValue()) % slots_.size();
@@ -80,7 +80,7 @@ public:
   bool remove(SearchState<T> *s)
   {
     // Find the bin where the state should be
-    int slot = hash_(s->getValue());
+    // int slot = hash_(s->getValue());
 
     // @todo
   }
@@ -117,6 +117,8 @@ public:
 
   inline int size() const { return numElements_; }
 
+  inline int getNumSlots() const { return (int)slots_.size(); }
+
   void clear()
   {
     for(auto it = slots_.begin(); it != slots_.end(); ++it)
@@ -132,10 +134,46 @@ public:
     }
   }
 
+  inline HashTableElement<T> *getSlot(int i) { return slots_[i]; }
+
 private:
-  void increaseTableSize()
+  void doubleTableSize()
   {
-    // @todo
+    // Increase the table size by doubling
+    std::vector<HashTableElement<T> *> newSlots(slots_.size()*2);
+    int newNumElements = 0;
+    std::cout << "Increasing table size from " << slots_.size()
+              << " to " << slots_.size()*2 << std::endl;
+    for(auto it = slots_.begin(); it != slots_.end(); ++it)
+    {
+      // Re-insert each element into the new hash table
+      HashTableElement<T> *current = *it;
+      while(current != nullptr)
+      {
+	HashTableElement<T> *next = current->next;
+	current->next = nullptr;
+
+	// Hash into new resized table
+	int slot = hash_(current->state->getValue()) % newSlots.size();
+
+	HashTableElement<T> *s = newSlots[slot];
+	if(s == nullptr)
+	  newSlots[slot] = current;
+	else
+	{
+	  while(s->next != nullptr)
+	    s = s->next;
+
+	  s->next = current;
+	}
+	newNumElements++;
+
+	current = next;
+      }
+    }
+
+    assert(numElements_ == newNumElements);
+    slots_ = std::move(newSlots);
   }
 
   int numElements_;

@@ -44,7 +44,7 @@ public:
     /* returns true if moving to the given transform would cause a collision with the given model */
     bool wouldCollideWithModel(Transform3D &transform, Model &model);
         
-private:
+protected:
     MPMesh *mesh;
     
     Transform3D transform;

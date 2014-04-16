@@ -12,6 +12,7 @@
 #include "MPEnvironment.h"
 #include <vector>
 #include <fstream>
+#include <cmath>
 
 namespace MP
 {
@@ -31,14 +32,11 @@ struct Point2D
   }
 };
 
-typedef SearchState<Point2D> SearchState2D;
+int point2DHash(Point2D p);
 
-inline int point2DHash(Point2D p)
-{
-  const int p1 = 73856093;
-  const int p2 = 19349663;
-  return ((p.x_*p1) ^ (p.y_*p2));
-}
+double euclideanHeuristic(const Point2D &start, const Point2D &goal);
+
+typedef SearchState<Point2D> SearchState2D;
 
 class Environment2D : public Environment<Point2D>
 {

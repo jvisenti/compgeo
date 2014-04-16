@@ -9,13 +9,15 @@
 #import "MPGLView.h"
 #import "BHGL.h"
 #import "MPReader.h"
-#include <Carbon/Carbon.h>
+#import "MPDijkstra3D.h"
+#import <Carbon/Carbon.h>
 
-const float kMPSceneMinScale    = 0.5f;
-const float kMPSceneMaxScale    = 2.0f;
-const float kMPSceneScaleFactor = 0.2f;
+#define kMPSceneScaleFactor 0.2f
 
-const float kMPObjectMotionIncrement = 0.02f;
+#define kMPObjectMotionIncrement 0.02f
+
+// TODO: maybe this should be based on the total size of the environment or active object or something
+#define kMPEnvironmentStepSize 0.2
 
 @interface MPGLView ()
 
@@ -81,10 +83,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     float scale = dx < 0 ? 1.0f - kMPSceneScaleFactor : 1.0f + kMPSceneScaleFactor;
     
-    scale *= self.scene.rootNode.scale.x;
-    scale = fmaxf(kMPSceneMinScale, fminf(scale, kMPSceneMaxScale));
-    
-    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleTo:GLKVector3Make(scale, scale, scale) withDuration:0.1];
+    BHGLBasicAnimation *scaleAnim = [BHGLBasicAnimation scaleBy:GLKVector3Make(scale, scale, scale) withDuration:0.1];
     
     [self.scene.rootNode runAnimation:scaleAnim];
 }
@@ -141,13 +140,13 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     if (key && ![self.movementAnimations objectForKey:@(key)])
     {
-        __weak BHGLNode *wnode = self.scene.activeObject;
-        BHGLBasicAnimation *trans = [BHGLBasicAnimation runBlock:^{
-            wnode.position = GLKVector3Add(wnode.position, dp);
-        }];
+        BHGLBasicAnimation *trans = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
+            object.position = GLKVector3Add(object.position, dp);
+
+        } duration:0.0];
         trans.repeats = YES;
         
-        [self.scene.activeObject runAnimation:trans];
+        [self.scene animateActiveObject:trans];
         
         [self.movementAnimations setObject:trans forKey:@(key)];
     }
@@ -189,6 +188,17 @@ const float kMPObjectMotionIncrement = 0.02f;
             key = kVK_Space;
             break;
             
+        case kVK_ANSI_P:
+        {
+            // TODO: be able to plan to any state
+            MP::Transform3D goal(MPVec3Make(1, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
+            
+            if ([self.scene planTo:goal])
+            {
+                [self.scene executePlan];
+            }
+        }
+            
         default:
             break;
     }
@@ -197,7 +207,7 @@ const float kMPObjectMotionIncrement = 0.02f;
     
     if (anim)
     {
-        [self.scene.activeObject removeAnimation:anim];
+        [self.scene removeAnimationFromActiveObject:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
 }
@@ -205,6 +215,8 @@ const float kMPObjectMotionIncrement = 0.02f;
 - (void)prepareOpenGL
 {
     [super prepareOpenGL];
+    
+    self.scene = [[MPScene alloc] init];
         
     glEnable(GL_MULTISAMPLE);
     
@@ -248,8 +260,14 @@ const float kMPObjectMotionIncrement = 0.02f;
             std::string filePath = std::string([chosenFile cStringUsingEncoding:NSUTF8StringEncoding]);
             
             MP::Reader reader(filePath);
-            MP::Environment3D *envrionment = reader.generateEnvironment3D();
-            self.scene = [[MPScene alloc] initWithEnvironment:envrionment];            
+            MP::Environment3D *environment = reader.generateEnvironment3D();
+            
+            if (environment)
+            {
+                environment->setStepSize(kMPEnvironmentStepSize);
+                
+                self.scene.environment = environment;
+            }
         }
     }];
 }

@@ -13,10 +13,9 @@
 
 @interface MPModelNode : BHGLModelNode
 
-@property (nonatomic, weak) MPScene *scene;
+@property (nonatomic, assign) MP::Model *model;
 
-- (void)setModel:(MP::Model *)model;
-- (MP::Model *)model;
+@property (nonatomic, weak) MPScene *scene;
 
 - (id)initWithModel:(MP::Model *)model;
 

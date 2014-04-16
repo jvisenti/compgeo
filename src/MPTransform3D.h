@@ -32,7 +32,7 @@ public:
     /* returns the TRS matrix using the position, rotation, and scale properties */
     MPMat4 getMatrix();
     
-private:
+protected:
     MPMat4 *matrixCache;
     
     MPVec3 position;
