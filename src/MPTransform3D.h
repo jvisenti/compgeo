@@ -18,6 +18,7 @@ class Transform3D
 public:
     Transform3D();
     Transform3D(const MPVec3 &pos, const MPVec3 &scale, const MPQuaternion &rotation);
+    Transform3D(const Transform3D &other);
     ~Transform3D();
     
     void setPosition(const MPVec3 &position);

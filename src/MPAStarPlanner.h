@@ -42,7 +42,7 @@ public:
     bool success = aStarSearch(s, g);
     std::cout << "A* search terminated after "
 	      << stateExpansions_ << " state expansions in " 
-	      << GET_ELAPSED_MICRO(timer) << " microseconds" << std::endl;
+	      << GET_ELAPSED_MICRO(timer) / 1000000.0 << " seconds" << std::endl;
 
     if(success)
     {

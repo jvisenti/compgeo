@@ -21,9 +21,18 @@ Transform3D::Transform3D(const MPVec3 &pos, const MPVec3 &scale, const MPQuatern
     this->init(pos, scale, rotation);
 }
 
+Transform3D::Transform3D(const Transform3D &other)
+{
+    this->position = other.getPosition();
+    this->rotation = other.getRotation();
+    this->scale = other.getScale();
+    
+    this->matrixCache = nullptr;
+}
+
 Transform3D::~Transform3D()
 {
-//    this->invalidateMatrixCache();
+    this->invalidateMatrixCache();
 }
 
 void Transform3D::setPosition(const MPVec3 &position)

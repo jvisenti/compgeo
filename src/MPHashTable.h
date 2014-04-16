@@ -23,7 +23,7 @@ namespace MP
 template <typename T>
 struct HashTableElement
 {
-  HashTableElement() { }
+  HashTableElement() : state(nullptr), next(nullptr) { }
   HashTableElement(SearchState<T> *s, HashTableElement<T> *n)
   : state(s), next(n) { }
 
@@ -68,7 +68,7 @@ public:
     else
     {
       while(e->next != nullptr)
-	e = e->next;
+	    e = e->next;
 
       e->next = new HashTableElement<T>(s, nullptr);
     }
@@ -99,8 +99,8 @@ public:
       /* 		<< ", " << t.y_ << ")" << std::endl; */
       if(e->state->getValue() == t)
       {
-	/* std::cout << "Found in the hash table" << std::endl; */
-	return e->state;
+	    /* std::cout << "Found in the hash table" << std::endl; */
+	    return e->state;
       }
 
       e = e->next;
@@ -120,18 +120,20 @@ public:
   inline int getNumSlots() const { return (int)slots_.size(); }
 
   void clear()
-  {
-    for(auto it = slots_.begin(); it != slots_.end(); ++it)
-    {
-      HashTableElement<T> *hit = *it;
-      while(hit != nullptr)
+  {      
+      for(int i = 0; i < slots_.size(); ++i)
       {
-	HashTableElement<T> *next = hit->next;
-	delete hit;
-	hit = 0;
-	hit = next;
+          HashTableElement<T> *hit = slots_.at(i);
+          while(hit != nullptr)
+          {
+              HashTableElement<T> *next = hit->next;
+              delete hit;
+              hit = next;
+          }
+          
+          slots_[i] = nullptr;
+          numElements_--;
       }
-    }
   }
 
   inline HashTableElement<T> *getSlot(int i) { return slots_[i]; }
@@ -150,25 +152,25 @@ private:
       HashTableElement<T> *current = *it;
       while(current != nullptr)
       {
-	HashTableElement<T> *next = current->next;
-	current->next = nullptr;
+	    HashTableElement<T> *next = current->next;
+	    current->next = nullptr;
 
-	// Hash into new resized table
-	int slot = hash_(current->state->getValue()) % newSlots.size();
+	    // Hash into new resized table
+	    int slot = hash_(current->state->getValue()) % newSlots.size();
 
-	HashTableElement<T> *s = newSlots[slot];
-	if(s == nullptr)
-	  newSlots[slot] = current;
-	else
-	{
-	  while(s->next != nullptr)
-	    s = s->next;
+	    HashTableElement<T> *s = newSlots[slot];
+	    if(s == nullptr)
+	      newSlots[slot] = current;
+	    else
+	    {
+	      while(s->next != nullptr)
+	        s = s->next;
 
-	  s->next = current;
-	}
-	newNumElements++;
+	      s->next = current;
+	    }
+        newNumElements++;
 
-	current = next;
+        current = next;
       }
     }
 

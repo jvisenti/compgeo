@@ -184,6 +184,10 @@ private:
   /* Clear all elements in the heap */
   void clear()
   {
+      for(auto it = data_.begin(); it != data_.end(); ++it)
+      {
+          it->state->setHeapIndex(INVALID_INDEX);
+      }
     data_.clear();
   }
 

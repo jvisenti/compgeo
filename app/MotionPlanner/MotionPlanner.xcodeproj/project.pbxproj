@@ -12,8 +12,6 @@
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
 		D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4B18EEEC0300993BAF /* MPAppDelegate.m */; };
 		D416ED4F18EEEC0300993BAF /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = D416ED4D18EEEC0300993BAF /* MainMenu.xib */; };
-		D416ED5818EEEC0300993BAF /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED5718EEEC0300993BAF /* XCTest.framework */; };
-		D416ED5918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED6D18EEED2600993BAF /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED6C18EEED2600993BAF /* OpenGL.framework */; };
 		D416ED6F18EEED2B00993BAF /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED6E18EEED2B00993BAF /* GLKit.framework */; };
 		D416EDA118EEED3D00993BAF /* BHGLAnimatedObject.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED7318EEED3D00993BAF /* BHGLAnimatedObject.m */; };
@@ -50,19 +48,10 @@
 		D4F24EC718FC775A002F3CB0 /* MPAStar3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EC518FC775A002F3CB0 /* MPAStar3D.cpp */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		D416ED5A18EEEC0300993BAF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D416ED2D18EEEC0300993BAF /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = D416ED3418EEEC0300993BAF;
-			remoteInfo = MotionPlanner;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXFileReference section */
 		5C64E05318F8D4E60089A27C /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
 		5C64E05418F8D4E60089A27C /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
+		5CBA52DA18FF2CA600E08F28 /* MPHeap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MPHeap.h; path = ../../src/MPHeap.h; sourceTree = "<group>"; };
 		D416ED3518EEEC0300993BAF /* MotionPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416ED3818EEEC0300993BAF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		D416ED3B18EEEC0300993BAF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -74,7 +63,6 @@
 		D416ED4A18EEEC0300993BAF /* MPAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MPAppDelegate.h; sourceTree = "<group>"; };
 		D416ED4B18EEEC0300993BAF /* MPAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MPAppDelegate.m; sourceTree = "<group>"; };
 		D416ED4E18EEEC0300993BAF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		D416ED5618EEEC0300993BAF /* MotionPlannerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MotionPlannerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416ED5718EEEC0300993BAF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		D416ED6C18EEED2600993BAF /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = System/Library/Frameworks/OpenGL.framework; sourceTree = SDKROOT; };
 		D416ED6E18EEED2B00993BAF /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
@@ -164,15 +152,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D416ED5318EEEC0300993BAF /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				D416ED5918EEEC0300993BAF /* Cocoa.framework in Frameworks */,
-				D416ED5818EEEC0300993BAF /* XCTest.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -191,7 +170,6 @@
 			isa = PBXGroup;
 			children = (
 				D416ED3518EEEC0300993BAF /* MotionPlanner.app */,
-				D416ED5618EEEC0300993BAF /* MotionPlannerTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -317,6 +295,7 @@
 				D416EEA318EF942A00993BAF /* MPTransform3D.cpp */,
 				D416EEA418EF942A00993BAF /* MPTransform3D.h */,
 				D4F24EC918FC7AD5002F3CB0 /* MPHashTable.h */,
+				5CBA52DA18FF2CA600E08F28 /* MPHeap.h */,
 				D4F24EC818FC79DB002F3CB0 /* MPEnvironment.h */,
 				D416EECC18F6E55A00993BAF /* MPEnvironment3D.cpp */,
 				D416EECD18F6E55A00993BAF /* MPEnvironment3D.h */,
@@ -364,24 +343,6 @@
 			productReference = D416ED3518EEEC0300993BAF /* MotionPlanner.app */;
 			productType = "com.apple.product-type.application";
 		};
-		D416ED5518EEEC0300993BAF /* MotionPlannerTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = D416ED6918EEEC0300993BAF /* Build configuration list for PBXNativeTarget "MotionPlannerTests" */;
-			buildPhases = (
-				D416ED5218EEEC0300993BAF /* Sources */,
-				D416ED5318EEEC0300993BAF /* Frameworks */,
-				D416ED5418EEEC0300993BAF /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				D416ED5B18EEEC0300993BAF /* PBXTargetDependency */,
-			);
-			name = MotionPlannerTests;
-			productName = MotionPlannerTests;
-			productReference = D416ED5618EEEC0300993BAF /* MotionPlannerTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -391,11 +352,6 @@
 				CLASSPREFIX = MP;
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "Brockenhaus Studio";
-				TargetAttributes = {
-					D416ED5518EEEC0300993BAF = {
-						TestTargetID = D416ED3418EEEC0300993BAF;
-					};
-				};
 			};
 			buildConfigurationList = D416ED3018EEEC0300993BAF /* Build configuration list for PBXProject "MotionPlanner" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -411,7 +367,6 @@
 			projectRoot = "";
 			targets = (
 				D416ED3418EEEC0300993BAF /* MotionPlanner */,
-				D416ED5518EEEC0300993BAF /* MotionPlannerTests */,
 			);
 		};
 /* End PBXProject section */
@@ -424,13 +379,6 @@
 				D416EE0418EF1EBE00993BAF /* lighting.fsh in Resources */,
 				D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */,
 				D416ED4F18EEEC0300993BAF /* MainMenu.xib in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		D416ED5418EEEC0300993BAF /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -476,22 +424,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		D416ED5218EEEC0300993BAF /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		D416ED5B18EEEC0300993BAF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = D416ED3418EEEC0300993BAF /* MotionPlanner */;
-			targetProxy = D416ED5A18EEEC0300993BAF /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		D416ED4D18EEEC0300993BAF /* MainMenu.xib */ = {
@@ -615,46 +548,6 @@
 			};
 			name = Release;
 		};
-		D416ED6A18EEEC0300993BAF /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MotionPlanner.app/Contents/MacOS/MotionPlanner";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MotionPlanner/MotionPlanner-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "MotionPlannerTests/MotionPlannerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Debug;
-		};
-		D416ED6B18EEEC0300993BAF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/MotionPlanner.app/Contents/MacOS/MotionPlanner";
-				COMBINE_HIDPI_IMAGES = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(inherited)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "MotionPlanner/MotionPlanner-Prefix.pch";
-				INFOPLIST_FILE = "MotionPlannerTests/MotionPlannerTests-Info.plist";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -672,15 +565,6 @@
 			buildConfigurations = (
 				D416ED6718EEEC0300993BAF /* Debug */,
 				D416ED6818EEEC0300993BAF /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		D416ED6918EEEC0300993BAF /* Build configuration list for PBXNativeTarget "MotionPlannerTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				D416ED6A18EEEC0300993BAF /* Debug */,
-				D416ED6B18EEEC0300993BAF /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
