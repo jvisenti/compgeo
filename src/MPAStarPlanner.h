@@ -11,6 +11,7 @@
 #include "MPPlanner.h"
 #include "MPHeap.h"
 #include "MPHashTable.h"
+#include "MPTimer.h"
 #include <algorithm>
 
 namespace MP
@@ -36,9 +37,12 @@ public:
     SearchState<T> *s = this->environment_->addState(start);
     SearchState<T> *g = this->environment_->addState(goal);
     stateExpansions_ = 0;
+    Timer timer;
+    timer.start();
     bool success = aStarSearch(s, g);
     std::cout << "A* search terminated after "
-	      << stateExpansions_ << " state expansions" << std::endl;
+	      << stateExpansions_ << " state expansions in " 
+	      << GET_ELAPSED_MICRO(timer) << " microseconds" << std::endl;
 
     if(success)
     {
