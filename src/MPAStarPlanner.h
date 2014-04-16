@@ -20,7 +20,7 @@ template <typename T>
 class AStarPlanner : public Planner<T>
 {
 public:
-  typedef double (*heuristicptr)(T, T);
+  typedef double (*heuristicptr)(const T&, const T&);
 
   AStarPlanner(Environment<T> *environment, heuristicptr heuristic)
     : Planner<T>(environment), heuristic_(heuristic), CLOSED_(environment->getHashFunction()), stateExpansions_(0)
@@ -71,8 +71,8 @@ public:
       // Check if s is the goal state
       if(s->getValue() == goalState->getValue())
       {
-	std::cout << "A* search found goal state" << std::endl;
-	return true;
+	    std::cout << "A* search found goal state" << std::endl;
+	    return true;
       }
       CLOSED_.insert(s);
       std::vector<SearchState<T> *> neighbors;

@@ -17,7 +17,7 @@
 #define kMPObjectMotionIncrement 0.02f
 
 // TODO: maybe this should be based on the total size of the environment or active object or something
-#define kMPEnvironmentStepSize 0.1
+#define kMPEnvironmentStepSize 0.2
 
 @interface MPGLView ()
 
