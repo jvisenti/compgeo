@@ -10,7 +10,7 @@ int point2DHash(Point2D p)
   return ((p.x_*p1) ^ (p.y_*p2));
 }
 
-double euclideanHeuristic(Point2D start, Point2D goal)
+double euclideanHeuristic(const Point2D &start, const Point2D &goal)
 {
   return std::sqrt(std::pow(goal.x_ - start.x_, 2) +
 		   std::pow(goal.y_ - start.y_, 2));

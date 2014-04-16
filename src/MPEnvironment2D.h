@@ -34,7 +34,7 @@ struct Point2D
 
 int point2DHash(Point2D p);
 
-double euclideanHeuristic(Point2D start, Point2D goal);
+double euclideanHeuristic(const Point2D &start, const Point2D &goal);
 
 typedef SearchState<Point2D> SearchState2D;
 
