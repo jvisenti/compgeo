@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>30E6A237-4A31-441E-AA08-FE14372FAE7B</string>
+	<string>E6AEBB72-EBF6-487B-B8F5-5C81B656F199</string>
 	<key>IDESourceControlProjectName</key>
 	<string>MotionPlanner</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>56B81708-9DB4-4D68-BBE4-0EF302F7684D</key>
-		<string>https://github.com/jvisenti/compgeo.git</string>
+		<key>1ABCC2D6-11B4-40E2-8322-202A921F82A1</key>
+		<string>https://github.com/eratner/compgeo.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>app/MotionPlanner/MotionPlanner.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>56B81708-9DB4-4D68-BBE4-0EF302F7684D</key>
+		<key>1ABCC2D6-11B4-40E2-8322-202A921F82A1</key>
 		<string>../../../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/jvisenti/compgeo.git</string>
+	<string>https://github.com/eratner/compgeo.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>56B81708-9DB4-4D68-BBE4-0EF302F7684D</string>
+	<string>1ABCC2D6-11B4-40E2-8322-202A921F82A1</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>56B81708-9DB4-4D68-BBE4-0EF302F7684D</string>
+			<string>1ABCC2D6-11B4-40E2-8322-202A921F82A1</string>
 			<key>IDESourceControlWCCName</key>
-			<string>compgeo</string>
+			<string>compgeo-ellis</string>
 		</dict>
 	</array>
 </dict>

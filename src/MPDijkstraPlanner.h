@@ -21,7 +21,7 @@ class DijkstraPlanner : public Planner<T>
 {
 public:
   DijkstraPlanner(Environment<T> *environment) 
-    : Planner<T>(environment), CLOSED_(environment->getHashFunction())
+    : Planner<T>(environment), CLOSED_(environment->getHashFunction()), stateExpansions_(0)
   {
   }
 
@@ -29,11 +29,14 @@ public:
   {
   }
 
-  bool plan(T start, T goal, std::vector<T> &plan)
+  virtual bool plan(T start, T goal, std::vector<T> &plan)
   {
     SearchState<T> *s = this->environment_->addState(start);
     SearchState<T> *g = this->environment_->addState(goal);
+    stateExpansions_ = 0;
     bool success = dijkstraSearch(s, g);
+    std::cout << "Dijkstra's search terminated after "
+	      << stateExpansions_ << " state expansions" << std::endl;
 
     if(success)
     {
@@ -47,6 +50,9 @@ public:
       std::reverse(plan.begin(), plan.end());
       return true;
     }
+      
+    std::cout << "Dijkstra's search failed after " << stateExpansions_
+	      << " state expansions" << std::endl;
 
     return false;
   }
@@ -62,13 +68,14 @@ public:
       SearchState<T> *x = Q.remove().state;
       CLOSED_.insert(x);
       // Check if x is the goal state
-      if(x->getValue() == goalState->getValue())
+      if(equals(x->getValue(), goalState->getValue()))
       {
-        std::cout << "Dijkstra's search found goal state" << std::endl;
+        /* std::cout << "Dijkstra's search found goal state" << std::endl; */
         return true;
       }
       std::vector<SearchState<T> *> neighbors;
       std::vector<double> costs;
+      stateExpansions_++;
       this->environment_->getSuccessors(x, neighbors, costs);
       for(auto it = neighbors.begin(); it != neighbors.end(); ++it)
       {
@@ -80,10 +87,15 @@ public:
           CLOSED_.insert(*it);
           Q.insertState(*it, (*it)->getPathCost());
         }
-        else std::cout << "Already visited!" << std::endl;
+        /* else std::cout << "Already visited!" << std::endl; */
       }
     }
     return false;
+  }
+
+  virtual bool equals(T a, T b)
+  {
+    return (a == b);
   }
 
 protected:
@@ -100,6 +112,8 @@ protected:
   }
 
   HashTable<T> CLOSED_;
+
+  int stateExpansions_;
 
 };
 

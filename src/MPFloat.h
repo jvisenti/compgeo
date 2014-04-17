@@ -16,7 +16,7 @@ extern "C" {
 #endif
     
 // we can change this if we want
-#define MP_FLT_EPSILON FLT_EPSILON
+#define MP_FLT_EPSILON 1e-4
     
 static const float Inf = FLT_MAX;
     
