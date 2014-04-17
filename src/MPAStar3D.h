@@ -1,9 +1,8 @@
 //
 //  MPAStar3D.h
-//  MotionPlanner
 //
 //  Created by John Visentin on 4/14/14.
-//  Copyright (c) 2014 Brockenhaus Studio. All rights reserved.
+//  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 
 #ifndef __MPAStar3D__

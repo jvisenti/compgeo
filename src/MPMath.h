@@ -308,7 +308,7 @@ static inline MPLine MPLineMake(MPVec3 p0, MPVec3 v)
     return l;
 }
     
-/* returns 1 if l1,l2 PROPERLY intersect, 0 otherwise */
+/* returns 1 if l1,l2 overlap at more than one point, 0 otherwise */
 static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegment l2)
 {
     // TODO: assumes a->b and c->d, but should also work for b->a or d->c
@@ -320,7 +320,7 @@ static inline int MPCollinearLineSegmentsIntersect(MPLineSegment l1, MPLineSegme
     
     if (l1degenerate || l2degenerate)
     {
-        // single points can't properly intersect
+        // single points can't overlap
         intersection = 0;
     }
     else if (MPFloatGreater(MPVec3DotProduct(MPVec3Subtract(l1.p2, l1.p1), MPVec3Subtract(l2.p1, l1.p1)), 0.0))

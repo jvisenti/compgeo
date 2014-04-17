@@ -250,7 +250,7 @@
 
 - (void)setupCamera
 {
-    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:15]];
+    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:40.0]];
     
     self.activeCamera.position = GLKVector3Make(0.0f, 2.0f, 10.0f);
     self.activeCamera.target = self.rootNode;

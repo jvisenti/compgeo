@@ -6,6 +6,7 @@
 //
 
 #include "MPEnvironment3D.h"
+#include "MPTimer.h"
 
 namespace MP
 {
@@ -159,6 +160,9 @@ bool Environment3D::isValid(Transform3D &T) const
 
 bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
 {
+//    Timer timer;
+//    timer.start();
+    
     bool valid = true;
     for(auto it = obstacles_.begin(); it != obstacles_.end(); ++it)
     {
@@ -168,6 +172,9 @@ bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
             break;
         }
     }
+    
+//    std::cout << "Collision detection took "
+//    << GET_ELAPSED_MICRO(timer) << " microseconds" << std::endl;
     
     return valid;
 }

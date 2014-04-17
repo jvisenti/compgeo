@@ -68,6 +68,29 @@
     return YES;
 }
 
+- (void)rightMouseUp:(NSEvent *)theEvent
+{
+//    TODO: something along the lines to convert mouse to world coordinates
+//    NSPoint mouseLoc = [theEvent locationInWindow];
+//    
+//    GLint viewport[4];
+//    glGetIntegerv(GL_VIEWPORT, viewport);
+//    
+//    mouseLoc.x = (2.0 * mouseLoc.x / viewport[2]) - 1.0f;
+//    mouseLoc.y = (2.0 * mouseLoc.y / viewport[3]) - 1.0f;
+//    
+//    GLKVector4 clip = GLKVector4Make(mouseLoc.x, mouseLoc.y, -1.0f, 1.0f);
+//    
+//    GLKVector4 eye = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.projectionMatrix, NULL), clip);
+//    eye.z = -1.0f;
+//    eye.w = 0.0f;
+//    
+//    GLKVector4 world = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.viewMatrix, NULL), eye);
+//    GLKVector3 world3 = GLKVector3Normalize(GLKVector3Make(world.x, world.y, world.z));
+//    
+//    NSLog(@"%.3f, %.3f, %.3f", world3.x, world3.y, world3.z);
+}
+
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
@@ -136,12 +159,13 @@
             break;
     }
     
-    dp = GLKQuaternionRotateVector3(GLKQuaternionInvert(self.scene.rootNode.rotation), dp);
-    
     if (key && ![self.movementAnimations objectForKey:@(key)])
     {
+        __weak MPGLView *wself = self;
         BHGLBasicAnimation *trans = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
-            object.position = GLKVector3Add(object.position, dp);
+            
+            GLKVector3 t = GLKQuaternionRotateVector3(GLKQuaternionInvert(wself.scene.rootNode.rotation), dp);
+            object.position = GLKVector3Add(object.position, t);
 
         } duration:0.0];
         trans.repeats = YES;
@@ -191,7 +215,7 @@
         case kVK_ANSI_P:
         {
             // TODO: be able to plan to any state
-            MP::Transform3D goal(MPVec3Make(0, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
+            MP::Transform3D goal(MPVec3Make(1.5, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
             
             if ([self.scene planTo:goal])
             {
