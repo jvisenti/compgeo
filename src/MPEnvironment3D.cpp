@@ -80,7 +80,7 @@ void Environment3D::getSuccessors(SearchState3D *s,
                     T.setPosition(position);
                     
                     // Check if active object collides with any obstacle at this state
-                    if(!stateValid(T))
+                    if(!this->stateValid(T))
                     {
                         continue;
                     }
@@ -144,7 +144,7 @@ bool Environment3D::inBounds(int x, int y, int z)
     return false;
 }
 
-bool Environment3D::stateValid(Transform3D &T) const
+bool Environment3D::stateValid(const Transform3D &T) const
 {
     Transform3D worldT = T;
     worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));

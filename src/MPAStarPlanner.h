@@ -34,6 +34,12 @@ public:
 
   bool plan(T start, T goal, std::vector<T> &plan)
   {
+    if (!this->environment_->stateValid(start) || !this->environment_->stateValid(goal))
+    {
+        std::cout << "A* plan failed because start/goal states are invalid" << std::endl;
+        return false;
+    }
+      
     SearchState<T> *s = this->environment_->addState(start);
     SearchState<T> *g = this->environment_->addState(goal);
     stateExpansions_ = 0;

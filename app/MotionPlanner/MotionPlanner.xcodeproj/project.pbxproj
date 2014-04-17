@@ -127,6 +127,8 @@
 		D416EECD18F6E55A00993BAF /* MPEnvironment3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment3D.h; path = ../../src/MPEnvironment3D.h; sourceTree = "<group>"; };
 		D416EECF18F77E1900993BAF /* MPReader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPReader.cpp; path = ../../src/MPReader.cpp; sourceTree = "<group>"; };
 		D416EED018F77E1900993BAF /* MPReader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPReader.h; path = ../../src/MPReader.h; sourceTree = "<group>"; };
+		D4A79DA118FF7A80005B4D57 /* MPPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPPlanner.h; path = ../../src/MPPlanner.h; sourceTree = "<group>"; };
+		D4A79DA218FF7D00005B4D57 /* MPDijkstraPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstraPlanner.h; path = ../../src/MPDijkstraPlanner.h; sourceTree = "<group>"; };
 		D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPTokenizer.cpp; path = ../../src/MPTokenizer.cpp; sourceTree = "<group>"; };
 		D4F24EA318F88395002F3CB0 /* MPTokenizer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPTokenizer.h; path = ../../src/MPTokenizer.h; sourceTree = "<group>"; };
 		D4F24EA718F97CF6002F3CB0 /* MPCube.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPCube.h; sourceTree = "<group>"; };
@@ -303,6 +305,8 @@
 				D416EED018F77E1900993BAF /* MPReader.h */,
 				D4F24EA218F88395002F3CB0 /* MPTokenizer.cpp */,
 				D4F24EA318F88395002F3CB0 /* MPTokenizer.h */,
+				D4A79DA118FF7A80005B4D57 /* MPPlanner.h */,
+				D4A79DA218FF7D00005B4D57 /* MPDijkstraPlanner.h */,
 				5C64E05318F8D4E60089A27C /* MPDijkstra3D.cpp */,
 				5C64E05418F8D4E60089A27C /* MPDijkstra3D.h */,
 				D4F24EC418FC772F002F3CB0 /* MPAStarPlanner.h */,

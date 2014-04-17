@@ -56,14 +56,14 @@ public:
 
   void setStepSize(double s) { stepSize_ = s; }
     
+  bool stateValid(const Transform3D &T) const;
+    
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;
 
 protected:
   bool inBounds(int x, int y, int z);
     
-  bool stateValid(Transform3D &T) const;
-
   MPVec3 origin_;
   MPVec3 size_;
 

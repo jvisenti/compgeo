@@ -181,20 +181,25 @@
 
 - (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal
 {
-    self.plan.clear();
-    
-    if(!self.planner->plan(start, goal, self.plan))
+    if (self.planner)
     {
-        printf("failed to find plan from ");
-        MPVec3Print(start.getPosition());
-        printf(" to ");
-        MPVec3Print(goal.getPosition());
-        printf("\n");
+        self.plan.clear();
         
-        return NO;
+        if(!self.planner->plan(start, goal, self.plan))
+        {
+            printf("failed to find plan from ");
+            MPVec3Print(start.getPosition());
+            printf(" to ");
+            MPVec3Print(goal.getPosition());
+            printf("\n");
+            
+            return NO;
+        }
+        
+        return YES;
     }
     
-    return YES;
+    return NO;
 }
 
 - (void)executePlan

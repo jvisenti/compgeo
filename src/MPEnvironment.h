@@ -48,7 +48,9 @@ public:
     
     virtual bool getCost(SearchState<T> *s, SearchState<T> *t, double &cost) = 0;
     
-    inline hfptr getHashFunction() { return hashFunction_; }
+    inline hfptr getHashFunction() const { return hashFunction_; }
+    
+    virtual bool stateValid(const T &state) const = 0;
     
 protected:
     void clear()
