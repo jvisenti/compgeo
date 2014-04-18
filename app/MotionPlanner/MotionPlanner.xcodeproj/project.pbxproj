@@ -537,7 +537,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MotionPlanner-cxydbujddbcrtoaqbivabgfpgzvs/Build/Products/Debug",
 					"$(PROJECT_DIR)/MotionPlanner",
 				);
-				LLVM_LTO = YES;
+				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
@@ -560,7 +560,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MotionPlanner-cxydbujddbcrtoaqbivabgfpgzvs/Build/Products/Debug",
 					"$(PROJECT_DIR)/MotionPlanner",
 				);
-				LLVM_LTO = YES;
+				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";

@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cassert>
 
-#define DEFAULT_HASH_TABLE_SIZE 4096
+#define DEFAULT_HASH_TABLE_SIZE 1024
 #define DEFAULT_MAX_LOAD_FACTOR 0.75
 
 namespace MP
@@ -137,10 +137,11 @@ public:
               HashTableElement<T> *next = hit->next;
               delete hit;
               hit = next;
+              
+              numElements_--;
           }
           
           slots_[i] = nullptr;
-          numElements_--;
       }
   }
 
