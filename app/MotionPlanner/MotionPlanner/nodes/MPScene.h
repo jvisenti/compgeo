@@ -22,6 +22,7 @@
 
 - (BOOL)transform:(MP::Transform3D &)transform validForModel:(MP::Model *)model;
 
+- (BOOL)plan;
 - (BOOL)planTo:(const MP::Transform3D &)goal;
 - (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal;
 
@@ -29,5 +30,8 @@
 
 - (void)animateActiveObject:(BHGLAnimation *)animation;
 - (void)removeAnimationFromActiveObject:(BHGLAnimation *)animation;
+
+- (void)animateShadow:(BHGLAnimation *)animation;
+- (void)removeAnimationFromShadow:(BHGLAnimation *)animation;
 
 @end

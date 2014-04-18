@@ -170,7 +170,7 @@
         } duration:0.0];
         trans.repeats = YES;
         
-        [self.scene animateActiveObject:trans];
+        [self.scene animateShadow:trans];
         
         [self.movementAnimations setObject:trans forKey:@(key)];
     }
@@ -213,11 +213,8 @@
             break;
             
         case kVK_ANSI_P:
-        {
-            // TODO: be able to plan to any state
-            MP::Transform3D goal(MPVec3Make(1.5, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
-            
-            if ([self.scene planTo:goal])
+        {            
+            if ([self.scene plan])
             {
                 [self.scene executePlan];
             }
@@ -231,7 +228,7 @@
     
     if (anim)
     {
-        [self.scene removeAnimationFromActiveObject:anim];
+        [self.scene removeAnimationFromShadow:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
 }

@@ -59,6 +59,9 @@ void Environment3D::getSuccessors(SearchState3D *s,
     if(states_.get(s->getValue()) == nullptr)
         states_.insert(s);
     
+//    Timer timer;
+//    timer.start();
+    
     int xs = (int)s->getValue().getPosition().x;
     int ys = (int)s->getValue().getPosition().y;
     int zs = (int)s->getValue().getPosition().z;
@@ -107,6 +110,9 @@ void Environment3D::getSuccessors(SearchState3D *s,
             }
         }
     }
+    
+//    std::cout << "Successor generation took "
+//    << GET_ELAPSED_MICRO(timer) << " microseconds" << std::endl;
 }
 
 bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
@@ -135,14 +141,9 @@ bool Environment3D::inBounds(int x, int y, int z)
     float worldY = (float)y * stepSize_;
     float worldZ = (float)z * stepSize_;
     
-    if(worldX >= origin_.x - size_.w && worldX <= origin_.x + size_.w &&
-       worldY >= origin_.y - size_.h && worldY <= origin_.y + size_.h &&
-       worldZ >= origin_.z - size_.d && worldZ <= origin_.z + size_.d)
-    {
-        return true;
-    }
-    
-    return false;
+    return (worldX >= origin_.x - size_.w && worldX <= origin_.x + size_.w &&
+            worldY >= origin_.y - size_.h && worldY <= origin_.y + size_.h &&
+            worldZ >= origin_.z - size_.d && worldZ <= origin_.z + size_.d);
 }
 
 bool Environment3D::stateValid(const Transform3D &T) const

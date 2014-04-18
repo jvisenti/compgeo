@@ -20,12 +20,15 @@
 @interface MPScene ()
 {
     MP::Environment3D *_environment;
+    
+    __weak BHGLNode *_rootNode;
 }
 
 @property (nonatomic, assign) MP::AStar3D *planner;
-@property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
+@property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
 
 @property (nonatomic, weak) MPCube *boundingBox;
+@property (nonatomic, weak) MPModelNode *shadow;
 @property (nonatomic, weak) MPPathNode *pathNode;
 @property (nonatomic, weak) MPModelNode *activeObject;
 
@@ -34,6 +37,7 @@
 - (void)setupLights;
 
 - (void)updateBoundingBox;
+- (void)updateShadow;
 
 - (void)cleanup;
 
@@ -79,8 +83,9 @@
 {
     if (!_rootNode)
     {
-        _rootNode = [[BHGLNode alloc] init];
-        [super addChild:_rootNode];
+        BHGLNode *root = [[BHGLNode alloc] init];
+        [super addChild:root];
+        _rootNode = root;
     }
     
     return _rootNode;
@@ -147,6 +152,7 @@
         
         _environment = environment;
         
+        [self updateShadow];
         [self updateBoundingBox];
         
         float maxAxis = 2.0f * fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
@@ -167,11 +173,20 @@
     
     if (_environment != nullptr)
     {
-        valid = _environment->isValidForModel(transform, model);
-        valid = valid && !_environment->getActiveObject()->wouldCollideWithModel(transform, *self.boundingBox.model);
+        valid = !_environment->getActiveObject()->wouldCollideWithModel(transform, *self.boundingBox.model);
+        
+        if (model != self.shadow.model)
+        {
+            valid = valid && _environment->isValidForModel(transform, model);
+        }
     }
     
     return valid;
+}
+
+- (BOOL)plan
+{
+    return [self planTo:self.shadow.model->getTransform()];
 }
 
 - (BOOL)planTo:(const MP::Transform3D &)goal
@@ -183,9 +198,9 @@
 {
     if (self.planner)
     {
-        self.plan.clear();
+        self.planStates.clear();
         
-        if(!self.planner->plan(start, goal, self.plan))
+        if(!self.planner->plan(start, goal, self.planStates))
         {
             printf("failed to find plan from ");
             MPVec3Print(start.getPosition());
@@ -205,11 +220,11 @@
 - (void)executePlan
 {
     std::vector<MPVec3> path;
-    BHGLKeyframeAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)self.plan.size() fps:kMPPlanStatesPerSec];
+    BHGLKeyframeAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)self.planStates.size() fps:kMPPlanStatesPerSec];
     
-    for (int i = 0; i < self.plan.size(); ++i)
+    for (int i = 0; i < self.planStates.size(); ++i)
     {
-        MP::Transform3D &transform = self.plan.at(i);
+        MP::Transform3D &transform = self.planStates.at(i);
         
         path.push_back(transform.getPosition());
         
@@ -231,6 +246,16 @@
 - (void)removeAnimationFromActiveObject:(BHGLAnimation *)animation
 {
     [self.activeObject removeAnimation:animation];
+}
+
+- (void)animateShadow:(BHGLAnimation *)animation
+{
+    [self.shadow runAnimation:animation];
+}
+
+- (void)removeAnimationFromShadow:(BHGLAnimation *)animation
+{
+    [self.shadow removeAnimation:animation];
 }
 
 #pragma mark - private interface
@@ -290,6 +315,33 @@
     [self addChild:boundingBox];
     
     self.boundingBox = boundingBox;
+}
+
+- (void)updateShadow
+{
+    [self.shadow removeFromParent];
+    
+    MP::Model *shadowModel = new MP::Model(self.activeObject.model->getMesh());
+    shadowModel->setTransform(self.activeObject.model->getTransform());
+    shadowModel->setScale(MPVec3Make(0.99f, 0.99f, 0.99f));
+    
+    MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
+    
+    BHGLColor shadowColor = self.activeObject.material.surfaceColor;
+    shadowColor.a = 0.1f;
+    
+    shadow.material.surfaceColor = shadowColor;
+    shadow.material.emissionColor = shadow.material.surfaceColor;
+    shadow.material.ambientColor = BHGLColorWhite;
+    shadow.material.diffuseColor = BHGLColorWhite;
+    shadow.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+    shadow.material.blendEnabled = GL_TRUE;
+    shadow.material.blendSrcRGB = GL_SRC_ALPHA;
+    shadow.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
+    
+    [self addChild:shadow];
+    
+    _shadow = shadow;
 }
 
 - (void)cleanup
