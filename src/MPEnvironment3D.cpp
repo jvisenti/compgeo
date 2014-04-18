@@ -126,11 +126,13 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     // If the distance between the two states is > stepSize_, then there is no edge
     // (i.e. primitive motion) between them
     MPVec3 difference = MPVec3Subtract(s->getValue().getPosition(), t->getValue().getPosition());
-    float rollDifference = std::abs(s->getValue().getRotation().w - t->getValue().getRotation().w);
+    float rollDifference = s->getValue().getRotation().w - t->getValue().getRotation().w;
     
     if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
     {
-        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
+//        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
+        
+        cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(rollDifference);
         
         return true;
     }

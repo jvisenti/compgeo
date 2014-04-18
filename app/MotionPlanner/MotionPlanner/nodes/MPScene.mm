@@ -120,7 +120,7 @@
             // create active object
             MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:environment->getActiveObject()];
             
-            activeNode.material.surfaceColor = BHGLColorRed;
+            activeNode.material.surfaceColor = BHGLColorOrange;
             activeNode.material.ambientColor = BHGLColorWhite;
             activeNode.material.diffuseColor = BHGLColorWhite;
             activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
@@ -138,7 +138,7 @@
                 
                 MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
                 
-                obstacleNode.material.surfaceColor = BHGLColorYellow;
+                obstacleNode.material.surfaceColor = BHGLColorTeal;
                 obstacleNode.material.ambientColor = BHGLColorWhite;
                 obstacleNode.material.diffuseColor = BHGLColorWhite;
                 obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
@@ -147,7 +147,7 @@
                 [self addChild:obstacleNode];
             }
             
-            self.planner = new MP::AStar3D(environment, MP::distanceHeuristic);
+            self.planner = new MP::AStar3D(environment, MP::manhattanHeuristic);
         }
         
         _environment = environment;
@@ -327,7 +327,7 @@
     MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
     
     BHGLColor shadowColor = self.activeObject.material.surfaceColor;
-    shadowColor.a = 0.1f;
+    shadowColor.a = 0.2f;
     
     shadow.material.surfaceColor = shadowColor;
     shadow.material.emissionColor = shadow.material.surfaceColor;

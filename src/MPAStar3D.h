@@ -15,6 +15,7 @@ namespace MP
 {
     
 extern double distanceHeuristic(const Transform3D &start, const Transform3D &goal);
+extern double manhattanHeuristic(const Transform3D &start, const Transform3D &goal);
     
 class AStar3D : public AStarPlanner<Transform3D>
 {

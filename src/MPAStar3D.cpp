@@ -15,6 +15,14 @@ double distanceHeuristic(const Transform3D &start, const Transform3D &goal)
     return MPVec3EuclideanDistance(start.getPosition(), goal.getPosition());
 }
     
+double manhattanHeuristic(const Transform3D &start, const Transform3D &goal)
+{
+    MPVec3 difference = MPVec3Subtract(start.getPosition(), goal.getPosition());
+    float rollDifference = start.getRotation().w - goal.getRotation().w;
+    
+    return std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(rollDifference);
+}
+    
 AStar3D::AStar3D(Environment3D *environment, heuristicptr heuristic)
 : AStarPlanner<Transform3D>(environment, heuristic)
 {
