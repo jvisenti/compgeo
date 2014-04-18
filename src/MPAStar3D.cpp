@@ -54,6 +54,10 @@ bool AStar3D::plan(Transform3D start, Transform3D goal, std::vector<Transform3D>
         {
             plannerToWorld(*it);
         }
+        
+        // "snap to" exact goal state
+        plan.push_back(goal);
+        
         std::cout << "AStar 3D planner succeeded with " << plan.size() << " states" << std::endl;
         return true;
     }
