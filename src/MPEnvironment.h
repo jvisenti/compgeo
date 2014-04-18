@@ -21,7 +21,7 @@ class Environment
 public:
     typedef int (*hfptr)(T);
     
-    Environment(hfptr THash) : states_(THash), hashFunction_(THash) { }
+    Environment(hfptr THash) : states_(THash), invalidStates_(THash), hashFunction_(THash) { }
     
     virtual ~Environment()
     {
@@ -50,7 +50,10 @@ public:
     
     inline hfptr getHashFunction() const { return hashFunction_; }
     
-    virtual bool stateValid(const T &state) const = 0;
+    virtual bool stateValid(const T &state)
+    {
+        return invalidStates_.get(state) == nullptr;
+    }
     
 protected:
     void clear()
@@ -62,13 +65,25 @@ protected:
             while(it != nullptr)
             {
                 delete it->state;
-                it->state = 0;
+                it->state = nullptr;
+                it = it->next;
+            }
+        }
+        
+        for(int i = 0; i < invalidStates_.getNumSlots(); ++i)
+        {
+            HashTableElement<T> *it = invalidStates_.getSlot(i);
+            while(it != nullptr)
+            {
+                delete it->state;
+                it->state = nullptr;
                 it = it->next;
             }
         }
     }
     
     HashTable<T> states_;
+    HashTable<T> invalidStates_;
     hfptr hashFunction_;
     
 };

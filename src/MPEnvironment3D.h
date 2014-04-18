@@ -60,7 +60,7 @@ public:
     
     void setRotationStepSize(double s) { rotationStepSize_ = s; }
     
-  bool stateValid(const Transform3D &T) const;
+  bool stateValid(const Transform3D &T);
     
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;

@@ -17,10 +17,16 @@ double distanceHeuristic(const Transform3D &start, const Transform3D &goal)
     
 double manhattanHeuristic(const Transform3D &start, const Transform3D &goal)
 {
-    MPVec3 difference = MPVec3Subtract(start.getPosition(), goal.getPosition());
-    float rollDifference = start.getRotation().w - goal.getRotation().w;
+    MPQuaternion sRot = start.getRotation();
+    MPQuaternion tRot = goal.getRotation();
     
-    return std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(rollDifference);
+    MPVec3 difference = MPVec3Subtract(start.getPosition(), goal.getPosition());
+    
+    float pitchDiff = sRot.x - tRot.x;
+    float yawDiff = sRot.y - tRot.y;
+    float rollDiff = sRot.z - tRot.z;
+    
+    return std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff);
 }
     
 AStar3D::AStar3D(Environment3D *environment, heuristicptr heuristic)
@@ -35,7 +41,7 @@ AStar3D::~AStar3D()
 bool AStar3D::plan(Transform3D start, Transform3D goal, std::vector<Transform3D>& plan)
 {
     double eps = static_cast<Environment3D *>(this->environment_)->getStepSize();
-    double rollEps = static_cast<Environment3D *>(this->environment_)->getRotationStepSize();
+    double rotationEps = static_cast<Environment3D *>(this->environment_)->getRotationStepSize();
     Transform3D plannerStart;
     MPVec3 pstart;
     pstart.x = std::floor(start.getPosition().x/eps);
@@ -50,8 +56,12 @@ bool AStar3D::plan(Transform3D start, Transform3D goal, std::vector<Transform3D>
     pgoal.x = std::floor(goal.getPosition().x/eps);
     pgoal.y = std::floor(goal.getPosition().y/eps);
     pgoal.z = std::floor(goal.getPosition().z/eps);
-    int roll = (int)(MPQuaternionRoll(goal.getRotation())/rollEps);
-    plannerGoal.setRotation(MPQuaternionMake(0.0f, 0.0f, 0.0f, roll));
+    
+    int pitch = (int)(MPQuaternionPitch(goal.getRotation())/rotationEps);
+    int yaw = (int)(MPQuaternionYaw(goal.getRotation())/rotationEps);
+    int roll = (int)(MPQuaternionRoll(goal.getRotation())/rotationEps);
+
+    plannerGoal.setRotation(MPQuaternionMake(pitch, roll, yaw, 0.0f));
     plannerGoal.setScale(goal.getScale());
     plannerGoal.setPosition(pgoal);
     

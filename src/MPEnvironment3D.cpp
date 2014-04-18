@@ -13,13 +13,21 @@ namespace MP
     
 bool operator==(const Transform3D &lhs, const Transform3D &rhs)
 {
+    MPVec3 leftPos = lhs.getPosition();
+    MPVec3 rightPos = rhs.getPosition();
+    
+    MPQuaternion leftRot = lhs.getRotation();
+    MPQuaternion rightRot = rhs.getRotation();
+    
     // Only consider the (x, y, z) projection of the transform
     // Also, assume that the coordinates are integer-valued
-    return (((int)lhs.getPosition().x == (int)rhs.getPosition().x) &&
-            ((int)lhs.getPosition().y == (int)rhs.getPosition().y) &&
-            ((int)lhs.getPosition().z == (int)rhs.getPosition().z) &&
-            // We store the roll as rotation w
-            ((int)lhs.getRotation().w == (int)rhs.getRotation().w));
+    return (((int)leftPos.x == (int)rightPos.x) &&
+            ((int)leftPos.y == (int)rightPos.y) &&
+            ((int)leftPos.z == (int)rightPos.z) &&
+            // We store the pitch/yaw/roll as rotation xyz
+            ((int)leftRot.x == (int)rightRot.x) &&
+            ((int)leftRot.y == (int)rightRot.y) &&
+            ((int)leftRot.z == (int)rightRot.z));
 }
 
 int transform3DHash(Transform3D t)
@@ -28,13 +36,21 @@ int transform3DHash(Transform3D t)
     const int p2 = 19349663;
     const int p3 = 83492791;
     const int p4 = 3331333;
+    const int p5 = 393919;
+    const int p6 = 39916801;
+    
+    MPVec3 pos = t.getPosition();
+    MPQuaternion rot = t.getRotation();
     
     // Assume that the coordinates are integer-valued
-    int x = (int)t.getPosition().x;
-    int y = (int)t.getPosition().y;
-    int z = (int)t.getPosition().z;
-    int roll = (int)t.getRotation().w;
-    return ((x*p1) ^ (y*p2) ^ (z*p3) ^ (roll*p4));
+    int x = (int)pos.x;
+    int y = (int)pos.y;
+    int z = (int)pos.z;
+    
+    int pitch = (int)rot.x;
+    int yaw = (int)rot.y;
+    int roll = (int)rot.z;
+    return ((x*p1) ^ (y*p2) ^ (z*p3) ^ (pitch*p4) ^ (yaw*p5) ^ (roll*p6));
 }
 
 Environment3D::Environment3D()
@@ -60,16 +76,24 @@ void Environment3D::getSuccessors(SearchState3D *s,
                                   std::vector<SearchState3D *> &successors,
                                   std::vector<double> &costs)
 {
-    if(states_.get(s->getValue()) == nullptr)
+    Transform3D sT = s->getValue();
+    
+    if(states_.get(sT) == nullptr)
         states_.insert(s);
     
 //    Timer timer;
 //    timer.start();
     
-    int xs = (int)s->getValue().getPosition().x;
-    int ys = (int)s->getValue().getPosition().y;
-    int zs = (int)s->getValue().getPosition().z;
-    int roll = (int)s->getValue().getRotation().w;
+    MPVec3 sTpos = sT.getPosition();
+    MPQuaternion sTrot = sT.getRotation();
+    
+    int xs = (int)sTpos.x;
+    int ys = (int)sTpos.y;
+    int zs = (int)sTpos.z;
+    
+    int pitch = (int)sTrot.x;
+    int yaw = (int)sTrot.y;
+    int roll = (int)sTrot.z;
     
     // TODO: What if rotationStepSize >= 2*M_PI?
     int numRotations = (int)(2*M_PI/rotationStepSize_);
@@ -82,35 +106,36 @@ void Environment3D::getSuccessors(SearchState3D *s,
             {
                 if(i == 0 && j == 0 & k == 0) continue;
                 
-                for(int r = -1; r <= 1; ++r)
+                for(int p = -1; p <= 1; ++p)
                 {
-                    if(inBounds(xs+i, ys+j, zs+k))
+                    for (int y = -1; y <= 1; ++y)
                     {
-                        Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake(0.0f, 0.0f, 0.0f, (roll + r + numRotations) % numRotations));
-                        
-                        // Check if active object collides with any obstacle at this state
-                        if(!this->stateValid(T))
+                        for (int r = -1; r <= 1; ++r)
                         {
-                            continue;
+                            if(inBounds(xs+i, ys+j, zs+k))
+                            {
+                                Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake((pitch + p + numRotations) % numRotations, (yaw + y + numRotations) % numRotations, (roll + r + numRotations) % numRotations, 0.0f));
+                                
+                                SearchState3D *neighbor = states_.get(T);
+                                if(neighbor == nullptr)
+                                {
+                                    // Check if active object collides with any obstacle at this state
+                                    if(!this->stateValid(T))
+                                    {
+                                        continue;
+                                    }
+                                    // Has not seen this state yet
+                                    neighbor = new SearchState3D();
+                                    neighbor->setValue(T);
+                                    neighbor->setParent(s);
+                                    states_.insert(neighbor);
+                                }
+                                successors.push_back(neighbor);
+                                double cost;
+                                getCost(s, neighbor, cost);
+                                costs.push_back(cost);
+                            }
                         }
-                        
-                        SearchState3D *neighbor = states_.get(T);
-                        if(neighbor == nullptr)
-                        {
-                            // Has not seen this state yet
-                            neighbor = new SearchState3D();
-                            neighbor->setValue(T);
-                            neighbor->setParent(s);
-                            states_.insert(neighbor);
-                        }
-                        else
-                        {
-                            // Already seen
-                        }
-                        successors.push_back(neighbor);
-                        double cost;
-                        getCost(s, neighbor, cost);
-                        costs.push_back(cost);
                     }
                 }
             }
@@ -125,14 +150,21 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
 {
     // If the distance between the two states is > stepSize_, then there is no edge
     // (i.e. primitive motion) between them
+    
+    MPQuaternion sRot = s->getValue().getRotation();
+    MPQuaternion tRot = t->getValue().getRotation();
+    
     MPVec3 difference = MPVec3Subtract(s->getValue().getPosition(), t->getValue().getPosition());
-    float rollDifference = s->getValue().getRotation().w - t->getValue().getRotation().w;
+    
+    float pitchDiff = sRot.x - tRot.x;
+    float yawDiff = sRot.y - tRot.y;
+    float rollDiff = sRot.z - tRot.z;
     
     if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
     {
 //        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
         
-        cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(rollDifference);
+        cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + (std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff));
         
         return true;
     }
@@ -156,13 +188,23 @@ bool Environment3D::inBounds(int x, int y, int z)
             worldZ >= origin_.z - size_.d && worldZ <= origin_.z + size_.d);
 }
 
-bool Environment3D::stateValid(const Transform3D &T) const
+bool Environment3D::stateValid(const Transform3D &T)
 {
+    if(!Environment<Transform3D>::stateValid(T)) return false;
+    
     Transform3D worldT = T;
     worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
     worldT.setRotation(MPQuaternionMakeWithAngleAndAxis(T.getRotation().w * rotationStepSize_, 0.0f, 0.0f, 1.0f));
     
-    return this->isValid(worldT);
+    if(!this->isValid(worldT))
+    {
+        SearchState3D *s = new SearchState3D();
+        s->setValue(T);
+        invalidStates_.insert(s);
+        return false;
+    }
+    
+    return true;
 }
 
 bool Environment3D::isValid(Transform3D &T) const

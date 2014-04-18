@@ -93,7 +93,7 @@ public:
     // @todo
   }
 
-  SearchState<T> *get(T t)
+  SearchState<T> *get(const T &t) const
   {
     int slot = hash_(t) % slots_.size();
     /* std::cout << "Checking slot " << slot << std::endl; */

@@ -73,7 +73,7 @@ public:
         
         //startState->setParent(startState); ??
         startState->setPathCost(0.0f);
-        OPEN.insertState(startState, heuristic_(startState->getValue(), goalState->getValue()));
+        OPEN.insertState(startState, 8.0f * heuristic_(startState->getValue(), goalState->getValue()));
         
         while(OPEN.size() > 0)
         {
@@ -106,12 +106,12 @@ public:
                     if((*it)->getHeapIndex() == INVALID_INDEX)
                     {
                         OPEN.insertState(*it, (*it)->getPathCost() + 
-                                         heuristic_((*it)->getValue(), goalState->getValue()));
+                                         8.0f * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                     else
                     {
                         OPEN.decreaseKey(*it, (*it)->getPathCost() + 
-                                         heuristic_((*it)->getValue(), goalState->getValue()));
+                                         8.0f * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                 }
             }
