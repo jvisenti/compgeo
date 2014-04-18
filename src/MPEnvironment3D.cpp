@@ -86,7 +86,7 @@ void Environment3D::getSuccessors(SearchState3D *s,
                 {
                     if(inBounds(xs+i, ys+j, zs+k))
                     {
-                        Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake(0.0f, 0.0f, 0.0f, (roll + r) % numRotations));
+                        Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake(0.0f, 0.0f, 0.0f, (roll + r + numRotations) % numRotations));
                         
                         // Check if active object collides with any obstacle at this state
                         if(!this->stateValid(T))
@@ -128,9 +128,9 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     MPVec3 difference = MPVec3Subtract(s->getValue().getPosition(), t->getValue().getPosition());
     float rollDifference = std::abs(s->getValue().getRotation().w - t->getValue().getRotation().w);
     
-    if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f && rollDifference <= 1.0f)
+    if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
     {
-        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition());// + (rollDifference > 0.0f ? 1.0f : 0.0f);
+        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
         
         return true;
     }
