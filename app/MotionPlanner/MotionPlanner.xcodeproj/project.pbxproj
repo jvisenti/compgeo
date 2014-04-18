@@ -527,6 +527,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_FAST_MATH = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MotionPlanner/MotionPlanner-Prefix.pch";
 				INFOPLIST_FILE = "MotionPlanner/MotionPlanner-Info.plist";
@@ -535,6 +537,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MotionPlanner-cxydbujddbcrtoaqbivabgfpgzvs/Build/Products/Debug",
 					"$(PROJECT_DIR)/MotionPlanner",
 				);
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
@@ -547,6 +550,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				COMBINE_HIDPI_IMAGES = YES;
+				GCC_FAST_MATH = NO;
+				GCC_OPTIMIZATION_LEVEL = fast;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "MotionPlanner/MotionPlanner-Prefix.pch";
 				INFOPLIST_FILE = "MotionPlanner/MotionPlanner-Info.plist";
@@ -555,6 +560,7 @@
 					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MotionPlanner-cxydbujddbcrtoaqbivabgfpgzvs/Build/Products/Debug",
 					"$(PROJECT_DIR)/MotionPlanner",
 				);
+				LLVM_LTO = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";

@@ -186,7 +186,6 @@
 
 - (BOOL)plan
 {
-    self.shadow.model->getTransform().setRotation(MPQuaternionMakeWithAngleAndAxis(M_PI_4, 0, 0, 1));
     return [self planTo:self.shadow.model->getTransform()];
 }
 

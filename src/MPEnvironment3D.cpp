@@ -130,7 +130,7 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     
     if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
     {
-        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
+        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition());// + (rollDifference > 0.0f ? 1.0f : 0.0f);
         
         return true;
     }
@@ -174,6 +174,7 @@ bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
 //    timer.start();
     
     bool valid = true;
+    
     for(auto it = obstacles_.begin(); it != obstacles_.end(); ++it)
     {
         if(model->wouldCollideWithModel(T, **it))

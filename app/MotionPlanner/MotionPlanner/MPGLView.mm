@@ -69,29 +69,6 @@
     return YES;
 }
 
-- (void)rightMouseUp:(NSEvent *)theEvent
-{
-//    TODO: something along the lines to convert mouse to world coordinates
-//    NSPoint mouseLoc = [theEvent locationInWindow];
-//    
-//    GLint viewport[4];
-//    glGetIntegerv(GL_VIEWPORT, viewport);
-//    
-//    mouseLoc.x = (2.0 * mouseLoc.x / viewport[2]) - 1.0f;
-//    mouseLoc.y = (2.0 * mouseLoc.y / viewport[3]) - 1.0f;
-//    
-//    GLKVector4 clip = GLKVector4Make(mouseLoc.x, mouseLoc.y, -1.0f, 1.0f);
-//    
-//    GLKVector4 eye = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.projectionMatrix, NULL), clip);
-//    eye.z = -1.0f;
-//    eye.w = 0.0f;
-//    
-//    GLKVector4 world = GLKMatrix4MultiplyVector4(GLKMatrix4Invert(self.scene.viewMatrix, NULL), eye);
-//    GLKVector3 world3 = GLKVector3Normalize(GLKVector3Make(world.x, world.y, world.z));
-//    
-//    NSLog(@"%.3f, %.3f, %.3f", world3.x, world3.y, world3.z);
-}
-
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
