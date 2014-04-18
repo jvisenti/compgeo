@@ -13,7 +13,7 @@
 #include <iostream>
 #include <cassert>
 
-#define DEFAULT_HASH_TABLE_SIZE 1024
+#define DEFAULT_HASH_TABLE_SIZE 4096
 #define DEFAULT_MAX_LOAD_FACTOR 0.75
 
 namespace MP
@@ -50,6 +50,12 @@ public:
 
   void insert(SearchState<T> *s)
   {
+      if(get(s->getValue()) != nullptr)
+      {
+          std::cout << ":'(" << std::endl;
+          return;
+      }
+      
     // If the load factor is two high, double the size of the hash table,
     // and re-insert all the elements
     if(getLoadFactor() > getMaxLoadFactor())
@@ -74,6 +80,8 @@ public:
     }
     
     // @todo should we check if it's already in the table?
+
+      
     numElements_++;
   }
 

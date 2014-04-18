@@ -186,6 +186,7 @@
 
 - (BOOL)plan
 {
+    self.shadow.model->getTransform().setRotation(MPQuaternionMakeWithAngleAndAxis(M_PI_4, 0, 0, 1));
     return [self planTo:self.shadow.model->getTransform()];
 }
 
@@ -323,7 +324,6 @@
     
     MP::Model *shadowModel = new MP::Model(self.activeObject.model->getMesh());
     shadowModel->setTransform(self.activeObject.model->getTransform());
-    shadowModel->setScale(MPVec3Make(0.99f, 0.99f, 0.99f));
     
     MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
     

@@ -56,6 +56,10 @@ public:
 
   void setStepSize(double s) { stepSize_ = s; }
     
+    double getRotationStepSize() const { return rotationStepSize_; }
+    
+    void setRotationStepSize(double s) { rotationStepSize_ = s; }
+    
   bool stateValid(const Transform3D &T) const;
     
   bool isValid(Transform3D &T) const;
@@ -68,6 +72,7 @@ protected:
   MPVec3 size_;
 
   double stepSize_;
+    double rotationStepSize_;
 
   Model *activeObject_;
   std::vector<Model *> obstacles_;

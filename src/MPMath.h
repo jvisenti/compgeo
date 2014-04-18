@@ -181,7 +181,22 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
     
     return MPVec3Make(rq.x, rq.y, rq.z);
 }
-
+    
+static inline float MPQuaternionRoll(MPQuaternion q)
+{
+    return atan(2*(q.x*q.y + q.z*q.w) / (1 - 2*(pow(q.y, 2) + pow(q.z, 2))));
+}
+    
+static inline float MPQuaternionPitch(MPQuaternion q)
+{
+    return -asin(2*(q.x*q.z - q.w*q.y));
+}
+    
+static inline float MPQuaternionYaw(MPQuaternion q)
+{
+    return atan(2*(q.x*q.w + q.y*q.z) / (1 - 2*(pow(q.z, 2) + pow(q.w, 2))));
+}
+    
 #pragma mark - matrix functions
 
 static inline MPMat4 MPMat4MakeTranslation(MPVec3 translation)
