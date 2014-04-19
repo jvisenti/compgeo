@@ -34,6 +34,13 @@ public:
     
     bool plan(T start, T goal, std::vector<T> &plan)
     {
+        T wGoal = goal;
+        
+        // convert world states to planner states
+        this->environment_->worldToPlanner(start);
+        
+        this->environment_->worldToPlanner(goal);
+        
         if (!this->environment_->stateValid(start))
         {
             std::cout << "A* plan failed because start state is invalid" << std::endl;
@@ -48,9 +55,12 @@ public:
         SearchState<T> *s = this->environment_->addState(start);
         SearchState<T> *g = this->environment_->addState(goal);
         stateExpansions_ = 0;
+        
         Timer timer;
         timer.start();
+        
         bool success = aStarSearch(s, g);
+        
         std::cout << "A* search terminated after "
         << stateExpansions_ << " state expansions in "
         << GET_ELAPSED_MICRO(timer) / 1000000.0 << " seconds" << std::endl;
@@ -61,10 +71,23 @@ public:
             SearchState<T> *v = g;
             while(v != nullptr && v != s)
             {
-                plan.push_back(v->getValue());
+                T stateVal = v->getValue();
+                this->environment_->plannerToWorld(stateVal);
+                
+                plan.push_back(stateVal);
                 v = v->getParent();
             }
+            
             std::reverse(plan.begin(), plan.end());
+            
+            // snap to goal state if we didn't hit it exactly
+            if (!(g->getValue() == wGoal))
+            {
+                plan.push_back(wGoal);
+            }
+            
+            std::cout << "AStar planner succeeded with " << plan.size() << " states" << std::endl;
+            
             return true;
         }
         

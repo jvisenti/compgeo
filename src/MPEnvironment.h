@@ -34,6 +34,8 @@ public:
     
     inline int getNumStates() const { return states_.size(); }
     
+    inline hfptr getHashFunction() const { return hashFunction_; }
+    
     SearchState<T> *addState(T p)
     {
         SearchState<T> *s = states_.get(p);
@@ -46,14 +48,20 @@ public:
         return s;
     }
     
+    
     virtual bool getCost(SearchState<T> *s, SearchState<T> *t, double &cost) = 0;
     
-    inline hfptr getHashFunction() const { return hashFunction_; }
     
     virtual bool stateValid(const T &state)
     {
         return invalidStates_.get(state) == nullptr;
     }
+    
+    virtual void plannerToWorld(T &state) const { return; }
+    virtual T plannerToWorld(const T &state) const { return state; }
+    
+    virtual void worldToPlanner(T &state) const { return; }
+    virtual T worldToPlanner(const T &state) const {return state; }
     
 protected:
     void clear()

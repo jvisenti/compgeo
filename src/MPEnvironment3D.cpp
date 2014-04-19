@@ -189,19 +189,7 @@ bool Environment3D::stateValid(const Transform3D &T)
 {
     if(!Environment<Transform3D>::stateValid(T)) return false;
     
-    Transform3D worldT = T;
-    worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
-    
-    MPQuaternion worldRotation = worldT.getRotation();
-    
-    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(worldRotation.x * rotationStepSize_, 1.0f, 0.0f, 0.0f);
-    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(worldRotation.y * rotationStepSize_, 0.0f, 1.0f, 0.0f);
-    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(worldRotation.z * rotationStepSize_, 0.0f, 0.0f, 1.0f);
-    
-    worldRotation = MPQuaternionMultiply(roll, yaw);
-    worldRotation = MPQuaternionMultiply(worldRotation, pitch);
-    
-    worldT.setRotation(worldRotation);
+    Transform3D worldT = this->plannerToWorld(T);
     
     if(!this->inBounds(worldT) || !this->isValid(worldT))
     {
@@ -212,6 +200,57 @@ bool Environment3D::stateValid(const Transform3D &T)
     }
     
     return true;
+}
+    
+void Environment3D::plannerToWorld(Transform3D &state) const
+{
+    state.setPosition(MPVec3MultiplyScalar(state.getPosition(), this->stepSize_));
+    
+    MPQuaternion worldRotation = state.getRotation();
+    
+    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(worldRotation.x * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
+    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(worldRotation.y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
+    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(worldRotation.z * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
+    
+    worldRotation = MPQuaternionMultiply(roll, yaw);
+    worldRotation = MPQuaternionMultiply(worldRotation, pitch);
+    
+    state.setRotation(worldRotation);
+}
+
+Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
+{
+    Transform3D worldState = state;
+    
+    plannerToWorld(worldState);
+    
+    return worldState;
+}
+
+void Environment3D::worldToPlanner(Transform3D &state) const
+{
+    MPVec3 pPos = state.getPosition();
+    pPos.x = std::floorf(pPos.x / this->stepSize_);
+    pPos.y = std::floorf(pPos.y / this->stepSize_);
+    pPos.z = std::floorf(pPos.z / this->stepSize_);
+    
+    MPQuaternion pRot;
+    pRot.x = std::floorf(MPQuaternionPitch(pRot) / this->rotationStepSize_);
+    pRot.y = std::floorf(MPQuaternionYaw(pRot) / this->rotationStepSize_);
+    pRot.z = std::floorf(MPQuaternionRoll(pRot) / this->rotationStepSize_);
+    pRot.w = 0.0f;
+    
+    state.setPosition(pPos);
+    state.setRotation(pRot);
+}
+
+Transform3D Environment3D::worldToPlanner(const Transform3D &state) const
+{
+    Transform3D plannerState = state;
+    
+    worldToPlanner(plannerState);
+    
+    return plannerState;
 }
 
 bool Environment3D::isValid(Transform3D &T) const

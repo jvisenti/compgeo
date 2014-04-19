@@ -62,6 +62,12 @@ public:
     
   bool stateValid(const Transform3D &T);
     
+  void plannerToWorld(Transform3D &state) const;
+  Transform3D plannerToWorld(const Transform3D &state) const;
+    
+  void worldToPlanner(Transform3D &state) const;
+  Transform3D worldToPlanner(const Transform3D &state) const;
+    
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;
     
