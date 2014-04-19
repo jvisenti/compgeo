@@ -183,9 +183,9 @@ bool Environment3D::inBounds(int x, int y, int z)
     float worldY = (float)y * stepSize_;
     float worldZ = (float)z * stepSize_;
     
-    return (worldX >= origin_.x - size_.w && worldX <= origin_.x + size_.w &&
-            worldY >= origin_.y - size_.h && worldY <= origin_.y + size_.h &&
-            worldZ >= origin_.z - size_.d && worldZ <= origin_.z + size_.d);
+    return (worldX >= origin_.x - size_.w/2 && worldX <= origin_.x + size_.w/2 &&
+            worldY >= origin_.y - size_.h/2 && worldY <= origin_.y + size_.h/2 &&
+            worldZ >= origin_.z - size_.d/2 && worldZ <= origin_.z + size_.d/2);
 }
 
 bool Environment3D::stateValid(const Transform3D &T)

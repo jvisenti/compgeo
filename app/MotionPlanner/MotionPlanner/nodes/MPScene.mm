@@ -155,7 +155,7 @@
         [self updateShadow];
         [self updateBoundingBox];
         
-        float maxAxis = 2.0f * fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
+        float maxAxis = fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
         float scale = kMPSceneMaxSize / maxAxis;
         
         self.rootNode.scale = GLKVector3Make(scale, scale, scale);
@@ -302,7 +302,7 @@
     [self.boundingBox removeFromParent];
     
     MPCube *boundingBox = [[MPCube alloc] init];
-    boundingBox.scale = GLKVector3Make(2.0*_environment->getSize().w+0.01, 2.0*_environment->getSize().h+0.01, 2.0*_environment->getSize().d+0.01);
+    boundingBox.scale = GLKVector3Make(_environment->getSize().w+0.01, _environment->getSize().h+0.01, _environment->getSize().d+0.01);
     
     boundingBox.material.surfaceColor = BHGLColorMake(1.0f, 1.0f, 1.0f, 0.1f);
     boundingBox.material.ambientColor = BHGLColorWhite;
