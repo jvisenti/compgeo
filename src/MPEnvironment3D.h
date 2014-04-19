@@ -36,11 +36,11 @@ public:
 
   bool getCost(SearchState3D *s, SearchState3D *t, double &cost);
 
-  void setOrigin(const MPVec3 &origin) { origin_ = origin; }
+  void setOrigin(const MPVec3 &origin);
 
   MPVec3 getOrigin() const { return origin_; }
 
-  void setSize(const MPVec3 &size) { size_ = size; }
+  void setSize(const MPVec3 &size);
 
   MPVec3 getSize() const { return size_; }
     
@@ -64,12 +64,18 @@ public:
     
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;
+    
+  bool inBounds(const Transform3D &T) const;
+  bool inBoundsForModel(const Transform3D &T, Model *model) const;
 
 protected:
-  bool inBounds(int x, int y, int z);
+    
+  void updateBoundingBox();
     
   MPVec3 origin_;
   MPVec3 size_;
+    
+  MPAABox boundingBox_;
 
   double stepSize_;
   double rotationStepSize_;

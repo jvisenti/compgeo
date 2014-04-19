@@ -172,12 +172,14 @@
     BOOL valid = YES;
     
     if (_environment != nullptr)
-    {
-        valid = !_environment->getActiveObject()->wouldCollideWithModel(transform, *self.boundingBox.model);
-        
-        if (model != self.shadow.model)
+    {        
+        if (model == self.shadow.model)
         {
-            valid = valid && _environment->isValidForModel(transform, model);
+            valid = _environment->inBoundsForModel(transform, self.shadow.model);
+        }
+        else
+        {
+            valid = _environment->isValidForModel(transform, model);
         }
     }
     

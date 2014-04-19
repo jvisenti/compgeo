@@ -72,6 +72,18 @@ Environment3D::Environment3D(const MPVec3 &origin, const MPVec3 &size)
 Environment3D::~Environment3D()
 {
 }
+    
+void Environment3D::setOrigin(const MPVec3 &origin)
+{
+    this->origin_ = origin;
+    this->updateBoundingBox();
+}
+    
+void Environment3D::setSize(const MPVec3 &size)
+{
+    this->size_ = size;
+    this->updateBoundingBox();
+}
 
 void Environment3D::getSuccessors(SearchState3D *s,
                                   std::vector<SearchState3D *> &successors,
@@ -113,29 +125,26 @@ void Environment3D::getSuccessors(SearchState3D *s,
                     {
                         for (int r = -1; r <= 1; ++r)
                         {
-                            if(inBounds(xs+i, ys+j, zs+k))
+                            Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake((pitch + p + numRotations) % numRotations, (yaw + y + numRotations) % numRotations, (roll + r + numRotations) % numRotations, 0.0f));
+                            
+                            SearchState3D *neighbor = states_.get(T);
+                            if(neighbor == nullptr)
                             {
-                                Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake((pitch + p + numRotations) % numRotations, (yaw + y + numRotations) % numRotations, (roll + r + numRotations) % numRotations, 0.0f));
-                                
-                                SearchState3D *neighbor = states_.get(T);
-                                if(neighbor == nullptr)
+                                // Check if active object collides with any obstacle at this state
+                                if(!this->stateValid(T))
                                 {
-                                    // Check if active object collides with any obstacle at this state
-                                    if(!this->stateValid(T))
-                                    {
-                                        continue;
-                                    }
-                                    
-                                    // Has not seen this state yet
-                                    neighbor = new SearchState3D();
-                                    neighbor->setValue(T);
-                                    states_.insert(neighbor);
+                                    continue;
                                 }
-                                successors.push_back(neighbor);
-                                double cost;
-                                getCost(s, neighbor, cost);
-                                costs.push_back(cost);
+                                
+                                // Has not seen this state yet
+                                neighbor = new SearchState3D();
+                                neighbor->setValue(T);
+                                states_.insert(neighbor);
                             }
+                            successors.push_back(neighbor);
+                            double cost;
+                            getCost(s, neighbor, cost);
+                            costs.push_back(cost);
                         }
                     }
                 }
@@ -176,18 +185,6 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     return false;
 }
 
-bool Environment3D::inBounds(int x, int y, int z)
-{
-    // TODO: Does this really check in bounds? (We are just checking the center)
-    float worldX = (float)x * stepSize_;
-    float worldY = (float)y * stepSize_;
-    float worldZ = (float)z * stepSize_;
-    
-    return (worldX >= origin_.x - size_.w/2 && worldX <= origin_.x + size_.w/2 &&
-            worldY >= origin_.y - size_.h/2 && worldY <= origin_.y + size_.h/2 &&
-            worldZ >= origin_.z - size_.d/2 && worldZ <= origin_.z + size_.d/2);
-}
-
 bool Environment3D::stateValid(const Transform3D &T)
 {
     if(!Environment<Transform3D>::stateValid(T)) return false;
@@ -206,7 +203,7 @@ bool Environment3D::stateValid(const Transform3D &T)
     
     worldT.setRotation(worldRotation);
     
-    if(!this->isValid(worldT))
+    if(!this->inBounds(worldT) || !this->isValid(worldT))
     {
         SearchState3D *s = new SearchState3D();
         s->setValue(T);
@@ -219,7 +216,7 @@ bool Environment3D::stateValid(const Transform3D &T)
 
 bool Environment3D::isValid(Transform3D &T) const
 {
-    return this->isValidForModel(T, activeObject_);
+    return this->isValidForModel(T, this->activeObject_);
 }
 
 bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
@@ -227,14 +224,13 @@ bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
 //    Timer timer;
 //    timer.start();
     
-    bool valid = true;
+    bool valid = this->inBoundsForModel(T, model);
     
-    for(auto it = obstacles_.begin(); it != obstacles_.end(); ++it)
+    for(auto it = obstacles_.begin(); valid && it != obstacles_.end(); ++it)
     {
         if(model->wouldCollideWithModel(T, **it))
         {
             valid = false;
-            break;
         }
     }
     
@@ -242,6 +238,28 @@ bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
 //    << GET_ELAPSED_MICRO(timer) << " microseconds" << std::endl;
     
     return valid;
+}
+    
+bool Environment3D::inBounds(const Transform3D &T) const
+{
+    return this->inBoundsForModel(T, this->activeObject_);
+}
+
+bool Environment3D::inBoundsForModel(const MP::Transform3D &T, MP::Model *model) const
+{
+    return MPAABoxContainsPoint(this->boundingBox_, T.getPosition());
+}
+    
+#pragma mark - protected methods
+    
+void Environment3D::updateBoundingBox()
+{
+    MPVec3 halfSize = MPVec3MultiplyScalar(this->size_, 0.5f);
+    
+    MPVec3 min = MPVec3Subtract(this->origin_, halfSize);
+    MPVec3 max = MPVec3Add(this->origin_, halfSize);
+    
+    this->boundingBox_ = MPAABoxMake(min, max);    
 }
     
 }
