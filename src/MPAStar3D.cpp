@@ -38,9 +38,4 @@ AStar3D::~AStar3D()
 {
 }
 
-bool AStar3D::plan(Transform3D start, Transform3D goal, std::vector<Transform3D>& plan)
-{
-    return AStarPlanner<Transform3D>::plan(start, goal, plan);
-}
-
 }

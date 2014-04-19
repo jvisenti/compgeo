@@ -22,9 +22,7 @@ class AStar3D : public AStarPlanner<Transform3D>
 public:
     AStar3D(Environment3D *environment, heuristicptr heuristic);
     
-    virtual ~AStar3D();
-    
-    bool plan(Transform3D start, Transform3D goal, std::vector<Transform3D> &plan);
+    virtual ~AStar3D();    
 };
     
 }
