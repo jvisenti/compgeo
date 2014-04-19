@@ -65,8 +65,8 @@ public:
   bool isValid(Transform3D &T) const;
   bool isValidForModel(Transform3D &T, Model *model) const;
     
-  bool inBounds(const Transform3D &T) const;
-  bool inBoundsForModel(const Transform3D &T, Model *model) const;
+  bool inBounds(Transform3D &T) const;
+  bool inBoundsForModel(Transform3D &T, Model *model) const;
 
 protected:
     

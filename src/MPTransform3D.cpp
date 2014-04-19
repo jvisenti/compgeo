@@ -88,6 +88,20 @@ MPMat4 Transform3D::getMatrix()
     
     return *(this->matrixCache);
 }
+    
+void Transform3D::transformVec3(MPVec3 &vec)
+{
+    vec = MPMat4TransformVec3(this->getMatrix(), vec);
+}
+
+MPVec3 Transform3D::transformVec3(const MPVec3 &vec)
+{
+    MPVec3 tVec = vec;
+    
+    transformVec3(tVec);
+    
+    return tVec;
+}
 
 #pragma mark - private methods
 

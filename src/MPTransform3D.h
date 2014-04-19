@@ -33,6 +33,9 @@ public:
     /* returns the TRS matrix using the position, rotation, and scale properties */
     MPMat4 getMatrix();
     
+    void transformVec3(MPVec3 &vec);
+    MPVec3 transformVec3(const MPVec3 &vec);
+    
 protected:
     MPMat4 *matrixCache;
     

@@ -240,14 +240,23 @@ bool Environment3D::isValidForModel(Transform3D &T, Model *model) const
     return valid;
 }
     
-bool Environment3D::inBounds(const Transform3D &T) const
+bool Environment3D::inBounds(Transform3D &T) const
 {
     return this->inBoundsForModel(T, this->activeObject_);
 }
 
-bool Environment3D::inBoundsForModel(const MP::Transform3D &T, MP::Model *model) const
+bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
 {
-    return MPAABoxContainsPoint(this->boundingBox_, T.getPosition());
+    const MPVec3 *extremePoints = MPMeshGetExtremePoints(model->getMesh());
+    
+    bool inBounds = true;
+    
+    for (int i = 0; i < 6 && inBounds; ++i)
+    {
+        inBounds = MPAABoxContainsPoint(this->boundingBox_, T.transformVec3(extremePoints[i]));
+    }
+    
+    return inBounds;
 }
     
 #pragma mark - protected methods
