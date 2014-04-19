@@ -191,7 +191,7 @@ bool Environment3D::stateValid(const Transform3D &T)
     
     Transform3D worldT = this->plannerToWorld(T);
     
-    if(!this->inBounds(worldT) || !this->isValid(worldT))
+    if(!this->isValid(worldT))
     {
         SearchState3D *s = new SearchState3D();
         s->setValue(T);
