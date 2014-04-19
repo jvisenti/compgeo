@@ -190,17 +190,23 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
     
 static inline float MPQuaternionRoll(MPQuaternion q)
 {
-    return atan(2*(q.x*q.y + q.z*q.w) / (1 - 2*(pow(q.y, 2) + pow(q.z, 2))));
+    float denom = (1.0f - 2.0f*q.y*q.y + q.z*q.z);
+    
+    return denom != 0.0f ? atan(2.0f*(q.x*q.y + q.z*q.w) / denom) : 0.0f;
 }
     
 static inline float MPQuaternionPitch(MPQuaternion q)
 {
-    return -asin(2*(q.x*q.z - q.w*q.y));
+    float p0 = 2.0f*(q.x*q.z - q.w*q.y);
+    
+    return (p0 >= -1.0f && p0 <= 1.0f) ? -asin(p0) : 0.0f;
 }
     
 static inline float MPQuaternionYaw(MPQuaternion q)
 {
-    return atan(2*(q.x*q.w + q.y*q.z) / (1 - 2*(pow(q.z, 2) + pow(q.w, 2))));
+    float denom = (1.0f - 2.0f*q.z*q.z + q.w*q.w);
+    
+    return denom != 0.0f ? atan(2.0f*(q.x*q.w + q.y*q.z) / denom) : 0.0f;
 }
     
 #pragma mark - matrix functions
