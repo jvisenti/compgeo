@@ -32,7 +32,7 @@ struct Point2D
   }
 };
 
-int point2DHash(Point2D p);
+int point2DHash(const Point2D &p);
 
 double euclideanHeuristic(const Point2D &start, const Point2D &goal);
 

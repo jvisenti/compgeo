@@ -30,7 +30,7 @@ bool operator==(const Transform3D &lhs, const Transform3D &rhs)
             ((int)leftRot.z == (int)rightRot.z));
 }
 
-int transform3DHash(Transform3D t)
+int transform3DHash(const Transform3D &t)
 {
     const int p1 = 73856093;
     const int p2 = 19349663;
@@ -50,6 +50,7 @@ int transform3DHash(Transform3D t)
     int pitch = (int)rot.x;
     int yaw = (int)rot.y;
     int roll = (int)rot.z;
+    
     return ((x*p1) ^ (y*p2) ^ (z*p3) ^ (pitch*p4) ^ (yaw*p5) ^ (roll*p6));
 }
 
@@ -124,10 +125,10 @@ void Environment3D::getSuccessors(SearchState3D *s,
                                     {
                                         continue;
                                     }
+                                    
                                     // Has not seen this state yet
                                     neighbor = new SearchState3D();
                                     neighbor->setValue(T);
-                                    neighbor->setParent(s);
                                     states_.insert(neighbor);
                                 }
                                 successors.push_back(neighbor);
@@ -162,12 +163,11 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     
     if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
     {
-//        cost = MPVec3EuclideanDistance(s->getValue().getPosition(), t->getValue().getPosition()) + (rollDifference > 0.0f ? 1.0f : 0.0f);
-        
         cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + (std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff));
         
         return true;
     }
+    
     std::cout << "Error: no edge between (" << s->getValue().getPosition().x*stepSize_ <<
     ", " << s->getValue().getPosition().y*stepSize_ << ", " <<
     s->getValue().getPosition().z*stepSize_ << ") and (" << t->getValue().getPosition().x*stepSize_

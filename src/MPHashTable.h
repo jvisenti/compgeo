@@ -35,8 +35,10 @@ template <typename T>
 class HashTable
 {
 public:
+  typedef int (*hfptr)(const T&);
+    
   /* Needs a has function that hashes objects of type T */
-  HashTable(int (*hash)(T),
+  HashTable(hfptr hash,
 	    int initialSize = DEFAULT_HASH_TABLE_SIZE, 
 	    double maxLoadFactor = DEFAULT_MAX_LOAD_FACTOR)
     : numElements_(0), slots_(initialSize), maxLoadFactor_(maxLoadFactor), hash_(hash)
@@ -193,7 +195,7 @@ private:
 
   double maxLoadFactor_;
 
-  int (*hash_)(T);
+  hfptr hash_;
  
 };
 

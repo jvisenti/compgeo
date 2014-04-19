@@ -19,7 +19,7 @@ template <typename T>
 class Environment
 {
 public:
-    typedef int (*hfptr)(T);
+    typedef int (*hfptr)(const T&);
     
     Environment(hfptr THash) : states_(THash), invalidStates_(THash), hashFunction_(THash) { }
     
