@@ -87,12 +87,21 @@ void AStar3D::plannerToWorld(Transform3D &T)
     float eps = static_cast<Environment3D *>(this->environment_)->getStepSize();
     float rotationEps = static_cast<Environment3D *>(this->environment_)->getRotationStepSize();
     MPVec3 pos = T.getPosition();
-    float roll = T.getRotation().w;
     pos.x *= eps;
     pos.y *= eps;
     pos.z *= eps;
     T.setPosition(pos);
-    T.setRotation(MPQuaternionMakeWithAngleAndAxis(roll*rotationEps, 0.0f, 0.0f, 1.0f));
+    
+    MPQuaternion worldRotation = T.getRotation();
+    
+    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(worldRotation.x * rotationEps, 1.0f, 0.0f, 0.0f);
+    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(worldRotation.y * rotationEps, 0.0f, 1.0f, 0.0f);
+    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(worldRotation.z * rotationEps, 0.0f, 0.0f, 1.0f);
+    
+    worldRotation = MPQuaternionMultiply(roll, yaw);
+    worldRotation = MPQuaternionMultiply(worldRotation, pitch);
+    
+    T.setRotation(worldRotation);
 }
     
 }

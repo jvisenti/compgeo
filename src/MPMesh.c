@@ -13,7 +13,7 @@
 
 typedef struct _MPMeshPrivate
 {
-    unsigned short refCount;
+    int refCount;
     MPSphere boundingSphere;
 } MPMeshPrivate;
 
@@ -56,14 +56,14 @@ void MPMeshRetain(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    ((MPMeshPrivate *)mesh->_reserved)->refCount++;
+    ++(((MPMeshPrivate *)mesh->_reserved)->refCount);
 }
 
 void MPMeshRelease(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    unsigned short refCount = ((MPMeshPrivate *)mesh->_reserved)->refCount;
+    int refCount = ((MPMeshPrivate *)mesh->_reserved)->refCount;
     
     if (!refCount)
     {
@@ -76,8 +76,13 @@ void MPMeshRelease(MPMesh *mesh)
     }
     else
     {
-        ((MPMeshPrivate *)mesh->_reserved)->refCount--;
+        --(((MPMeshPrivate *)mesh->_reserved)->refCount);
     }
+}
+
+int MPMeshGetRefCount(const MPMesh *mesh)
+{
+    return ((MPMeshPrivate *)mesh->_reserved)->refCount;
 }
 
 size_t MPMeshGetTriangleCount(const MPMesh *mesh)

@@ -40,6 +40,12 @@ typedef struct _MPSphere
     float radius;
 } MPSphere;
     
+typedef struct _MPAABox
+{
+    MPVec3 min;
+    MPVec3 max;
+} MPAABox;
+    
 typedef union _MPTriangle
 {
     struct {MPVec3 v1, v2, v3;};
@@ -305,6 +311,32 @@ static inline MPSphere MPSphereMake(MPVec3 center, float radius)
 static inline int MPSphereIntersectsSphere(MPSphere s1, MPSphere s2)
 {
     return MPVec3EuclideanDistance(s1.center, s2.center) <= s1.radius + s2.radius;
+}
+    
+#pragma mark - axis aligned box functions
+    
+static inline MPAABox MPAABoxMake(MPVec3 min, MPVec3 max)
+{
+    MPAABox b;
+    b.min = min; b.max = max;
+    return b;
+}
+    
+static inline int MPAABoxContainsPoint(MPAABox b, MPVec3 p)
+{
+    return (p.x > b.min.x && p.x < b.max.x &&
+            p.y > b.min.y && p.y < b.max.y &&
+            p.z > b.min.z && p.z < b.max.z);
+}
+    
+static inline int MPAABoxIntersectsBox(MPAABox b1, MPAABox b2)
+{
+    return(b1.max.x > b2.min.x &&
+           b1.min.x < b2.max.x &&
+           b1.max.y > b2.min.y &&
+           b1.min.y < b2.max.y &&
+           b1.max.z > b2.min.z &&
+           b1.min.z < b2.max.z);
 }
     
 #pragma mark - line functions

@@ -34,9 +34,14 @@ public:
     
     bool plan(T start, T goal, std::vector<T> &plan)
     {
-        if (!this->environment_->stateValid(start) || !this->environment_->stateValid(goal))
+        if (!this->environment_->stateValid(start))
         {
-            std::cout << "A* plan failed because start/goal states are invalid" << std::endl;
+            std::cout << "A* plan failed because start state is invalid" << std::endl;
+            return false;
+        }
+        else if (!this->environment_->stateValid(goal))
+        {
+            std::cout << "A* plan failed because goal state is invalid" << std::endl;
             return false;
         }
         
@@ -73,7 +78,7 @@ public:
         
         //startState->setParent(startState); ??
         startState->setPathCost(0.0f);
-        OPEN.insertState(startState, 8.0f * heuristic_(startState->getValue(), goalState->getValue()));
+        OPEN.insertState(startState, 4.0f * heuristic_(startState->getValue(), goalState->getValue()));
         
         while(OPEN.size() > 0)
         {
@@ -106,12 +111,12 @@ public:
                     if((*it)->getHeapIndex() == INVALID_INDEX)
                     {
                         OPEN.insertState(*it, (*it)->getPathCost() + 
-                                         8.0f * heuristic_((*it)->getValue(), goalState->getValue()));
+                                         4.0f * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                     else
                     {
                         OPEN.decreaseKey(*it, (*it)->getPathCost() + 
-                                         8.0f * heuristic_((*it)->getValue(), goalState->getValue()));
+                                         4.0f * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                 }
             }

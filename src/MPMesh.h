@@ -42,6 +42,8 @@ void MPMeshRetain(MPMesh *mesh);
 /* decrement the retain counter of the given mesh. the mesh will be freed if its retain count reaches 0. */
 void MPMeshRelease(MPMesh *mesh);
     
+int MPMeshGetRefCount(const MPMesh *mesh);
+    
 /* returns the number of triangles in the triangulation of the mesh represented by the index array. */
 size_t MPMeshGetTriangleCount(const MPMesh *mesh);
     

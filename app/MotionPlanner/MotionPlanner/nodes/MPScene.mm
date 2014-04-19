@@ -347,7 +347,6 @@
 {
     if (self.planner)
     {
-        // TODO: anything else need to be done to free up memory?
         delete self.planner;
     }
     
@@ -355,9 +354,13 @@
     {
         if (_environment->getActiveObject())
         {
-            //            TODO: need to free these somehow
-            //            free((void *)_environment->getActiveObject()->getMesh()->vertexData);
-            //            free((void *)_environment->getActiveObject()->getMesh()->indexData);
+            
+            if (MPMeshGetRefCount(_environment->getActiveObject()->getMesh()) <= 1)
+            {
+                // free allocated vertex and index data if we're about to free the mesh
+                free((void *)_environment->getActiveObject()->getMesh()->vertexData);
+                free((void *)_environment->getActiveObject()->getMesh()->indexData);
+            }
             
             delete _environment->getActiveObject();
         }
@@ -367,9 +370,12 @@
         {
             MP::Model *otherModel = *it;
             
-            //            TODO: need to free these somehow
-            //            free((void *)otherModel->getMesh()->vertexData);
-            //            free((void *)otherModel->getMesh()->indexData);
+            if (MPMeshGetRefCount((*it)->getMesh()) <= 1)
+            {
+                // free allocated vertex and index data if we're about to free the mesh
+                free((void *)(*it)->getMesh()->vertexData);
+                free((void *)(*it)->getMesh()->indexData);
+            }
             
             delete otherModel;
         }

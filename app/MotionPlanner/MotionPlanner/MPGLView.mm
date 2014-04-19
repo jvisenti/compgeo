@@ -18,7 +18,7 @@
 
 // TODO: maybe this should be based on the total size of the environment or active object or something
 #define kMPEnvironmentStepSize      0.2
-#define kMPEnvironmentRotationStep  (M_PI/4.0f)
+#define kMPEnvironmentRotationStep  (M_PI/8.0f)
 
 @interface MPGLView ()
 

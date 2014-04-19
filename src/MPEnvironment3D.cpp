@@ -194,7 +194,17 @@ bool Environment3D::stateValid(const Transform3D &T)
     
     Transform3D worldT = T;
     worldT.setPosition(MPVec3MultiplyScalar(T.getPosition(), stepSize_));
-    worldT.setRotation(MPQuaternionMakeWithAngleAndAxis(T.getRotation().w * rotationStepSize_, 0.0f, 0.0f, 1.0f));
+    
+    MPQuaternion worldRotation = worldT.getRotation();
+    
+    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(worldRotation.x * rotationStepSize_, 1.0f, 0.0f, 0.0f);
+    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(worldRotation.y * rotationStepSize_, 0.0f, 1.0f, 0.0f);
+    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(worldRotation.z * rotationStepSize_, 0.0f, 0.0f, 1.0f);
+    
+    worldRotation = MPQuaternionMultiply(roll, yaw);
+    worldRotation = MPQuaternionMultiply(worldRotation, pitch);
+    
+    worldT.setRotation(worldRotation);
     
     if(!this->isValid(worldT))
     {
