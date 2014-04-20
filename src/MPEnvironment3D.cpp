@@ -230,14 +230,14 @@ Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
 void Environment3D::worldToPlanner(Transform3D &state) const
 {
     MPVec3 pPos = state.getPosition();
-    pPos.x = std::floorf(pPos.x / this->stepSize_);
-    pPos.y = std::floorf(pPos.y / this->stepSize_);
-    pPos.z = std::floorf(pPos.z / this->stepSize_);
+    pPos.x = int(pPos.x / this->stepSize_);
+    pPos.y = int(pPos.y / this->stepSize_);
+    pPos.z = int(pPos.z / this->stepSize_);
     
     MPQuaternion pRot;
-    pRot.x = std::floorf(MPQuaternionPitch(pRot) / this->rotationStepSize_);
-    pRot.y = std::floorf(MPQuaternionYaw(pRot) / this->rotationStepSize_);
-    pRot.z = std::floorf(MPQuaternionRoll(pRot) / this->rotationStepSize_);
+    pRot.x = int(MPQuaternionPitch(pRot) / this->rotationStepSize_);
+    pRot.y = int(MPQuaternionYaw(pRot) / this->rotationStepSize_);
+    pRot.z = int(MPQuaternionRoll(pRot) / this->rotationStepSize_);
     pRot.w = 0.0f;
     
     state.setPosition(pPos);

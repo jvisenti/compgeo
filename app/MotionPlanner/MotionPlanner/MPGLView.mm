@@ -123,13 +123,13 @@
             dp.z -= kMPObjectMotionIncrement;
             break;
             
-        case kVK_ANSI_V:
-            key = kVK_ANSI_V;
+        case kVK_Space:
+            key = kVK_Space;
             dp.y += kMPObjectMotionIncrement;
             break;
             
-        case kVK_Space:
-            key = kVK_Space;
+        case kVK_ANSI_V:
+            key = kVK_ANSI_V;
             dp.y -= kMPObjectMotionIncrement;
             break;
             
