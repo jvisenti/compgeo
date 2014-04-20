@@ -330,9 +330,9 @@ static inline MPAABox MPAABoxMake(MPVec3 min, MPVec3 max)
     
 static inline int MPAABoxContainsPoint(MPAABox b, MPVec3 p)
 {
-    return (p.x > b.min.x && p.x < b.max.x &&
-            p.y > b.min.y && p.y < b.max.y &&
-            p.z > b.min.z && p.z < b.max.z);
+    return (p.x >= b.min.x && p.x <= b.max.x &&
+            p.y >= b.min.y && p.y <= b.max.y &&
+            p.z >= b.min.z && p.z <= b.max.z);
 }
     
 static inline int MPAABoxIntersectsBox(MPAABox b1, MPAABox b2)

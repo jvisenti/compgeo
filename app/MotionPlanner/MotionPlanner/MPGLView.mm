@@ -17,7 +17,7 @@
 #define kMPObjectMotionIncrement 0.02f
 
 // TODO: maybe this should be based on the total size of the environment or active object or something
-#define kMPEnvironmentStepSize      0.2
+#define kMPEnvironmentStepSize      0.25
 #define kMPEnvironmentRotationStep  (M_PI/8.0f)
 
 @interface MPGLView ()
@@ -151,7 +151,9 @@
         __weak MPGLView *wself = self;
         BHGLBasicAnimation *trans = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
             
-            GLKVector3 t = GLKQuaternionRotateVector3(GLKQuaternionInvert(wself.scene.rootNode.rotation), dp);
+            GLKQuaternion rotateY = GLKQuaternionMakeWithAngleAndAxis(M_PI*[wself.xSlider floatValue], 0.0f, 1.0f, 0.0f);
+            
+            GLKVector3 t = GLKQuaternionRotateVector3(GLKQuaternionInvert(rotateY), dp);
             object.position = GLKVector3Add(object.position, t);
 
         } duration:0.0];
