@@ -107,6 +107,9 @@
     if (environment != _environment)
     {
         [self.rootNode.children makeObjectsPerformSelector:@selector(removeFromParent)];
+        self.rootNode.position = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        self.rootNode.scale = GLKVector3Make(1.0f, 1.0f, 1.0f);
+        self.rootNode.rotation = GLKQuaternionIdentity;
         
         MPPathNode *pathNode = [[MPPathNode alloc] init];
         [_rootNode addChild:pathNode];

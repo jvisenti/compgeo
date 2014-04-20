@@ -24,6 +24,12 @@
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
 
+@property (nonatomic, weak) IBOutlet NSSlider *xSlider;
+@property (nonatomic, weak) IBOutlet NSSlider *ySlider;
+
+- (IBAction)xSliderChanged:(NSSlider *)sender;
+- (IBAction)ySliderChanged:(NSSlider *)sender;
+
 - (IBAction)openFile:(NSMenuItem *)sender;
 
 @end
@@ -72,10 +78,13 @@
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
+    CGFloat dy = [theEvent deltaY] / self.bounds.size.height;
     
-    BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI*dx, 0.0f, 1.0f, 0.0f)];
+    [self.xSlider setFloatValue:[self.xSlider floatValue] + dx];
+    [self xSliderChanged:self.xSlider];
     
-    [self.scene.rootNode runAnimation:rotateY];
+    [self.ySlider setFloatValue:[self.ySlider floatValue] + dy];
+    [self ySliderChanged:self.ySlider];
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent
@@ -243,6 +252,22 @@
     return _movementAnimations;
 }
 
+- (IBAction)xSliderChanged:(NSSlider *)sender
+{
+    GLKQuaternion xRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[self.ySlider floatValue], 1.0f, 0.0f, 0.0f);
+    GLKQuaternion yRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[sender floatValue], 0.0f, 1.0f, 0.0f);
+    
+    self.scene.rootNode.rotation = GLKQuaternionMultiply(xRotation, yRotation);
+}
+
+- (IBAction)ySliderChanged:(NSSlider *)sender
+{
+    GLKQuaternion xRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[sender floatValue], 1.0f, 0.0f, 0.0f);
+    GLKQuaternion yRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[self.xSlider floatValue], 0.0f, 1.0f, 0.0f);
+    
+    self.scene.rootNode.rotation = GLKQuaternionMultiply(xRotation, yRotation);
+}
+
 - (void)openFile:(NSMenuItem *)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -265,6 +290,9 @@
             {
                 environment->setStepSize(kMPEnvironmentStepSize);
                 environment->setRotationStepSize(kMPEnvironmentRotationStep);
+                
+                [self.xSlider setFloatValue:0.0f];
+                [self.ySlider setFloatValue:0.0f];
                 
                 self.scene.environment = environment;
             }
