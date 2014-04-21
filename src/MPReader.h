@@ -2,7 +2,7 @@
 //  MPReader.h
 //
 //  Created by John Visentin on 4/10/14.
-//  Copyright (c) 2014 Brockenhaus Studio. All rights reserved.
+//  Copyright (c) 2014 John Visentin. All rights reserved.
 //
 // A file reader for loading mesh/model/environment data.
 

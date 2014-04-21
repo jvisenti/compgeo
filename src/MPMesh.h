@@ -42,6 +42,8 @@ void MPMeshRetain(MPMesh *mesh);
 /* decrement the retain counter of the given mesh. the mesh will be freed if its retain count reaches 0. */
 void MPMeshRelease(MPMesh *mesh);
     
+int MPMeshGetRefCount(const MPMesh *mesh);
+    
 /* returns the number of triangles in the triangulation of the mesh represented by the index array. */
 size_t MPMeshGetTriangleCount(const MPMesh *mesh);
     
@@ -49,6 +51,9 @@ size_t MPMeshGetTriangleCount(const MPMesh *mesh);
    when the method returns, the array pointed to by triangle will contain the 3 vertices. */
 void MPMeshGetTriangle(const MPMesh *mesh, size_t n, MPVec3 *triangle);
 
+/* returns the extreme points of the mesh. order is: left, bottom, far, right, top, near */
+const MPVec3* MPMeshGetExtremePoints(const MPMesh *mesh);
+    
 /* returns the bounding sphere of the mesh using the given transform. pass NULL to use identity. */
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform);
     

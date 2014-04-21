@@ -37,6 +37,15 @@ static inline void MPSpherePrint(MPSphere s)
     printf(" r:%.2f}", s.radius);
 }
     
+static inline void MPAABoxPrint(MPAABox b)
+{
+    printf("{min:");
+    MPVec3Print(b.min);
+    printf(" max:");
+    MPVec3Print(b.max);
+    printf("}");
+}
+    
 #if defined(__cplusplus)
 }
 #endif

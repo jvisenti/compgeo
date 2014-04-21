@@ -19,9 +19,9 @@ template <typename T>
 class Environment
 {
 public:
-    typedef int (*hfptr)(T);
+    typedef int (*hfptr)(const T&);
     
-    Environment(hfptr THash) : states_(THash), hashFunction_(THash) { }
+    Environment(hfptr THash) : states_(THash), invalidStates_(THash), hashFunction_(THash) { }
     
     virtual ~Environment()
     {
@@ -33,6 +33,8 @@ public:
                                std::vector<double> &costs) = 0;
     
     inline int getNumStates() const { return states_.size(); }
+    
+    inline hfptr getHashFunction() const { return hashFunction_; }
     
     SearchState<T> *addState(T p)
     {
@@ -46,9 +48,20 @@ public:
         return s;
     }
     
+    
     virtual bool getCost(SearchState<T> *s, SearchState<T> *t, double &cost) = 0;
     
-    inline hfptr getHashFunction() { return hashFunction_; }
+    
+    virtual bool stateValid(const T &state)
+    {
+        return invalidStates_.get(state) == nullptr;
+    }
+    
+    virtual void plannerToWorld(T &state) const { return; }
+    virtual T plannerToWorld(const T &state) const { return state; }
+    
+    virtual void worldToPlanner(T &state) const { return; }
+    virtual T worldToPlanner(const T &state) const {return state; }
     
 protected:
     void clear()
@@ -60,13 +73,25 @@ protected:
             while(it != nullptr)
             {
                 delete it->state;
-                it->state = 0;
+                it->state = nullptr;
+                it = it->next;
+            }
+        }
+        
+        for(int i = 0; i < invalidStates_.getNumSlots(); ++i)
+        {
+            HashTableElement<T> *it = invalidStates_.getSlot(i);
+            while(it != nullptr)
+            {
+                delete it->state;
+                it->state = nullptr;
                 it = it->next;
             }
         }
     }
     
     HashTable<T> states_;
+    HashTable<T> invalidStates_;
     hfptr hashFunction_;
     
 };

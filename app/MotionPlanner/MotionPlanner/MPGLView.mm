@@ -17,11 +17,18 @@
 #define kMPObjectMotionIncrement 0.02f
 
 // TODO: maybe this should be based on the total size of the environment or active object or something
-#define kMPEnvironmentStepSize 0.2
+#define kMPEnvironmentStepSize      0.25
+#define kMPEnvironmentRotationStep  (M_PI/8.0f)
 
 @interface MPGLView ()
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
+
+@property (nonatomic, weak) IBOutlet NSSlider *xSlider;
+@property (nonatomic, weak) IBOutlet NSSlider *ySlider;
+
+- (IBAction)xSliderChanged:(NSSlider *)sender;
+- (IBAction)ySliderChanged:(NSSlider *)sender;
 
 - (IBAction)openFile:(NSMenuItem *)sender;
 
@@ -71,10 +78,13 @@
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     CGFloat dx = [theEvent deltaX] / self.bounds.size.width;
+    CGFloat dy = [theEvent deltaY] / self.bounds.size.height;
     
-    BHGLBasicAnimation *rotateY = [BHGLBasicAnimation rotateBy:GLKQuaternionMakeWithAngleAndAxis(M_PI*dx, 0.0f, 1.0f, 0.0f)];
+    [self.xSlider setFloatValue:[self.xSlider floatValue] + dx];
+    [self xSliderChanged:self.xSlider];
     
-    [self.scene.rootNode runAnimation:rotateY];
+    [self.ySlider setFloatValue:[self.ySlider floatValue] + dy];
+    [self ySliderChanged:self.ySlider];
 }
 
 - (void)scrollWheel:(NSEvent *)theEvent
@@ -122,13 +132,13 @@
             dp.z -= kMPObjectMotionIncrement;
             break;
             
-        case kVK_ANSI_V:
-            key = kVK_ANSI_V;
+        case kVK_Space:
+            key = kVK_Space;
             dp.y += kMPObjectMotionIncrement;
             break;
             
-        case kVK_Space:
-            key = kVK_Space;
+        case kVK_ANSI_V:
+            key = kVK_ANSI_V;
             dp.y -= kMPObjectMotionIncrement;
             break;
             
@@ -136,17 +146,20 @@
             break;
     }
     
-    dp = GLKQuaternionRotateVector3(GLKQuaternionInvert(self.scene.rootNode.rotation), dp);
-    
     if (key && ![self.movementAnimations objectForKey:@(key)])
     {
+        __weak MPGLView *wself = self;
         BHGLBasicAnimation *trans = [BHGLBasicAnimation transformWithBlock:^(BHGLAnimatedObject *object, NSTimeInterval current, NSTimeInterval duration) {
-            object.position = GLKVector3Add(object.position, dp);
+            
+            GLKQuaternion rotateY = GLKQuaternionMakeWithAngleAndAxis(M_PI*[wself.xSlider floatValue], 0.0f, 1.0f, 0.0f);
+            
+            GLKVector3 t = GLKQuaternionRotateVector3(GLKQuaternionInvert(rotateY), dp);
+            object.position = GLKVector3Add(object.position, t);
 
         } duration:0.0];
         trans.repeats = YES;
         
-        [self.scene animateActiveObject:trans];
+        [self.scene animateShadow:trans];
         
         [self.movementAnimations setObject:trans forKey:@(key)];
     }
@@ -189,11 +202,8 @@
             break;
             
         case kVK_ANSI_P:
-        {
-            // TODO: be able to plan to any state
-            MP::Transform3D goal(MPVec3Make(1.5, 0, 0), MPVec3Make(1, 1, 1), MPQuaternionIdentity);
-            
-            if ([self.scene planTo:goal])
+        {            
+            if ([self.scene plan])
             {
                 [self.scene executePlan];
             }
@@ -207,7 +217,7 @@
     
     if (anim)
     {
-        [self.scene removeAnimationFromActiveObject:anim];
+        [self.scene removeAnimationFromShadow:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
 }
@@ -244,6 +254,22 @@
     return _movementAnimations;
 }
 
+- (IBAction)xSliderChanged:(NSSlider *)sender
+{
+    GLKQuaternion xRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[self.ySlider floatValue], 1.0f, 0.0f, 0.0f);
+    GLKQuaternion yRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[sender floatValue], 0.0f, 1.0f, 0.0f);
+    
+    self.scene.rootNode.rotation = GLKQuaternionMultiply(xRotation, yRotation);
+}
+
+- (IBAction)ySliderChanged:(NSSlider *)sender
+{
+    GLKQuaternion xRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[sender floatValue], 1.0f, 0.0f, 0.0f);
+    GLKQuaternion yRotation = GLKQuaternionMakeWithAngleAndAxis(M_PI*[self.xSlider floatValue], 0.0f, 1.0f, 0.0f);
+    
+    self.scene.rootNode.rotation = GLKQuaternionMultiply(xRotation, yRotation);
+}
+
 - (void)openFile:(NSMenuItem *)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -265,6 +291,10 @@
             if (environment)
             {
                 environment->setStepSize(kMPEnvironmentStepSize);
+                environment->setRotationStepSize(kMPEnvironmentRotationStep);
+                
+                [self.xSlider setFloatValue:0.0f];
+                [self.ySlider setFloatValue:0.0f];
                 
                 self.scene.environment = environment;
             }

@@ -133,6 +133,7 @@ static const BHGLColor BHGLColorMagenta = {1.0f, 0.0f, 1.0f, 1.0f};
 static const BHGLColor BHGLColorOrange = {1.0f, 0.5f, 0.0f, 1.0f};
 static const BHGLColor BHGLColorPurple = {0.5f, 0.0f, 0.5f, 1.0f};
 static const BHGLColor BHGLColorBrown = {0.6f, 0.4f, 0.2f, 1.0f};
+static const BHGLColor BHGLColorTeal = {0.0f, 0.5f, 0.5f, 1.0f};
 
 typedef struct _BHGLColorVertex
 {

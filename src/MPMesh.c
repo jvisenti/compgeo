@@ -13,11 +13,12 @@
 
 typedef struct _MPMeshPrivate
 {
-    unsigned short refCount;
+    int refCount;
+    MPVec3 extremePoints[6]; // left, bottom, far, right, top, near
     MPSphere boundingSphere;
 } MPMeshPrivate;
 
-MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh);
+void _MPMeshComputePrivate(MPMesh *mesh);
 
 #pragma mark - public functions
 
@@ -34,11 +35,11 @@ MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices
     mesh->numIndices = numIndices;
     
     MPMeshPrivate *priv = malloc(sizeof(MPMeshPrivate));
-    
     priv->refCount = 0;
-    priv->boundingSphere = _MPMeshComputeBoundingSphere(mesh);
     
     mesh->_reserved = priv;
+    
+    _MPMeshComputePrivate(mesh);
     
     return mesh;
 }
@@ -56,14 +57,14 @@ void MPMeshRetain(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    ((MPMeshPrivate *)mesh->_reserved)->refCount++;
+    ++(((MPMeshPrivate *)mesh->_reserved)->refCount);
 }
 
 void MPMeshRelease(MPMesh *mesh)
 {
     if (mesh == NULL) return;
     
-    unsigned short refCount = ((MPMeshPrivate *)mesh->_reserved)->refCount;
+    int refCount = ((MPMeshPrivate *)mesh->_reserved)->refCount;
     
     if (!refCount)
     {
@@ -76,8 +77,13 @@ void MPMeshRelease(MPMesh *mesh)
     }
     else
     {
-        ((MPMeshPrivate *)mesh->_reserved)->refCount--;
+        --(((MPMeshPrivate *)mesh->_reserved)->refCount);
     }
+}
+
+int MPMeshGetRefCount(const MPMesh *mesh)
+{
+    return ((MPMeshPrivate *)mesh->_reserved)->refCount;
 }
 
 size_t MPMeshGetTriangleCount(const MPMesh *mesh)
@@ -116,6 +122,11 @@ void MPMeshGetTriangle(const MPMesh *mesh, size_t n, MPVec3 *triangle)
     }
 }
 
+const MPVec3* MPMeshGetExtremePoints(const MPMesh *mesh)
+{
+    return ((MPMeshPrivate *)mesh->_reserved)->extremePoints;
+}
+
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
 {    
     MPSphere boundingSphere = ((MPMeshPrivate *)mesh->_reserved)->boundingSphere;
@@ -152,7 +163,7 @@ MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
 
 #pragma mark - private functions
 
-MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh)
+void _MPMeshComputePrivate(MPMesh *mesh)
 {
     MPVec3 *left, *right, *bottom, *top, *back, *front;
     left = right = bottom = top = back = front = (MPVec3 *)mesh->vertexData;
@@ -186,5 +197,14 @@ MPSphere _MPMeshComputeBoundingSphere(MPMesh *mesh)
     maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, *back));
     maxDist = fmaxf(maxDist, MPVec3EuclideanDistance(center, *front));
     
-    return MPSphereMake(center, maxDist);
+    MPMeshPrivate *private = (MPMeshPrivate *)mesh->_reserved;
+    
+    private->extremePoints[0] = *left;
+    private->extremePoints[1] = *bottom;
+    private->extremePoints[2] = *back;
+    private->extremePoints[3] = *right;
+    private->extremePoints[4] = *top;
+    private->extremePoints[5] = *front;
+                              
+    private->boundingSphere = MPSphereMake(center, maxDist);
 }

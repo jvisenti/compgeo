@@ -3,7 +3,7 @@
 namespace MP
 {
 
-int point2DHash(Point2D p)
+int point2DHash(const Point2D &p)
 {
   const int p1 = 73856093;
   const int p2 = 19349663;

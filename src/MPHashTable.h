@@ -35,8 +35,10 @@ template <typename T>
 class HashTable
 {
 public:
+  typedef int (*hfptr)(const T&);
+    
   /* Needs a has function that hashes objects of type T */
-  HashTable(int (*hash)(T),
+  HashTable(hfptr hash,
 	    int initialSize = DEFAULT_HASH_TABLE_SIZE, 
 	    double maxLoadFactor = DEFAULT_MAX_LOAD_FACTOR)
     : numElements_(0), slots_(initialSize), maxLoadFactor_(maxLoadFactor), hash_(hash)
@@ -50,6 +52,12 @@ public:
 
   void insert(SearchState<T> *s)
   {
+      if(get(s->getValue()) != nullptr)
+      {
+          std::cout << ":'(" << std::endl;
+          return;
+      }
+      
     // If the load factor is two high, double the size of the hash table,
     // and re-insert all the elements
     if(getLoadFactor() > getMaxLoadFactor())
@@ -74,6 +82,8 @@ public:
     }
     
     // @todo should we check if it's already in the table?
+
+      
     numElements_++;
   }
 
@@ -85,7 +95,7 @@ public:
     // @todo
   }
 
-  SearchState<T> *get(T t)
+  SearchState<T> *get(const T &t) const
   {
     int slot = hash_(t) % slots_.size();
     /* std::cout << "Checking slot " << slot << std::endl; */
@@ -129,10 +139,11 @@ public:
               HashTableElement<T> *next = hit->next;
               delete hit;
               hit = next;
+              
+              numElements_--;
           }
           
           slots_[i] = nullptr;
-          numElements_--;
       }
   }
 
@@ -184,7 +195,7 @@ private:
 
   double maxLoadFactor_;
 
-  int (*hash_)(T);
+  hfptr hash_;
  
 };
 

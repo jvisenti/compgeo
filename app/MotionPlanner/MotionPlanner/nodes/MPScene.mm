@@ -20,12 +20,15 @@
 @interface MPScene ()
 {
     MP::Environment3D *_environment;
+    
+    __weak BHGLNode *_rootNode;
 }
 
 @property (nonatomic, assign) MP::AStar3D *planner;
-@property (nonatomic, assign) std::vector<MP::Transform3D> &plan;
+@property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
 
 @property (nonatomic, weak) MPCube *boundingBox;
+@property (nonatomic, weak) MPModelNode *shadow;
 @property (nonatomic, weak) MPPathNode *pathNode;
 @property (nonatomic, weak) MPModelNode *activeObject;
 
@@ -34,6 +37,7 @@
 - (void)setupLights;
 
 - (void)updateBoundingBox;
+- (void)updateShadow;
 
 - (void)cleanup;
 
@@ -79,8 +83,9 @@
 {
     if (!_rootNode)
     {
-        _rootNode = [[BHGLNode alloc] init];
-        [super addChild:_rootNode];
+        BHGLNode *root = [[BHGLNode alloc] init];
+        [super addChild:root];
+        _rootNode = root;
     }
     
     return _rootNode;
@@ -102,6 +107,9 @@
     if (environment != _environment)
     {
         [self.rootNode.children makeObjectsPerformSelector:@selector(removeFromParent)];
+        self.rootNode.position = GLKVector3Make(0.0f, 0.0f, 0.0f);
+        self.rootNode.scale = GLKVector3Make(1.0f, 1.0f, 1.0f);
+        self.rootNode.rotation = GLKQuaternionIdentity;
         
         MPPathNode *pathNode = [[MPPathNode alloc] init];
         [_rootNode addChild:pathNode];
@@ -115,7 +123,7 @@
             // create active object
             MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:environment->getActiveObject()];
             
-            activeNode.material.surfaceColor = BHGLColorRed;
+            activeNode.material.surfaceColor = BHGLColorOrange;
             activeNode.material.ambientColor = BHGLColorWhite;
             activeNode.material.diffuseColor = BHGLColorWhite;
             activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
@@ -133,7 +141,7 @@
                 
                 MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
                 
-                obstacleNode.material.surfaceColor = BHGLColorYellow;
+                obstacleNode.material.surfaceColor = BHGLColorTeal;
                 obstacleNode.material.ambientColor = BHGLColorWhite;
                 obstacleNode.material.diffuseColor = BHGLColorWhite;
                 obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
@@ -142,14 +150,15 @@
                 [self addChild:obstacleNode];
             }
             
-            self.planner = new MP::AStar3D(environment, MP::distanceHeuristic);
+            self.planner = new MP::AStar3D(environment, MP::manhattanHeuristic);
         }
         
         _environment = environment;
         
+        [self updateShadow];
         [self updateBoundingBox];
         
-        float maxAxis = 2.0f * fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
+        float maxAxis = fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
         float scale = kMPSceneMaxSize / maxAxis;
         
         self.rootNode.scale = GLKVector3Make(scale, scale, scale);
@@ -166,12 +175,23 @@
     BOOL valid = YES;
     
     if (_environment != nullptr)
-    {
-        valid = _environment->isValidForModel(transform, model);
-        valid = valid && !_environment->getActiveObject()->wouldCollideWithModel(transform, *self.boundingBox.model);
+    {        
+        if (model == self.shadow.model)
+        {
+            valid = _environment->inBoundsForModel(transform, self.shadow.model);
+        }
+        else
+        {
+            valid = _environment->isValidForModel(transform, model);
+        }
     }
     
     return valid;
+}
+
+- (BOOL)plan
+{
+    return [self planTo:self.shadow.model->getTransform()];
 }
 
 - (BOOL)planTo:(const MP::Transform3D &)goal
@@ -181,30 +201,35 @@
 
 - (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal
 {
-    self.plan.clear();
-    
-    if(!self.planner->plan(start, goal, self.plan))
+    if (self.planner)
     {
-        printf("failed to find plan from ");
-        MPVec3Print(start.getPosition());
-        printf(" to ");
-        MPVec3Print(goal.getPosition());
-        printf("\n");
+        self.planStates.clear();
         
-        return NO;
+        if(!self.planner->plan(start, goal, self.planStates))
+        {
+            printf("failed to find plan from ");
+            MPVec3Print(start.getPosition());
+            printf(" to ");
+            MPVec3Print(goal.getPosition());
+            printf("\n");
+            
+            return NO;
+        }
+        
+        return YES;
     }
     
-    return YES;
+    return NO;
 }
 
 - (void)executePlan
 {
     std::vector<MPVec3> path;
-    BHGLKeyframeAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)self.plan.size() fps:kMPPlanStatesPerSec];
+    BHGLKeyframeAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)self.planStates.size() fps:kMPPlanStatesPerSec];
     
-    for (int i = 0; i < self.plan.size(); ++i)
+    for (int i = 0; i < self.planStates.size(); ++i)
     {
-        MP::Transform3D &transform = self.plan.at(i);
+        MP::Transform3D &transform = self.planStates.at(i);
         
         path.push_back(transform.getPosition());
         
@@ -228,6 +253,16 @@
     [self.activeObject removeAnimation:animation];
 }
 
+- (void)animateShadow:(BHGLAnimation *)animation
+{
+    [self.shadow runAnimation:animation];
+}
+
+- (void)removeAnimationFromShadow:(BHGLAnimation *)animation
+{
+    [self.shadow removeAnimation:animation];
+}
+
 #pragma mark - private interface
 
 - (void)setupProgram
@@ -245,7 +280,7 @@
 
 - (void)setupCamera
 {
-    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:15]];
+    [self addCamera:[[BHGLCamera alloc] initWithFieldOfView:GLKMathDegreesToRadians(35) aspectRatio:1.0 nearClippingPlane:0.01 farClippingPlane:40.0]];
     
     self.activeCamera.position = GLKVector3Make(0.0f, 2.0f, 10.0f);
     self.activeCamera.target = self.rootNode;
@@ -272,7 +307,7 @@
     [self.boundingBox removeFromParent];
     
     MPCube *boundingBox = [[MPCube alloc] init];
-    boundingBox.scale = GLKVector3Make(2.0*_environment->getSize().w+0.01, 2.0*_environment->getSize().h+0.01, 2.0*_environment->getSize().d+0.01);
+    boundingBox.scale = GLKVector3Make(_environment->getSize().w+0.01, _environment->getSize().h+0.01, _environment->getSize().d+0.01);
     
     boundingBox.material.surfaceColor = BHGLColorMake(1.0f, 1.0f, 1.0f, 0.1f);
     boundingBox.material.ambientColor = BHGLColorWhite;
@@ -287,11 +322,36 @@
     self.boundingBox = boundingBox;
 }
 
+- (void)updateShadow
+{
+    [self.shadow removeFromParent];
+    
+    MP::Model *shadowModel = new MP::Model(self.activeObject.model->getMesh());
+    shadowModel->setTransform(self.activeObject.model->getTransform());
+    
+    MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
+    
+    BHGLColor shadowColor = self.activeObject.material.surfaceColor;
+    shadowColor.a = 0.2f;
+    
+    shadow.material.surfaceColor = shadowColor;
+    shadow.material.emissionColor = shadow.material.surfaceColor;
+    shadow.material.ambientColor = BHGLColorWhite;
+    shadow.material.diffuseColor = BHGLColorWhite;
+    shadow.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+    shadow.material.blendEnabled = GL_TRUE;
+    shadow.material.blendSrcRGB = GL_SRC_ALPHA;
+    shadow.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
+    
+    [self addChild:shadow];
+    
+    _shadow = shadow;
+}
+
 - (void)cleanup
 {
     if (self.planner)
     {
-        // TODO: anything else need to be done to free up memory?
         delete self.planner;
     }
     
@@ -299,9 +359,13 @@
     {
         if (_environment->getActiveObject())
         {
-            //            TODO: need to free these somehow
-            //            free((void *)_environment->getActiveObject()->getMesh()->vertexData);
-            //            free((void *)_environment->getActiveObject()->getMesh()->indexData);
+            
+            if (MPMeshGetRefCount(_environment->getActiveObject()->getMesh()) <= 1)
+            {
+                // free allocated vertex and index data if we're about to free the mesh
+                free((void *)_environment->getActiveObject()->getMesh()->vertexData);
+                free((void *)_environment->getActiveObject()->getMesh()->indexData);
+            }
             
             delete _environment->getActiveObject();
         }
@@ -311,9 +375,12 @@
         {
             MP::Model *otherModel = *it;
             
-            //            TODO: need to free these somehow
-            //            free((void *)otherModel->getMesh()->vertexData);
-            //            free((void *)otherModel->getMesh()->indexData);
+            if (MPMeshGetRefCount((*it)->getMesh()) <= 1)
+            {
+                // free allocated vertex and index data if we're about to free the mesh
+                free((void *)(*it)->getMesh()->vertexData);
+                free((void *)(*it)->getMesh()->indexData);
+            }
             
             delete otherModel;
         }
