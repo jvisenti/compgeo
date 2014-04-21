@@ -210,9 +210,9 @@ Model* Reader::generateModel_(Tokenizer &tokens, const std::map<std::string, MPM
                 // NOTE: this may not be the best format to store rotations in
                 MPVec3 axisRotations = this->loadVector3_(tokens);
                 
-                MPQuaternion rx = MPQuaternionMakeWithAngleAndAxis(axisRotations.x, 1.0f, 0.0f, 0.0f);
-                MPQuaternion ry = MPQuaternionMakeWithAngleAndAxis(axisRotations.y, 0.0f, 1.0f, 0.0f);
-                MPQuaternion rz = MPQuaternionMakeWithAngleAndAxis(axisRotations.z, 0.0f, 0.0f, 1.0f);
+                MPQuaternion rx = MPQuaternionMakeWithAngleAndAxis(RADIANS(axisRotations.x), 1.0f, 0.0f, 0.0f);
+                MPQuaternion ry = MPQuaternionMakeWithAngleAndAxis(RADIANS(axisRotations.y), 0.0f, 1.0f, 0.0f);
+                MPQuaternion rz = MPQuaternionMakeWithAngleAndAxis(RADIANS(axisRotations.z), 0.0f, 0.0f, 1.0f);
                 
                 MPQuaternion r = MPQuaternionMultiply(ry, rx);
                 r = MPQuaternionMultiply(rz, r);

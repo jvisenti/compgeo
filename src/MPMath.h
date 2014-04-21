@@ -67,6 +67,9 @@ static const MPVec3 MPVec3Zero = {{0.0f, 0.0f, 0.0f}};
 static const MPQuaternion MPQuaternionIdentity = {{0.0f, 0.0f, 0.0f, 1.0f}};
 static const MPMat4 MPMat4Identity = {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f}};
     
+#define RADIANS(d) ((d) * M_PI / 180.0f)
+#define DEGREES(r) ((r) * 180.0f / M_PI)
+    
 #pragma mark - vector3 functions
 
 static inline MPVec3 MPVec3Make(float x, float y, float z)
