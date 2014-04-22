@@ -27,6 +27,8 @@ typedef struct _MPMesh
     size_t indexSize;
     size_t numIndices;
     
+    const char *texName;
+    
     void *_reserved;
 } MPMesh;
 

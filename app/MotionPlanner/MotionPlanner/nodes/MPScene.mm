@@ -141,7 +141,7 @@
                 
                 MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
                 
-                obstacleNode.material.surfaceColor = BHGLColorTeal;
+                obstacleNode.material.surfaceColor = obstacleNode.material.texture ? BHGLColorBlack : BHGLColorTeal;
                 obstacleNode.material.ambientColor = BHGLColorWhite;
                 obstacleNode.material.diffuseColor = BHGLColorWhite;
                 obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
@@ -271,6 +271,7 @@
     
     [program setVertexAttribute:BHGLVertexAttribPosition forName:kBHGLPositionAttributeName];
     [program setVertexAttribute:BHGLVertexAttribNormal forName:kBHGLNormalAttributeName];
+    [program setVertexAttribute:BHGLVertexAttribTexCoord0 forName:kBHGLTexCoord0AttributeName];
     
     if ([program link])
     {

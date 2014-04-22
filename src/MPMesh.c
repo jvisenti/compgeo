@@ -34,6 +34,8 @@ MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices
     mesh->indexSize = indexSize;
     mesh->numIndices = numIndices;
     
+    mesh->texName = NULL;
+    
     MPMeshPrivate *priv = malloc(sizeof(MPMeshPrivate));
     priv->refCount = 0;
     
@@ -48,6 +50,7 @@ void MPMeshFree(MPMesh *mesh)
 {
     if (mesh)
     {
+        free((void *)mesh->texName);
         free(mesh->_reserved);
         free(mesh);
     }

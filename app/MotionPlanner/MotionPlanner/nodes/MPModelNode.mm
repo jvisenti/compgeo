@@ -105,21 +105,33 @@
     
     if (mesh)
     {
-        BHGLVertexType vType = BHGLVertexTypeCreate(2);
-        vType.attribs[0] = BHGLVertexAttribPosition;
-        vType.types[0] = GL_FLOAT;
-        vType.lengths[0] = 3;
-        vType.normalized[0] = GL_FALSE;
-        vType.offsets[0] = (GLvoid *)0;
+        BHGLVertexType vType;
         
-        // NOTE: this assumes the mesh has normal data, which MPMesh knows nothing about. We should think about this.
-        vType.attribs[1] = BHGLVertexAttribNormal;
-        vType.types[1] = GL_FLOAT;
-        vType.lengths[1] = 3;
-        vType.normalized[1] = GL_FALSE;
-        vType.offsets[1] = (GLvoid *)(3*sizeof(GLfloat));
-        
-        vType.stride = (GLsizei)mesh->stride;
+        if (mesh->texName)
+        {
+            vType = BHGLVertexTypeCreateWithType(BHGL_NTEXTURE_VERTEX);
+            
+            NSString *texName = [NSString stringWithUTF8String:mesh->texName];
+            self.material.texture = [[BHGLTexture alloc] initWithImageNamed:texName];
+        }
+        else
+        {
+            vType = BHGLVertexTypeCreate(2);
+            vType.attribs[0] = BHGLVertexAttribPosition;
+            vType.types[0] = GL_FLOAT;
+            vType.lengths[0] = 3;
+            vType.normalized[0] = GL_FALSE;
+            vType.offsets[0] = (GLvoid *)0;
+            
+            // NOTE: this assumes the mesh has normal data, which MPMesh knows nothing about. We should think about this.
+            vType.attribs[1] = BHGLVertexAttribNormal;
+            vType.types[1] = GL_FLOAT;
+            vType.lengths[1] = 3;
+            vType.normalized[1] = GL_FALSE;
+            vType.offsets[1] = (GLvoid *)(3*sizeof(GLfloat));
+            
+            vType.stride = (GLsizei)mesh->stride;
+        }
         
         [super setMesh:[[BHGLMesh alloc] initWithVertexData:(const GLvoid *)mesh->vertexData vertexDataSize:(mesh->numVertices * mesh->stride) vertexType:&vType indexData:(const GLvoid *)mesh->indexData indexDataSize:(mesh->numIndices * mesh->indexSize) indexType:GL_UNSIGNED_INT]];
         
