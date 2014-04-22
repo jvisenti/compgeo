@@ -221,6 +221,33 @@ static inline float MPQuaternionYaw(MPQuaternion q)
     //return denom != 0.0f ? atan(2.0f*(q.x*q.w + q.y*q.z) / denom) : 0.0f;
 }
     
+static inline void MPQuaternionToRPY(MPQuaternion q, float *r, float *p, float *y)
+{
+    float test = q.x * q.y + q.z * q.w;
+    // Handle the singularity cases
+    if(test > 0.499f)
+    {
+        *y = 2 * atan2(q.x, q.w);
+        *p = M_PI_2;
+        *r = 0.0f;
+        return;
+    }
+    if(test < -0.499f)
+    {
+        *y = -2.0f * atan2(q.x, q.w);
+        *p = -M_PI_2;
+        *r = 0.0f;
+        return;
+    }
+    
+    float sqx = q.x * q.x;
+    float sqy = q.y * q.y;
+    float sqz = q.z * q.z;
+    *r = atan2(2 * q.y * q.w - 2 * q.x * q.z, 1 - 2 * sqy - 2 * sqz);
+    *y = asin(2 * test);
+    *p = atan2(2 * q.x * q.w - 2* q.y * q.z, 1 - 2 * sqx - 2 * sqz);
+}
+    
 #pragma mark - matrix functions
 
 static inline MPMat4 MPMat4MakeTranslation(MPVec3 translation)

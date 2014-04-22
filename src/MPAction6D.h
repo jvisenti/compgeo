@@ -3,7 +3,6 @@
 //  MotionPlanner
 //
 //  Created by Ellis M. Ratner on 4/21/14.
-//  Copyright (c) 2014 Brockenhaus Studio. All rights reserved.
 //
 
 #ifndef __MPAction6D__

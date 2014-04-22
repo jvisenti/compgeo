@@ -202,14 +202,13 @@ void Environment3D::plannerToWorld(Transform3D &state) const
 {
     state.setPosition(MPVec3MultiplyScalar(state.getPosition(), this->stepSize_));
     
-    MPQuaternion worldRotation = state.getRotation();
+    MPQuaternion plannerRotation = state.getRotation();
     
-    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(worldRotation.x * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
-    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(worldRotation.y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
-    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(worldRotation.z * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
+    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(plannerRotation.x * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
+    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(plannerRotation.y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
+    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(plannerRotation.z * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
     
-    worldRotation = MPQuaternionMultiply(roll, yaw);
-    worldRotation = MPQuaternionMultiply(worldRotation, pitch);
+    MPQuaternion worldRotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
     
     state.setRotation(worldRotation);
 }
@@ -231,10 +230,11 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     pPos.z = int(pPos.z / this->stepSize_);
     
     MPQuaternion pRot;
-    MPQuaternion rotation = state.getRotation();
-    pRot.x = int(MPQuaternionPitch(rotation) / this->rotationStepSize_);
-    pRot.y = int(MPQuaternionYaw(rotation) / this->rotationStepSize_);
-    pRot.z = int(MPQuaternionRoll(rotation) / this->rotationStepSize_);
+    float r, p, y;
+    MPQuaternionToRPY(state.getRotation(), &r, &p, &y);
+    pRot.x = int(p / this->rotationStepSize_);
+    pRot.y = int(y / this->rotationStepSize_);
+    pRot.z = int(r / this->rotationStepSize_);
     pRot.w = 0.0f;
     
     //MPQuaternionPrint(pRot);
@@ -323,8 +323,7 @@ void Environment3D::generate6DActions()
                             MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
                             MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(r * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
                             
-                            rotation = MPQuaternionMultiply(roll, yaw);
-                            rotation = MPQuaternionMultiply(rotation, pitch);
+                            rotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
                             
                             double cost = std::abs(i) + std::abs(j) + std::abs(k) + std::abs(p) + std::abs(y) + std::abs(r);
                             

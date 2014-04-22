@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		33958A491905E61A00B77C79 /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33958A471905E61A00B77C79 /* MPAction6D.cpp */; };
+		33FBB3681906D9F7002635EC /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
 		D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4B18EEEC0300993BAF /* MPAppDelegate.m */; };
@@ -50,9 +50,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		33958A451905DFBA00B77C79 /* MPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAction.h; sourceTree = "<group>"; };
-		33958A471905E61A00B77C79 /* MPAction6D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPAction6D.cpp; sourceTree = "<group>"; };
-		33958A481905E61A00B77C79 /* MPAction6D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAction6D.h; sourceTree = "<group>"; };
+		33FBB3651906D9F7002635EC /* MPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction.h; path = ../../src/MPAction.h; sourceTree = "<group>"; };
+		33FBB3661906D9F7002635EC /* MPAction6D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPAction6D.cpp; path = ../../src/MPAction6D.cpp; sourceTree = "<group>"; };
+		33FBB3671906D9F7002635EC /* MPAction6D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction6D.h; path = ../../src/MPAction6D.h; sourceTree = "<group>"; };
 		D416ED3518EEEC0300993BAF /* MotionPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416ED3818EEEC0300993BAF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		D416ED3B18EEEC0300993BAF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -321,9 +321,9 @@
 				D4A79DBD18FF8B96005B4D57 /* MPTransform3D.cpp */,
 				D4A79DBE18FF8B96005B4D57 /* MPTransform3D.h */,
 				D4A79DBF18FF8B96005B4D57 /* MPUtils.h */,
-				33958A451905DFBA00B77C79 /* MPAction.h */,
-				33958A471905E61A00B77C79 /* MPAction6D.cpp */,
-				33958A481905E61A00B77C79 /* MPAction6D.h */,
+				33FBB3651906D9F7002635EC /* MPAction.h */,
+				33FBB3661906D9F7002635EC /* MPAction6D.cpp */,
+				33FBB3671906D9F7002635EC /* MPAction6D.h */,
 			);
 			name = MotionPlannerSrc;
 			sourceTree = "<group>";
@@ -431,7 +431,7 @@
 				D4A79DC718FF8B96005B4D57 /* MPTokenizer.cpp in Sources */,
 				D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */,
 				D416EDA718EEED3D00993BAF /* BHGLLight.m in Sources */,
-				33958A491905E61A00B77C79 /* MPAction6D.cpp in Sources */,
+				33FBB3681906D9F7002635EC /* MPAction6D.cpp in Sources */,
 				D416EDA218EEED3D00993BAF /* BHGLAnimation.m in Sources */,
 				D4A79DC618FF8B96005B4D57 /* MPReader.cpp in Sources */,
 				D416EDA518EEED3D00993BAF /* BHGLCUtils.c in Sources */,
