@@ -296,6 +296,8 @@
                 [self.xSlider setFloatValue:0.0f];
                 [self.ySlider setFloatValue:0.0f];
                 
+                environment->generate6DActions();
+                
                 self.scene.environment = environment;
             }
         }

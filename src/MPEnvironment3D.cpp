@@ -7,10 +7,30 @@
 
 #include "MPEnvironment3D.h"
 #include "MPTimer.h"
+#include "MPUtils.h"
 
 namespace MP
 {
+
+double distanceHeuristic(const Transform3D &start, const Transform3D &goal)
+{
+    return MPVec3EuclideanDistance(start.getPosition(), goal.getPosition());
+}
+
+double manhattanHeuristic(const Transform3D &start, const Transform3D &goal)
+{
+    MPQuaternion sRot = start.getRotation();
+    MPQuaternion tRot = goal.getRotation();
     
+    MPVec3 difference = MPVec3Subtract(start.getPosition(), goal.getPosition());
+    
+    float pitchDiff = sRot.x - tRot.x;
+    float yawDiff = sRot.y - tRot.y;
+    float rollDiff = sRot.z - tRot.z;
+    
+    return std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff);
+}
+
 bool operator==(const Transform3D &lhs, const Transform3D &rhs)
 {
     MPVec3 leftPos = lhs.getPosition();
@@ -94,62 +114,38 @@ void Environment3D::getSuccessors(SearchState3D *s,
     if(states_.get(sT) == nullptr)
         states_.insert(s);
     
+    plannerToWorld(sT);
+    
 //    Timer timer;
 //    timer.start();
     
-    MPVec3 sTpos = sT.getPosition();
-    MPQuaternion sTrot = sT.getRotation();
-    
-    int xs = (int)sTpos.x;
-    int ys = (int)sTpos.y;
-    int zs = (int)sTpos.z;
-    
-    int pitch = (int)sTrot.x;
-    int yaw = (int)sTrot.y;
-    int roll = (int)sTrot.z;
-    
-    // TODO: What if rotationStepSize >= 2*M_PI?
-    int numRotations = (int)(2*M_PI/rotationStepSize_);
-    
-    for(int i = -1; i <= 1; ++i)
+    for(auto action : actionSet_)
     {
-        for(int j = -1; j <= 1; ++j)
+        Transform3D neighborTransformWorld = action(sT);
+        Transform3D neighborTransformPlanner = neighborTransformWorld;
+        worldToPlanner(neighborTransformPlanner);
+        
+        SearchState3D *neighborState = states_.get(neighborTransformPlanner);
+        if(neighborState == nullptr)
         {
-            for(int k = -1; k <= 1; ++k)
+            // Check if active object collides with any obstacle at this state
+            if(!Environment<Transform3D>::stateValid(neighborTransformPlanner)) continue;
+            
+            if(!this->isValid(neighborTransformWorld))
             {
-                if(i == 0 && j == 0 & k == 0) continue;
-                
-                for(int p = -1; p <= 1; ++p)
-                {
-                    for (int y = -1; y <= 1; ++y)
-                    {
-                        for (int r = -1; r <= 1; ++r)
-                        {
-                            Transform3D T(MPVec3Make((float)(xs+i), (float)(ys+j), (float)(zs+k)), s->getValue().getScale(), MPQuaternionMake((pitch + p + numRotations) % numRotations, (yaw + y + numRotations) % numRotations, (roll + r + numRotations) % numRotations, 0.0f));
-                            
-                            SearchState3D *neighbor = states_.get(T);
-                            if(neighbor == nullptr)
-                            {
-                                // Check if active object collides with any obstacle at this state
-                                if(!this->stateValid(T))
-                                {
-                                    continue;
-                                }
-                                
-                                // Has not seen this state yet
-                                neighbor = new SearchState3D();
-                                neighbor->setValue(T);
-                                states_.insert(neighbor);
-                            }
-                            successors.push_back(neighbor);
-                            double cost;
-                            getCost(s, neighbor, cost);
-                            costs.push_back(cost);
-                        }
-                    }
-                }
+                SearchState3D *s = new SearchState3D();
+                s->setValue(neighborTransformPlanner);
+                invalidStates_.insert(s);
+                continue;
             }
+            
+            // Has not seen this state yet
+            neighborState = new SearchState3D();
+            neighborState->setValue(neighborTransformPlanner);
+            states_.insert(neighborState);
         }
+        successors.push_back(neighborState);
+        costs.push_back(action.getCost());
     }
     
 //    std::cout << "Successor generation took "
@@ -235,10 +231,14 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     pPos.z = int(pPos.z / this->stepSize_);
     
     MPQuaternion pRot;
-    pRot.x = int(MPQuaternionPitch(pRot) / this->rotationStepSize_);
-    pRot.y = int(MPQuaternionYaw(pRot) / this->rotationStepSize_);
-    pRot.z = int(MPQuaternionRoll(pRot) / this->rotationStepSize_);
+    MPQuaternion rotation = state.getRotation();
+    pRot.x = int(MPQuaternionPitch(rotation) / this->rotationStepSize_);
+    pRot.y = int(MPQuaternionYaw(rotation) / this->rotationStepSize_);
+    pRot.z = int(MPQuaternionRoll(rotation) / this->rotationStepSize_);
     pRot.w = 0.0f;
+    
+    //MPQuaternionPrint(pRot);
+    //printf("\n");
     
     state.setPosition(pPos);
     state.setRotation(pRot);
@@ -296,6 +296,70 @@ bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
     }
     
     return inBounds;
+}
+    
+void Environment3D::generate6DActions()
+{
+    actionSet_.clear();
+    
+    for(int i = -1; i <= 1; ++i)
+    {
+        for(int j = -1; j <= 1; ++j)
+        {
+            for(int k = -1; k <= 1; ++k)
+            {
+                if(i == 0 && j == 0 & k == 0) continue;
+                
+                for(int p = -1; p <= 1; ++p)
+                {
+                    for (int y = -1; y <= 1; ++y)
+                    {
+                        for (int r = -1; r <= 1; ++r)
+                        {
+                            MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
+                            MPQuaternion rotation = MPQuaternionIdentity;
+                            
+                            MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(p * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
+                            MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
+                            MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(r * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
+                            
+                            rotation = MPQuaternionMultiply(roll, yaw);
+                            rotation = MPQuaternionMultiply(rotation, pitch);
+                            
+                            double cost = std::abs(i) + std::abs(j) + std::abs(k) + std::abs(p) + std::abs(y) + std::abs(r);
+                            
+                            Action6D action(cost, translation, rotation);
+                            actionSet_.push_back(action);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+    
+void Environment3D::generate3DActions()
+{
+    actionSet_.clear();
+    
+    for(int i = -1; i <= 1; ++i)
+    {
+        for(int j = -1; j <= 1; ++j)
+        {
+            for(int k = -1; k <= 1; ++k)
+            {
+                if(i == 0 && j == 0 & k == 0) continue;
+                
+                MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
+                MPQuaternion rotation = MPQuaternionIdentity;
+                
+                double cost = std::abs(i) + std::abs(j) + std::abs(k);
+                
+                Action6D action(cost, translation, rotation);
+                actionSet_.push_back(action);
+            }
+        }
+    }
 }
     
 #pragma mark - protected methods

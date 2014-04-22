@@ -10,7 +10,7 @@
 #import "BHGL.h"
 #import "MPCube.h"
 #import "MPPathNode.h"
-#import "MPAStar3D.h"
+#import "MPAStarPlanner.h"
 #import "MPUtils.h"
 
 #define kMPSceneMaxSize 4.0f
@@ -24,7 +24,7 @@
     __weak BHGLNode *_rootNode;
 }
 
-@property (nonatomic, assign) MP::AStar3D *planner;
+@property (nonatomic, assign) MP::AStarPlanner<MP::Transform3D> *planner;
 @property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
 
 @property (nonatomic, weak) MPCube *boundingBox;
@@ -150,7 +150,7 @@
                 [self addChild:obstacleNode];
             }
             
-            self.planner = new MP::AStar3D(environment, MP::manhattanHeuristic);
+            self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);
         }
         
         _environment = environment;

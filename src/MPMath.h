@@ -193,23 +193,32 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
     
 static inline float MPQuaternionRoll(MPQuaternion q)
 {
-    float denom = (1.0f - 2.0f*q.y*q.y + q.z*q.z);
+    return atan2(2*q.y*q.w - 2*q.x*q.z, 1 - 2*q.y*q.y - 2*q.z*q.z);
+    //return atan2(2*(q.x*q.y + q.w*q.z), q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z);
     
-    return denom != 0.0f ? atan(2.0f*(q.x*q.y + q.z*q.w) / denom) : 0.0f;
+    //float denom = (1.0f - 2.0f*q.y*q.y + q.z*q.z);
+    
+    //return denom != 0.0f ? atan(2.0f*(q.x*q.y + q.z*q.w) / denom) : 0.0f;
 }
     
 static inline float MPQuaternionPitch(MPQuaternion q)
 {
-    float p0 = 2.0f*(q.x*q.z - q.w*q.y);
+    return atan2(2*q.x*q.w - 2*q.y*q.z, 1 - 2*q.x*q.x - 2*q.z*q.z);
+    //return atan2(2*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z);
     
-    return (p0 >= -1.0f && p0 <= 1.0f) ? -asin(p0) : 0.0f;
+    //float p0 = 2.0f*(q.x*q.z - q.w*q.y);
+    
+    //return (p0 >= -1.0f && p0 <= 1.0f) ? -asin(p0) : 0.0f;
 }
     
 static inline float MPQuaternionYaw(MPQuaternion q)
 {
-    float denom = (1.0f - 2.0f*q.z*q.z + q.w*q.w);
+    return asin(2*q.x*q.w + 2*q.z*q.w);
+    //return asin(-2*(q.x*q.z - q.w*q.y));
     
-    return denom != 0.0f ? atan(2.0f*(q.x*q.w + q.y*q.z) / denom) : 0.0f;
+    //float denom = (1.0f - 2.0f*q.z*q.z + q.w*q.w);
+    
+    //return denom != 0.0f ? atan(2.0f*(q.x*q.w + q.y*q.z) / denom) : 0.0f;
 }
     
 #pragma mark - matrix functions

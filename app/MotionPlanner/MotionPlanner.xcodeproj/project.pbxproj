@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33958A491905E61A00B77C79 /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33958A471905E61A00B77C79 /* MPAction6D.cpp */; };
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
 		D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4B18EEEC0300993BAF /* MPAppDelegate.m */; };
@@ -36,7 +37,6 @@
 		D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */ = {isa = PBXBuildFile; fileRef = D416EE0318EF1EBE00993BAF /* lighting.vsh */; };
 		D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = D416EEC718F4BDFD00993BAF /* BHGLView.m */; };
 		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
-		D4A79DC018FF8B96005B4D57 /* MPAStar3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA318FF8B96005B4D57 /* MPAStar3D.cpp */; };
 		D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
 		D4A79DC218FF8B96005B4D57 /* MPEnvironment2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAA18FF8B96005B4D57 /* MPEnvironment2D.cpp */; };
 		D4A79DC318FF8B96005B4D57 /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
@@ -50,6 +50,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33958A451905DFBA00B77C79 /* MPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAction.h; sourceTree = "<group>"; };
+		33958A471905E61A00B77C79 /* MPAction6D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MPAction6D.cpp; sourceTree = "<group>"; };
+		33958A481905E61A00B77C79 /* MPAction6D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPAction6D.h; sourceTree = "<group>"; };
 		D416ED3518EEEC0300993BAF /* MotionPlanner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MotionPlanner.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D416ED3818EEEC0300993BAF /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		D416ED3B18EEEC0300993BAF /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -112,8 +115,6 @@
 		D416EEC618F4BDFD00993BAF /* BHGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BHGLView.h; path = ../BHGL/BHGLView.h; sourceTree = "<group>"; };
 		D416EEC718F4BDFD00993BAF /* BHGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BHGLView.m; path = ../BHGL/BHGLView.m; sourceTree = "<group>"; };
 		D416EEC918F4BE6D00993BAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
-		D4A79DA318FF8B96005B4D57 /* MPAStar3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPAStar3D.cpp; path = ../../src/MPAStar3D.cpp; sourceTree = "<group>"; };
-		D4A79DA418FF8B96005B4D57 /* MPAStar3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStar3D.h; path = ../../src/MPAStar3D.h; sourceTree = "<group>"; };
 		D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStarPlanner.h; path = ../../src/MPAStarPlanner.h; sourceTree = "<group>"; };
 		D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
 		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
@@ -293,8 +294,6 @@
 		D416EDEB18EF19D000993BAF /* MotionPlannerSrc */ = {
 			isa = PBXGroup;
 			children = (
-				D4A79DA318FF8B96005B4D57 /* MPAStar3D.cpp */,
-				D4A79DA418FF8B96005B4D57 /* MPAStar3D.h */,
 				D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */,
 				D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */,
 				D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */,
@@ -322,6 +321,9 @@
 				D4A79DBD18FF8B96005B4D57 /* MPTransform3D.cpp */,
 				D4A79DBE18FF8B96005B4D57 /* MPTransform3D.h */,
 				D4A79DBF18FF8B96005B4D57 /* MPUtils.h */,
+				33958A451905DFBA00B77C79 /* MPAction.h */,
+				33958A471905E61A00B77C79 /* MPAction6D.cpp */,
+				33958A481905E61A00B77C79 /* MPAction6D.h */,
 			);
 			name = MotionPlannerSrc;
 			sourceTree = "<group>";
@@ -406,7 +408,6 @@
 				D4A79DC218FF8B96005B4D57 /* MPEnvironment2D.cpp in Sources */,
 				D416ED4518EEEC0300993BAF /* main.m in Sources */,
 				D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */,
-				D4A79DC018FF8B96005B4D57 /* MPAStar3D.cpp in Sources */,
 				D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */,
 				D416EDAF18EEED3D00993BAF /* BHGLTexture.m in Sources */,
 				D4F24EAC18F98913002F3CB0 /* MPPathNode.mm in Sources */,
@@ -430,6 +431,7 @@
 				D4A79DC718FF8B96005B4D57 /* MPTokenizer.cpp in Sources */,
 				D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */,
 				D416EDA718EEED3D00993BAF /* BHGLLight.m in Sources */,
+				33958A491905E61A00B77C79 /* MPAction6D.cpp in Sources */,
 				D416EDA218EEED3D00993BAF /* BHGLAnimation.m in Sources */,
 				D4A79DC618FF8B96005B4D57 /* MPReader.cpp in Sources */,
 				D416EDA518EEED3D00993BAF /* BHGLCUtils.c in Sources */,
