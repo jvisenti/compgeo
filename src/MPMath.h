@@ -69,6 +69,18 @@ static const MPMat4 MPMat4Identity = {{1.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f,
     
 #define RADIANS(d) ((d) * M_PI / 180.0f)
 #define DEGREES(r) ((r) * 180.0f / M_PI)
+
+static inline float MPSafeASin(float x)
+{
+    if(isnan(x))
+        return 0;
+    if(x >= 1.0f)
+        return M_PI_2;
+    if(x <= -1.0f)
+        return -M_PI_2;
+
+    return asinf(x);
+}
     
 #pragma mark - vector3 functions
 
@@ -191,61 +203,40 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
     return MPVec3Make(rq.x, rq.y, rq.z);
 }
     
-static inline float MPQuaternionRoll(MPQuaternion q)
-{
-    return atan2(2*q.y*q.w - 2*q.x*q.z, 1 - 2*q.y*q.y - 2*q.z*q.z);
-    //return atan2(2*(q.x*q.y + q.w*q.z), q.w*q.w + q.x*q.x - q.y*q.y - q.z*q.z);
-    
-    //float denom = (1.0f - 2.0f*q.y*q.y + q.z*q.z);
-    
-    //return denom != 0.0f ? atan(2.0f*(q.x*q.y + q.z*q.w) / denom) : 0.0f;
-}
-    
-static inline float MPQuaternionPitch(MPQuaternion q)
-{
-    return atan2(2*q.x*q.w - 2*q.y*q.z, 1 - 2*q.x*q.x - 2*q.z*q.z);
-    //return atan2(2*(q.y*q.z + q.w*q.x), q.w*q.w - q.x*q.x - q.y*q.y + q.z*q.z);
-    
-    //float p0 = 2.0f*(q.x*q.z - q.w*q.y);
-    
-    //return (p0 >= -1.0f && p0 <= 1.0f) ? -asin(p0) : 0.0f;
-}
-    
-static inline float MPQuaternionYaw(MPQuaternion q)
-{
-    return asin(2*q.x*q.w + 2*q.z*q.w);
-    //return asin(-2*(q.x*q.z - q.w*q.y));
-    
-    //float denom = (1.0f - 2.0f*q.z*q.z + q.w*q.w);
-    
-    //return denom != 0.0f ? atan(2.0f*(q.x*q.w + q.y*q.z) / denom) : 0.0f;
-}
-    
 static inline void MPQuaternionToRPY(MPQuaternion q, float *r, float *p, float *y)
 {
-    float test = q.x * q.y + q.z * q.w;
-    // Handle the singularity cases
-    if(test > 0.499f)
-    {
-        *y = 2 * atan2(q.x, q.w);
-        *p = M_PI_2;
-        *r = 0.0f;
-        return;
-    }
-    if(test < -0.499f)
-    {
-        *y = -2.0f * atan2(q.x, q.w);
-        *p = -M_PI_2;
-        *r = 0.0f;
-        return;
-    }
+    if(y)
+        *y = (float)atan2(2.0f * q.x * q.w + 2.0f * q.y * q.z, 1.0f - 2.0f * (q.z * q.z  + q.w * q.w));
     
-    float sqx = q.x * q.x;
-    float sqy = q.y * q.y;
-    float sqz = q.z * q.z;
-    *r = atan2(2 * q.y * q.w - 2 * q.x * q.z, 1 - 2 * sqy - 2 * sqz);
-    *y = asin(2 * test);
-    *p = atan2(2 * q.x * q.w - 2* q.y * q.z, 1 - 2 * sqx - 2 * sqz);
+    // We will handle the singularity at +/-M_PI_2 in the pitch by using a safe arcsin
+    if(p)
+        *p = (float)MPSafeASin(2.0f * (q.x * q.z - q.w * q.y));
+    if(r)
+        *r = (float)atan2(2.0f * q.x * q.y + 2.0f * q.z * q.w, 1.0f - 2.0f * (q.y * q.y + q.z * q.z));
+}
+    
+static inline MPQuaternion MPRPYToQuaternion(float r, float p, float y)
+{
+    MPQuaternion q;
+    
+    float halfRoll = r * 0.5f;
+    float sinHalfRoll = sinf(halfRoll);
+    float cosHalfRoll = cosf(halfRoll);
+    
+    float halfPitch = p * 0.5f;
+    float sinHalfPitch = sinf(halfPitch);
+    float cosHalfPitch = cosf(halfPitch);
+    
+    float halfYaw = y * 0.5f;
+    float sinHalfYaw = sinf(halfYaw);
+    float cosHalfYaw = cosf(halfYaw);
+
+    q.x = cosHalfYaw * cosHalfPitch * cosHalfRoll + sinHalfYaw * sinHalfPitch * sinHalfRoll;
+    q.y = cosHalfYaw * cosHalfPitch * sinHalfRoll - sinHalfYaw * sinHalfPitch * cosHalfRoll;
+    q.z = cosHalfYaw * sinHalfPitch * cosHalfRoll + sinHalfYaw * cosHalfPitch * sinHalfRoll;
+    q.w = sinHalfYaw * cosHalfPitch * cosHalfRoll - cosHalfYaw * sinHalfPitch * sinHalfRoll;
+    
+    return q;
 }
     
 #pragma mark - matrix functions

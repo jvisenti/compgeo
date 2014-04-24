@@ -300,6 +300,12 @@ bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
     
 void Environment3D::generate6DActions()
 {
+    //MPQuaternion q = MPRPYToQuaternion(0.2f, 0.3f, 0.7f);
+    MPQuaternion q = MPRPYToQuaternion(0.0f, M_PI_2, 0.0f);
+    float r, p, y;
+    MPQuaternionToRPY(q, &r, &p, &y);
+    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
+    
     actionSet_.clear();
     
     for(int i = -1; i <= 1; ++i)
@@ -317,13 +323,15 @@ void Environment3D::generate6DActions()
                         for (int r = -1; r <= 1; ++r)
                         {
                             MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
-                            MPQuaternion rotation = MPQuaternionIdentity;
+                            //MPQuaternion rotation = MPQuaternionIdentity;
                             
-                            MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(p * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
-                            MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
-                            MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(r * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
+                            //MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(p * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
+                            //MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
+                            //MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(r * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
                             
-                            rotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
+                            //rotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
+
+                            MPQuaternion rotation = MPRPYToQuaternion(r * this->rotationStepSize_, p * this->rotationStepSize_, y * this->rotationStepSize_);
                             
                             double cost = std::abs(i) + std::abs(j) + std::abs(k) + std::abs(p) + std::abs(y) + std::abs(r);
                             
