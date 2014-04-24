@@ -206,13 +206,14 @@ static inline MPVec3 MPQuaternionRotateVec3(MPQuaternion q, MPVec3 v)
 static inline void MPQuaternionToRPY(MPQuaternion q, float *r, float *p, float *y)
 {
     if(y)
-        *y = (float)atan2(2.0f * q.x * q.w + 2.0f * q.y * q.z, 1.0f - 2.0f * (q.z * q.z  + q.w * q.w));
+        *y = atan2f(2.0f * (q.w * q.y + q.z * q.x), 1 - 2.0f * (q.x * q.x + q.y * q.y));
     
-    // We will handle the singularity at +/-M_PI_2 in the pitch by using a safe arcsin
+    // Handle the singularity at +/-M_PI_2 in the pitch by using a safe arcsin
     if(p)
-        *p = (float)MPSafeASin(2.0f * (q.x * q.z - q.w * q.y));
+        *p = (float)MPSafeASin(2.0f * (q.w * q.x - q.y * q.z));
     if(r)
-        *r = (float)atan2(2.0f * q.x * q.y + 2.0f * q.z * q.w, 1.0f - 2.0f * (q.y * q.y + q.z * q.z));
+        *r = atan2f(2.0f * (q.w * q.z + q.x * q.y), 1 - 2.0f * (q.z * q.z + q.x * q.x));
+
 }
     
 static inline MPQuaternion MPRPYToQuaternion(float r, float p, float y)
@@ -231,10 +232,10 @@ static inline MPQuaternion MPRPYToQuaternion(float r, float p, float y)
     float sinHalfYaw = sinf(halfYaw);
     float cosHalfYaw = cosf(halfYaw);
 
-    q.x = cosHalfYaw * cosHalfPitch * cosHalfRoll + sinHalfYaw * sinHalfPitch * sinHalfRoll;
-    q.y = cosHalfYaw * cosHalfPitch * sinHalfRoll - sinHalfYaw * sinHalfPitch * cosHalfRoll;
-    q.z = cosHalfYaw * sinHalfPitch * cosHalfRoll + sinHalfYaw * cosHalfPitch * sinHalfRoll;
-    q.w = sinHalfYaw * cosHalfPitch * cosHalfRoll - cosHalfYaw * sinHalfPitch * sinHalfRoll;
+    q.w = cosHalfYaw * cosHalfPitch * cosHalfRoll + sinHalfYaw * sinHalfPitch * sinHalfRoll;
+    q.x = cosHalfYaw * sinHalfPitch * cosHalfRoll + sinHalfYaw * cosHalfPitch * sinHalfRoll;
+    q.y = sinHalfYaw * cosHalfPitch * cosHalfRoll - cosHalfYaw * sinHalfPitch * sinHalfRoll;
+    q.z = cosHalfYaw * cosHalfPitch * sinHalfRoll - sinHalfYaw * sinHalfPitch * cosHalfRoll;
     
     return q;
 }

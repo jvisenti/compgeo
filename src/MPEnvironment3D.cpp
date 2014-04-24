@@ -203,14 +203,8 @@ void Environment3D::plannerToWorld(Transform3D &state) const
     state.setPosition(MPVec3MultiplyScalar(state.getPosition(), this->stepSize_));
     
     MPQuaternion plannerRotation = state.getRotation();
-    
-    MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(plannerRotation.x * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
-    MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(plannerRotation.y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
-    MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(plannerRotation.z * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
-    
-    MPQuaternion worldRotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
-    
-    state.setRotation(worldRotation);
+
+    state.setRotation(MPRPYToQuaternion(plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_, plannerRotation.z * this->rotationStepSize_));
 }
 
 Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
@@ -229,16 +223,15 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     pPos.y = int(pPos.y / this->stepSize_);
     pPos.z = int(pPos.z / this->stepSize_);
     
+    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
+    
     MPQuaternion pRot;
     float r, p, y;
     MPQuaternionToRPY(state.getRotation(), &r, &p, &y);
-    pRot.x = int(p / this->rotationStepSize_);
-    pRot.y = int(y / this->rotationStepSize_);
-    pRot.z = int(r / this->rotationStepSize_);
+    pRot.x = (int(p / this->rotationStepSize_) + numRotations) % numRotations;
+    pRot.y = (int(y / this->rotationStepSize_) + numRotations) % numRotations;
+    pRot.z = (int(r / this->rotationStepSize_) + numRotations) % numRotations;
     pRot.w = 0.0f;
-    
-    //MPQuaternionPrint(pRot);
-    //printf("\n");
     
     state.setPosition(pPos);
     state.setRotation(pRot);
@@ -300,11 +293,13 @@ bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
     
 void Environment3D::generate6DActions()
 {
-    //MPQuaternion q = MPRPYToQuaternion(0.2f, 0.3f, 0.7f);
-    MPQuaternion q = MPRPYToQuaternion(0.0f, M_PI_2, 0.0f);
-    float r, p, y;
-    MPQuaternionToRPY(q, &r, &p, &y);
-    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
+//    MPQuaternion q = MPRPYToQuaternion(0.2f, 0.3f, 0.7f);
+//    MPQuaternion q2 = MPQuaternionMultiply(MPQuaternionMultiply(MPQuaternionMakeWithAngleAndAxis(0.7f, 0.0f, 1.0f, 0.0f), MPQuaternionMakeWithAngleAndAxis(0.3f, 1.0f, 0.0f, 0.0f)), MPQuaternionMakeWithAngleAndAxis(0.2f, 0.0f, 0.0f, 1.0f));
+//    float r, p, y;
+//    MPQuaternionToRPY(q, &r, &p, &y);
+//    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
+//    MPQuaternionToRPY(q2, &r, &p, &y);
+//    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
     
     actionSet_.clear();
     
@@ -323,13 +318,6 @@ void Environment3D::generate6DActions()
                         for (int r = -1; r <= 1; ++r)
                         {
                             MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
-                            //MPQuaternion rotation = MPQuaternionIdentity;
-                            
-                            //MPQuaternion pitch = MPQuaternionMakeWithAngleAndAxis(p * this->rotationStepSize_, 1.0f, 0.0f, 0.0f);
-                            //MPQuaternion yaw = MPQuaternionMakeWithAngleAndAxis(y * this->rotationStepSize_, 0.0f, 1.0f, 0.0f);
-                            //MPQuaternion roll = MPQuaternionMakeWithAngleAndAxis(r * this->rotationStepSize_, 0.0f, 0.0f, 1.0f);
-                            
-                            //rotation = MPQuaternionMultiply(yaw, MPQuaternionMultiply(pitch, roll));
 
                             MPQuaternion rotation = MPRPYToQuaternion(r * this->rotationStepSize_, p * this->rotationStepSize_, y * this->rotationStepSize_);
                             
