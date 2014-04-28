@@ -326,9 +326,9 @@ void Environment3D::generateActionSet()
         MPQuaternion rotation;
         float r, p, y;
         MPQuaternionToRPY(action.getRotation(), &r, &p, &y);
-        rotation.x = (int(p / this->rotationStepSize_) + numRotations) % numRotations;
-        rotation.y = (int(y / this->rotationStepSize_) + numRotations) % numRotations;
-        rotation.z = (int(r / this->rotationStepSize_) + numRotations) % numRotations;
+        rotation.x = (int(std::round(p / this->rotationStepSize_)) + numRotations) % numRotations;
+        rotation.y = (int(std::round(y / this->rotationStepSize_)) + numRotations) % numRotations;
+        rotation.z = (int(std::round(r / this->rotationStepSize_)) + numRotations) % numRotations;
         rotation.w = 0.0f;
        
         actionSet_.push_back(Action6D(action.getCost(), translation, rotation));
@@ -339,14 +339,21 @@ void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &sta
 {
     int numRotations = 2.0f * M_PI / this->getRotationStepSize();
 
+    MPQuaternion q = stateTransform.getRotation();
+    
+    MPQuaternion worldQ = MPRPYToQuaternion(q.z, q.x, q.y);
+    
     MPQuaternion rot = action.getRotation();
     MPVec3 trans = action.getTranslation();
     
+    MPVec3 worldTrans = MPVec3MultiplyScalar(trans, this->stepSize_);
+    worldTrans = MPQuaternionRotateVec3(worldQ, worldTrans);
+    trans = MPVec3Make(std::round(worldTrans.x / stepSize_), std::round(worldTrans.y / stepSize_), std::round(worldTrans.z / stepSize_));
+    
     stateTransform.setPosition(MPVec3Add(stateTransform.getPosition(), trans));
-    MPQuaternion q = stateTransform.getRotation();
     q.x = (int(q.x + rot.x + numRotations) % numRotations);
     q.y = (int(q.y + rot.y + numRotations) % numRotations);
-    q.z = (int(q.z + rot.y + numRotations) % numRotations);
+    q.z = (int(q.z + rot.z + numRotations) % numRotations);
     stateTransform.setRotation(q);
 }
     

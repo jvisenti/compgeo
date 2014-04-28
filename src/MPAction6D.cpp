@@ -47,7 +47,7 @@ Action6D::ActionSet Action6D::generate3DActions(float translationStep)
         {
             for(int k = -1; k <= 1; ++k)
             {
-                if(i == 0 && j == 0 & k == 0) continue;
+                if(i == 0 && j == 0 && k == 0) continue;
                 
                 MPVec3 translation = MPVec3Make(i * translationStep, j * translationStep, k * translationStep);
                 MPQuaternion rotation = MPQuaternionIdentity;
@@ -73,7 +73,7 @@ Action6D::ActionSet Action6D::generate6DActions(float translationStep, float rot
         {
             for(int k = -1; k <= 1; ++k)
             {
-                if(i == 0 && j == 0 & k == 0) continue;
+                if(i == 0 && j == 0 && k == 0) continue;
                 
                 for(int p = -1; p <= 1; ++p)
                 {
@@ -91,6 +91,36 @@ Action6D::ActionSet Action6D::generate6DActions(float translationStep, float rot
                             actions.push_back(action);
                         }
                     }
+                }
+            }
+        }
+    }
+    
+    return actions;
+}
+    
+Action6D::ActionSet Action6D::generateFalconActions(float translationStep, float rotationStep)
+{
+    ActionSet actions;
+    
+    for(int i = 1; i <= 1; ++i)
+    {
+        for(int p = -1; p <= 1; ++p)
+        {
+            for (int y = -1; y <= 1; ++y)
+            {
+                for (int r = -1; r <= 1; ++r)
+                {
+                    if(i == 0 && p == 0 && y == 0 && r == 0) continue;
+                    
+                    MPVec3 translation = MPVec3Make(0.0f, i * translationStep, 0.0f);
+                    
+                    MPQuaternion rotation = MPRPYToQuaternion(r * rotationStep, p * rotationStep, y * rotationStep);
+                    
+                    double cost = std::abs(i) + std::abs(p) + std::abs(y) + std::abs(r);
+                    
+                    Action6D action(cost, translation, rotation);
+                    actions.push_back(action);
                 }
             }
         }

@@ -34,6 +34,8 @@ public:
     
     static ActionSet generate6DActions(float translationStep, float rotationStep);
     
+    static ActionSet generateFalconActions(float translationStep, float rotationStep);
+    
 private:
     MPVec3 translation_;
     MPQuaternion rotation_;
