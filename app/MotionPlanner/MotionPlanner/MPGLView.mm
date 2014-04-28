@@ -288,6 +288,10 @@
             MP::Reader reader(filePath);
             MP::Environment3D *environment = reader.generateEnvironment3D();
             
+            // TODO: Generate some default actions for the active object
+            MP::Model *activeObject = environment->getActiveObject();
+            activeObject->setActionSet(MP::Action6D::generate6DActions(0.25, M_PI/8.0f));
+            
             if (environment)
             {
                 environment->setStepSize(kMPEnvironmentStepSize);
@@ -295,8 +299,6 @@
                 
                 [self.xSlider setFloatValue:0.0f];
                 [self.ySlider setFloatValue:0.0f];
-                
-                environment->generate6DActions();
                 
                 self.scene.environment = environment;
             }

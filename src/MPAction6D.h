@@ -26,6 +26,14 @@ public:
     
     Transform3D operator()(const Transform3D& transform);
     
+    MPVec3 getTranslation() const;
+    
+    MPQuaternion getRotation() const;
+    
+    static ActionSet generate3DActions(float translationStep);
+    
+    static ActionSet generate6DActions(float translationStep, float rotationStep);
+    
 private:
     MPVec3 translation_;
     MPQuaternion rotation_;

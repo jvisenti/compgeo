@@ -137,4 +137,14 @@ bool Model::wouldCollideWithModel(Transform3D &transform, Model &model)
     
     return false;
 }
+    
+void Model::setActionSet(const Action6D::ActionSet &actions)
+{
+    actionSet = actions;
+}
+
+Action6D::ActionSet Model::getActionSet() const
+{
+    return actionSet;
+}
 }

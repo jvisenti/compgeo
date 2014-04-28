@@ -11,6 +11,7 @@
 
 #include "MPMesh.h"
 #include "MPTransform3D.h"
+#include "MPAction6D.h"
 
 namespace MP
 {
@@ -43,11 +44,16 @@ public:
     
     /* returns true if moving to the given transform would cause a collision with the given model */
     bool wouldCollideWithModel(Transform3D &transform, Model &model);
-        
+    
+    void setActionSet(const Action6D::ActionSet &);
+    Action6D::ActionSet getActionSet() const;
+    
 protected:
     MPMesh *mesh;
     
     Transform3D transform;
+    
+    Action6D::ActionSet actionSet;
 };
 }
 

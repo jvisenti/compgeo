@@ -86,7 +86,7 @@ public:
                 plan.push_back(wGoal);
             }
             
-            std::cout << "AStar planner succeeded with " << plan.size() << " states" << std::endl;
+            std::cout << "A* planner succeeded with " << plan.size() << " states" << std::endl;
             
             return true;
         }
@@ -109,7 +109,7 @@ public:
             // Check if s is the goal state
             if(s->getValue() == goalState->getValue())
             {
-                std::cout << "A* search found goal state" << std::endl;
+//                std::cout << "A* search found goal state" << std::endl;
                 return true;
             }
             CLOSED_.insert(s);

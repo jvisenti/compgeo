@@ -48,9 +48,9 @@ public:
     
     MPVec3 getSize() const { return size_; }
     
-    void setActiveObject(Model *activeObject) { activeObject_ = activeObject; }
+    void setActiveObject(Model *activeObject);
     
-    Model* getActiveObject() const { return activeObject_; }
+    Model* getActiveObject() { return activeObject_; }
     
     void addObstacle(Model *obstacle) { obstacles_.push_back(obstacle); }
     
@@ -78,13 +78,13 @@ public:
     bool inBounds(Transform3D &T) const;
     bool inBoundsForModel(Transform3D &T, Model *model) const;
     
-    void generate6DActions();
-    
-    void generate3DActions();
-    
 protected:
     
     void updateBoundingBox();
+    
+    void generateActionSet();
+    
+    void applyAction(const Action6D &action, Transform3D &stateTransform);
     
     MPVec3 origin_;
     MPVec3 size_;

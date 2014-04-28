@@ -104,47 +104,52 @@ void Environment3D::setSize(const MPVec3 &size)
     this->size_ = size;
     this->updateBoundingBox();
 }
+    
+void Environment3D::setActiveObject(MP::Model *activeObject)
+{
+    activeObject_ = activeObject;
+
+    actionSet_.clear();
+    //generateActionSet()
+}
 
 void Environment3D::getSuccessors(SearchState3D *s,
                                   std::vector<SearchState3D *> &successors,
                                   std::vector<double> &costs)
 {
+    if(actionSet_.empty())
+        generateActionSet();
+    
     Transform3D sT = s->getValue();
     
     if(states_.get(sT) == nullptr)
         states_.insert(s);
-    
-    plannerToWorld(sT);
     
 //    Timer timer;
 //    timer.start();
     
     for(auto action : actionSet_)
     {
-        Transform3D neighborTransformWorld = action(sT);
-        Transform3D neighborTransformPlanner = neighborTransformWorld;
-        worldToPlanner(neighborTransformPlanner);
+        // Generate the successor transform by applying an action to the current state
+        Transform3D T = sT;
+        applyAction(action, T);
         
-        SearchState3D *neighborState = states_.get(neighborTransformPlanner);
-        if(neighborState == nullptr)
+        SearchState3D *neighbor = states_.get(T);
+        if(neighbor == nullptr)
         {
             // Check if active object collides with any obstacle at this state
-            if(!Environment<Transform3D>::stateValid(neighborTransformPlanner)) continue;
-            
-            if(!this->isValid(neighborTransformWorld))
+            if(!this->stateValid(T))
             {
-                SearchState3D *s = new SearchState3D();
-                s->setValue(neighborTransformPlanner);
-                invalidStates_.insert(s);
                 continue;
             }
             
             // Has not seen this state yet
-            neighborState = new SearchState3D();
-            neighborState->setValue(neighborTransformPlanner);
-            states_.insert(neighborState);
+            neighbor = new SearchState3D();
+            neighbor->setValue(T);
+            states_.insert(neighbor);
         }
-        successors.push_back(neighborState);
+        
+        successors.push_back(neighbor);
         costs.push_back(action.getCost());
     }
     
@@ -291,72 +296,6 @@ bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
     return inBounds;
 }
     
-void Environment3D::generate6DActions()
-{
-//    MPQuaternion q = MPRPYToQuaternion(0.2f, 0.3f, 0.7f);
-//    MPQuaternion q2 = MPQuaternionMultiply(MPQuaternionMultiply(MPQuaternionMakeWithAngleAndAxis(0.7f, 0.0f, 1.0f, 0.0f), MPQuaternionMakeWithAngleAndAxis(0.3f, 1.0f, 0.0f, 0.0f)), MPQuaternionMakeWithAngleAndAxis(0.2f, 0.0f, 0.0f, 1.0f));
-//    float r, p, y;
-//    MPQuaternionToRPY(q, &r, &p, &y);
-//    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
-//    MPQuaternionToRPY(q2, &r, &p, &y);
-//    std::cout << "(r, p, y) = (" << r << ", " << p << ", " << y << ")" << std::endl;
-    
-    actionSet_.clear();
-    
-    for(int i = -1; i <= 1; ++i)
-    {
-        for(int j = -1; j <= 1; ++j)
-        {
-            for(int k = -1; k <= 1; ++k)
-            {
-                if(i == 0 && j == 0 & k == 0) continue;
-                
-                for(int p = -1; p <= 1; ++p)
-                {
-                    for (int y = -1; y <= 1; ++y)
-                    {
-                        for (int r = -1; r <= 1; ++r)
-                        {
-                            MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
-
-                            MPQuaternion rotation = MPRPYToQuaternion(r * this->rotationStepSize_, p * this->rotationStepSize_, y * this->rotationStepSize_);
-                            
-                            double cost = std::abs(i) + std::abs(j) + std::abs(k) + std::abs(p) + std::abs(y) + std::abs(r);
-                            
-                            Action6D action(cost, translation, rotation);
-                            actionSet_.push_back(action);
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-    
-void Environment3D::generate3DActions()
-{
-    actionSet_.clear();
-    
-    for(int i = -1; i <= 1; ++i)
-    {
-        for(int j = -1; j <= 1; ++j)
-        {
-            for(int k = -1; k <= 1; ++k)
-            {
-                if(i == 0 && j == 0 & k == 0) continue;
-                
-                MPVec3 translation = MPVec3Make(i*stepSize_, j*stepSize_, k*stepSize_);
-                MPQuaternion rotation = MPQuaternionIdentity;
-                
-                double cost = std::abs(i) + std::abs(j) + std::abs(k);
-                
-                Action6D action(cost, translation, rotation);
-                actionSet_.push_back(action);
-            }
-        }
-    }
-}
-    
 #pragma mark - protected methods
     
 void Environment3D::updateBoundingBox()
@@ -367,6 +306,48 @@ void Environment3D::updateBoundingBox()
     MPVec3 max = MPVec3Add(this->origin_, halfSize);
     
     this->boundingBox_ = MPAABoxMake(min, max);    
+}
+    
+void Environment3D::generateActionSet()
+{
+    actionSet_.clear();
+    
+    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
+
+    // Get the model-specific actions that are specified in world coordinates, and
+    // convert them to planner coordinate actions
+    for(auto action : activeObject_->getActionSet())
+    {
+        MPVec3 translation = action.getTranslation();
+        translation.x = int(translation.x / this->stepSize_);
+        translation.y = int(translation.y / this->stepSize_);
+        translation.z = int(translation.z / this->stepSize_);
+        
+        MPQuaternion rotation;
+        float r, p, y;
+        MPQuaternionToRPY(action.getRotation(), &r, &p, &y);
+        rotation.x = (int(p / this->rotationStepSize_) + numRotations) % numRotations;
+        rotation.y = (int(y / this->rotationStepSize_) + numRotations) % numRotations;
+        rotation.z = (int(r / this->rotationStepSize_) + numRotations) % numRotations;
+        rotation.w = 0.0f;
+       
+        actionSet_.push_back(Action6D(action.getCost(), translation, rotation));
+    }
+}
+    
+void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &stateTransform)
+{
+    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
+
+    MPQuaternion rot = action.getRotation();
+    MPVec3 trans = action.getTranslation();
+    
+    stateTransform.setPosition(MPVec3Add(stateTransform.getPosition(), trans));
+    MPQuaternion q = stateTransform.getRotation();
+    q.x = ((int)(q.x + rot.x + numRotations) % numRotations);
+    q.y = ((int)(q.y + rot.y + numRotations) % numRotations);
+    q.z = ((int)(q.z + rot.y + numRotations) % numRotations);
+    stateTransform.setRotation(q);
 }
     
 }
