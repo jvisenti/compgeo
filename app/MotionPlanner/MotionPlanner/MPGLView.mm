@@ -290,7 +290,8 @@
             
             // TODO: Generate some default actions for the active object
             MP::Model *activeObject = environment->getActiveObject();
-            activeObject->setActionSet(MP::Action6D::generate6DActions(0.25, M_PI/8.0f));
+            activeObject->setActionSet(MP::Action6D::generate6DActions(kMPEnvironmentStepSize, kMPEnvironmentRotationStep));
+//            activeObject->setActionSet(MP::Action6D::generate3DActions(kMPEnvironmentStepSize));
             
             if (environment)
             {

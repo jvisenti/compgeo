@@ -30,7 +30,7 @@ public:
 
   inline T getValue() const { return value_; }
 
-  inline void setValue(T value) { value_ = value; }
+  inline void setValue(const T &value) { value_ = value; }
 
   inline double getPathCost() const { return g_; }
 

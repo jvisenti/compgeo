@@ -138,10 +138,10 @@ void Environment3D::getSuccessors(SearchState3D *s,
         if(neighbor == nullptr)
         {
             // Check if active object collides with any obstacle at this state
-            if(!this->stateValid(T))
-            {
-                continue;
-            }
+//            if(!this->stateValid(T))
+//            {
+//                continue;
+//            }
             
             // Has not seen this state yet
             neighbor = new SearchState3D();
@@ -209,7 +209,7 @@ void Environment3D::plannerToWorld(Transform3D &state) const
     
     MPQuaternion plannerRotation = state.getRotation();
 
-    state.setRotation(MPRPYToQuaternion(plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_, plannerRotation.z * this->rotationStepSize_));
+    state.setRotation(MPRPYToQuaternion(plannerRotation.z * this->rotationStepSize_, plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_));
 }
 
 Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
@@ -233,9 +233,9 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     MPQuaternion pRot;
     float r, p, y;
     MPQuaternionToRPY(state.getRotation(), &r, &p, &y);
-    pRot.x = (int(p / this->rotationStepSize_) + numRotations) % numRotations;
-    pRot.y = (int(y / this->rotationStepSize_) + numRotations) % numRotations;
-    pRot.z = (int(r / this->rotationStepSize_) + numRotations) % numRotations;
+    pRot.x = (int(std::round(p / this->rotationStepSize_)) + numRotations) % numRotations;
+    pRot.y = (int(std::round(y / this->rotationStepSize_)) + numRotations) % numRotations;
+    pRot.z = (int(std::round(r / this->rotationStepSize_)) + numRotations) % numRotations;
     pRot.w = 0.0f;
     
     state.setPosition(pPos);
@@ -344,9 +344,9 @@ void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &sta
     
     stateTransform.setPosition(MPVec3Add(stateTransform.getPosition(), trans));
     MPQuaternion q = stateTransform.getRotation();
-    q.x = ((int)(q.x + rot.x + numRotations) % numRotations);
-    q.y = ((int)(q.y + rot.y + numRotations) % numRotations);
-    q.z = ((int)(q.z + rot.y + numRotations) % numRotations);
+    q.x = (int(q.x + rot.x + numRotations) % numRotations);
+    q.y = (int(q.y + rot.y + numRotations) % numRotations);
+    q.z = (int(q.z + rot.y + numRotations) % numRotations);
     stateTransform.setRotation(q);
 }
     

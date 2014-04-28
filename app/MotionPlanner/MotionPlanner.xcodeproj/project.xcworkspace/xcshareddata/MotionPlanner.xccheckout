@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>D7E837D7-563C-4225-A1CF-9807E63FC00F</string>
+	<key>IDESourceControlProjectName</key>
+	<string>MotionPlanner</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>C2534AE9-5FED-4674-88AE-3FD2C5192085</key>
+		<string>https://github.com/jvisenti/compgeo.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>app/MotionPlanner/MotionPlanner.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>C2534AE9-5FED-4674-88AE-3FD2C5192085</key>
+		<string>../../../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/jvisenti/compgeo.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>C2534AE9-5FED-4674-88AE-3FD2C5192085</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>C2534AE9-5FED-4674-88AE-3FD2C5192085</string>
+			<key>IDESourceControlWCCName</key>
+			<string>compgeo</string>
+		</dict>
+	</array>
+</dict>
+</plist>

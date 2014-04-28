@@ -109,10 +109,16 @@ public:
             // Check if s is the goal state
             if(s->getValue() == goalState->getValue())
             {
-//                std::cout << "A* search found goal state" << std::endl;
                 return true;
             }
+            
             CLOSED_.insert(s);
+            
+            if(!this->environment_->stateValid(s->getValue()))
+            {
+                continue;
+            }
+            
             std::vector<SearchState<T> *> neighbors;
             std::vector<double> costs;
             stateExpansions_++;
