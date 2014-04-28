@@ -16,10 +16,6 @@
 
 #define kMPObjectMotionIncrement 0.02f
 
-// TODO: maybe this should be based on the total size of the environment or active object or something
-#define kMPEnvironmentStepSize      0.25
-#define kMPEnvironmentRotationStep  (M_PI/8.0f)
-
 @interface MPGLView ()
 
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
@@ -289,10 +285,7 @@
             MP::Environment3D *environment = reader.generateEnvironment3D();
             
             if (environment)
-            {
-                environment->setStepSize(kMPEnvironmentStepSize);
-                environment->setRotationStepSize(kMPEnvironmentRotationStep);
-                
+            {                
                 [self.xSlider setFloatValue:0.0f];
                 [self.ySlider setFloatValue:0.0f];
                 

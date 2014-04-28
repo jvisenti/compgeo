@@ -13,7 +13,7 @@ namespace MP
     
 static const std::regex MeshValue("Vertex|Index|Texture");
 static const std::regex ModelValue("Mesh|Position|Rotation|Scale");
-static const std::regex EnvironmentValue("Origin|Size|ActiveObject|Obstacles");
+static const std::regex EnvironmentValue("Step|RotationStep|Origin|Size|ActiveObject|Obstacles");
     
 static const std::regex FloatLit("^\\-?[\\d]*\\.?[\\d]*$");
 static const std::regex IntLit("^\\-?[\\d]+");
@@ -138,7 +138,23 @@ Environment3D* Reader::generateEnvironment3D_(Tokenizer &tokens, const std::map<
             token = tokens.match(EnvironmentValue);
             tokens.match("=");
             
-            if (token == "Origin")
+            if (token == "Step")
+            {
+                tokens.match("{");
+                
+                environment->setStepSize(atof(tokens.match(FloatLit).c_str()));
+                
+                tokens.match("}");
+            }
+            else if (token == "RotationStep")
+            {
+                tokens.match("{");
+                
+                environment->setRotationStepSize(RADIANS(atof(tokens.match(FloatLit).c_str())));
+                
+                tokens.match("}");
+            }
+            else if (token == "Origin")
             {
                 environment->setOrigin(this->loadVector3_(tokens));
             }
