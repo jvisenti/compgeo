@@ -38,7 +38,6 @@
 		D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = D416EEC718F4BDFD00993BAF /* BHGLView.m */; };
 		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
 		D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
-		D4A79DC218FF8B96005B4D57 /* MPEnvironment2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAA18FF8B96005B4D57 /* MPEnvironment2D.cpp */; };
 		D4A79DC318FF8B96005B4D57 /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
 		D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
 		D4A79DC518FF8B96005B4D57 /* MPModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB418FF8B96005B4D57 /* MPModel.cpp */; };
@@ -120,8 +119,6 @@
 		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
 		D4A79DA818FF8B96005B4D57 /* MPDijkstraPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstraPlanner.h; path = ../../src/MPDijkstraPlanner.h; sourceTree = "<group>"; };
 		D4A79DA918FF8B96005B4D57 /* MPEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment.h; path = ../../src/MPEnvironment.h; sourceTree = "<group>"; };
-		D4A79DAA18FF8B96005B4D57 /* MPEnvironment2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEnvironment2D.cpp; path = ../../src/MPEnvironment2D.cpp; sourceTree = "<group>"; };
-		D4A79DAB18FF8B96005B4D57 /* MPEnvironment2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment2D.h; path = ../../src/MPEnvironment2D.h; sourceTree = "<group>"; };
 		D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEnvironment3D.cpp; path = ../../src/MPEnvironment3D.cpp; sourceTree = "<group>"; };
 		D4A79DAD18FF8B96005B4D57 /* MPEnvironment3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment3D.h; path = ../../src/MPEnvironment3D.h; sourceTree = "<group>"; };
 		D4A79DAE18FF8B96005B4D57 /* MPFloat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPFloat.h; path = ../../src/MPFloat.h; sourceTree = "<group>"; };
@@ -299,8 +296,6 @@
 				D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */,
 				D4A79DA818FF8B96005B4D57 /* MPDijkstraPlanner.h */,
 				D4A79DA918FF8B96005B4D57 /* MPEnvironment.h */,
-				D4A79DAA18FF8B96005B4D57 /* MPEnvironment2D.cpp */,
-				D4A79DAB18FF8B96005B4D57 /* MPEnvironment2D.h */,
 				D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */,
 				D4A79DAD18FF8B96005B4D57 /* MPEnvironment3D.h */,
 				D4A79DAE18FF8B96005B4D57 /* MPFloat.h */,
@@ -405,7 +400,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */,
-				D4A79DC218FF8B96005B4D57 /* MPEnvironment2D.cpp in Sources */,
 				D416ED4518EEEC0300993BAF /* main.m in Sources */,
 				D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */,
 				D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */,
