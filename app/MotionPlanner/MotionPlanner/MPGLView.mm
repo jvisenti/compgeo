@@ -198,11 +198,15 @@
             break;
             
         case kVK_ANSI_P:
-        {            
-            if ([self.scene plan])
-            {
-                [self.scene executePlan];
-            }
+        {
+            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                if ([self.scene plan])
+                {
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self.scene executePlan];
+                    });
+                }
+            });
         }
             
         default:
