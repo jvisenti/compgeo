@@ -240,7 +240,7 @@
     
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glClearColor(0.6f, 0.8f, 1.0f, 0.0f);
+    glClearColor(0.2f, 0.6f, 0.4f, 0.0f);
 }
 
 #pragma mark - private interface
