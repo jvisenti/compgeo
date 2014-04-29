@@ -102,6 +102,27 @@
     glUniform3fv([self.program uniformPosition:@"u_EyeDirection"], 1, eye.v);
 }
 
+- (void)render
+{
+    if (_environment && self.planner && self.shadow.model)
+    {
+        MP::Transform3D current = self.shadow.model->getTransform();
+        std::vector<MP::Transform3D> states = self.planner->getExploredStates();
+        
+        for (auto t : states)
+        {
+            _environment->plannerToWorld(t);
+            self.shadow.model->setTransform(t);
+            
+            [self.shadow render];
+        }
+        
+        self.shadow.model->setTransform(current);
+    }
+    
+    [super render];
+}
+
 - (void)setEnvironment:(MP::Environment3D *)environment
 {
     if (environment != _environment)

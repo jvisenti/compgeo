@@ -97,6 +97,7 @@ public:
     bool aStarSearch(SearchState<T> *startState, SearchState<T> *goalState)
     {
         CLOSED_.clear();
+        exploredStates_.clear();
         Heap<T> OPEN;
         
         //startState->setParent(startState); ??
@@ -106,18 +107,22 @@ public:
         while(OPEN.size() > 0)
         {
             SearchState<T> *s = OPEN.remove().state;
+            T stateVal = s->getValue();
+            
             // Check if s is the goal state
-            if(s->getValue() == goalState->getValue())
+            if(stateVal == goalState->getValue())
             {
                 return true;
             }
             
             CLOSED_.insert(s);
             
-            if(!this->environment_->stateValid(s->getValue()))
+            if(!this->environment_->stateValid(stateVal))
             {
                 continue;
             }
+            
+            exploredStates_.push_back(stateVal);
             
             std::vector<SearchState<T> *> neighbors;
             std::vector<double> costs;
@@ -154,6 +159,8 @@ public:
         return false;
     }
     
+    const std::vector<T>& getExploredStates() const { return this->exploredStates_; }
+    
 protected:
     void update(SearchState<T> *s, SearchState<T> *sp)
     {
@@ -171,6 +178,8 @@ protected:
     heuristicptr heuristic_;
     
     HashTable<T> CLOSED_;
+    
+    std::vector<T> exploredStates_;
     
     int stateExpansions_;
     
