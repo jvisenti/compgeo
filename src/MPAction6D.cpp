@@ -103,17 +103,17 @@ Action6D::ActionSet Action6D::generateFalconActions(float translationStep, float
 {
     ActionSet actions;
     
-    for(int i = 1; i <= 1; ++i)
+    for(int i = -1; i <= -1; ++i)
     {
+        if (i == 0) continue;
+        
         for(int p = -1; p <= 1; ++p)
         {
             for (int y = -1; y <= 1; ++y)
             {
                 for (int r = -1; r <= 1; ++r)
                 {
-                    if(i == 0 && p == 0 && y == 0 && r == 0) continue;
-                    
-                    MPVec3 translation = MPVec3Make(0.0f, i * translationStep, 0.0f);
+                    MPVec3 translation = MPVec3Make(0.0f, 0.0f, i * translationStep);
                     
                     MPQuaternion rotation = MPRPYToQuaternion(r * rotationStep, p * rotationStep, y * rotationStep);
                     

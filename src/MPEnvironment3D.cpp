@@ -105,12 +105,17 @@ void Environment3D::setSize(const MPVec3 &size)
     this->updateBoundingBox();
 }
     
+void Environment3D::setRotationStepSize(double s)
+{
+    this->rotationStepSize_ = s;
+    this->numRotations_ = 2.0f * M_PI / s;
+}
+    
 void Environment3D::setActiveObject(MP::Model *activeObject)
 {
     activeObject_ = activeObject;
 
     actionSet_.clear();
-    //generateActionSet()
 }
 
 void Environment3D::getSuccessors(SearchState3D *s,
@@ -137,12 +142,6 @@ void Environment3D::getSuccessors(SearchState3D *s,
         SearchState3D *neighbor = states_.get(T);
         if(neighbor == nullptr)
         {
-            // Check if active object collides with any obstacle at this state
-//            if(!this->stateValid(T))
-//            {
-//                continue;
-//            }
-            
             // Has not seen this state yet
             neighbor = new SearchState3D();
             neighbor->setValue(T);
@@ -159,9 +158,6 @@ void Environment3D::getSuccessors(SearchState3D *s,
 
 bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
 {
-    // If the distance between the two states is > stepSize_, then there is no edge
-    // (i.e. primitive motion) between them
-    
     MPQuaternion sRot = s->getValue().getRotation();
     MPQuaternion tRot = t->getValue().getRotation();
     
@@ -171,19 +167,9 @@ bool Environment3D::getCost(SearchState3D *s, SearchState3D *t, double &cost)
     float yawDiff = sRot.y - tRot.y;
     float rollDiff = sRot.z - tRot.z;
     
-    if(std::abs(difference.x) <= 1.0f && std::abs(difference.y) <= 1.0f && std::abs(difference.z) <= 1.0f)
-    {
-        cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + (std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff));
-        
-        return true;
-    }
+    cost = std::abs(difference.x) + std::abs(difference.y) + std::abs(difference.z) + (std::abs(pitchDiff) + std::abs(yawDiff) + std::abs(rollDiff));
     
-    std::cout << "Error: no edge between (" << s->getValue().getPosition().x*stepSize_ <<
-    ", " << s->getValue().getPosition().y*stepSize_ << ", " <<
-    s->getValue().getPosition().z*stepSize_ << ") and (" << t->getValue().getPosition().x*stepSize_
-    << ", " << t->getValue().getPosition().y*stepSize_ << ", " << t->getValue().getPosition().z*stepSize_ << ")" << std::endl;
-    
-    return false;
+    return true;
 }
 
 bool Environment3D::stateValid(const Transform3D &T)
@@ -209,7 +195,8 @@ void Environment3D::plannerToWorld(Transform3D &state) const
     
     MPQuaternion plannerRotation = state.getRotation();
 
-    state.setRotation(MPRPYToQuaternion(plannerRotation.z * this->rotationStepSize_, plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_));
+    MPQuaternion q = MPRPYToQuaternion(plannerRotation.z * this->rotationStepSize_, plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_);
+    state.setRotation(q);
 }
 
 Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
@@ -228,14 +215,12 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     pPos.y = int(pPos.y / this->stepSize_);
     pPos.z = int(pPos.z / this->stepSize_);
     
-    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
-    
     MPQuaternion pRot;
     float r, p, y;
     MPQuaternionToRPY(state.getRotation(), &r, &p, &y);
-    pRot.x = (int(std::round(p / this->rotationStepSize_)) + numRotations) % numRotations;
-    pRot.y = (int(std::round(y / this->rotationStepSize_)) + numRotations) % numRotations;
-    pRot.z = (int(std::round(r / this->rotationStepSize_)) + numRotations) % numRotations;
+    pRot.x = (int(std::round(p / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+    pRot.y = (int(std::round(y / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+    pRot.z = (int(std::round(r / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
     pRot.w = 0.0f;
     
     state.setPosition(pPos);
@@ -312,8 +297,6 @@ void Environment3D::generateActionSet()
 {
     actionSet_.clear();
     
-    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
-
     // Get the model-specific actions that are specified in world coordinates, and
     // convert them to planner coordinate actions
     for(auto action : activeObject_->getActionSet())
@@ -326,9 +309,9 @@ void Environment3D::generateActionSet()
         MPQuaternion rotation;
         float r, p, y;
         MPQuaternionToRPY(action.getRotation(), &r, &p, &y);
-        rotation.x = (int(std::round(p / this->rotationStepSize_)) + numRotations) % numRotations;
-        rotation.y = (int(std::round(y / this->rotationStepSize_)) + numRotations) % numRotations;
-        rotation.z = (int(std::round(r / this->rotationStepSize_)) + numRotations) % numRotations;
+        rotation.x = (int(std::round(p / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+        rotation.y = (int(std::round(y / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+        rotation.z = (int(std::round(r / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
         rotation.w = 0.0f;
        
         actionSet_.push_back(Action6D(action.getCost(), translation, rotation));
@@ -337,11 +320,9 @@ void Environment3D::generateActionSet()
     
 void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &stateTransform)
 {
-    int numRotations = 2.0f * M_PI / this->getRotationStepSize();
-
     MPQuaternion q = stateTransform.getRotation();
     
-    MPQuaternion worldQ = MPRPYToQuaternion(q.z, q.x, q.y);
+    MPQuaternion worldQ = MPRPYToQuaternion(q.z * this->rotationStepSize_, q.x * this->rotationStepSize_, q.y * this->rotationStepSize_);
     
     MPQuaternion rot = action.getRotation();
     MPVec3 trans = action.getTranslation();
@@ -351,9 +332,9 @@ void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &sta
     trans = MPVec3Make(std::round(worldTrans.x / stepSize_), std::round(worldTrans.y / stepSize_), std::round(worldTrans.z / stepSize_));
     
     stateTransform.setPosition(MPVec3Add(stateTransform.getPosition(), trans));
-    q.x = (int(q.x + rot.x + numRotations) % numRotations);
-    q.y = (int(q.y + rot.y + numRotations) % numRotations);
-    q.z = (int(q.z + rot.z + numRotations) % numRotations);
+    q.x = (int(q.x + rot.x + this->numRotations_) % this->numRotations_);
+    q.y = (int(q.y + rot.y + this->numRotations_) % this->numRotations_);
+    q.z = (int(q.z + rot.z + this->numRotations_) % this->numRotations_);
     stateTransform.setRotation(q);
 }
     

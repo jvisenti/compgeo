@@ -62,7 +62,7 @@ public:
     
     double getRotationStepSize() const { return rotationStepSize_; }
     
-    void setRotationStepSize(double s) { rotationStepSize_ = s; }
+    void setRotationStepSize(double s);
     
     bool stateValid(const Transform3D &T);
     
@@ -93,6 +93,7 @@ protected:
     
     double stepSize_;
     double rotationStepSize_;
+    int numRotations_;
     
     Model *activeObject_;
     std::vector<Model *> obstacles_;
