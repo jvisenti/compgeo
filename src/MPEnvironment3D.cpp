@@ -188,53 +188,6 @@ bool Environment3D::stateValid(const Transform3D &T)
     
     return true;
 }
-    
-void Environment3D::plannerToWorld(Transform3D &state) const
-{
-    state.setPosition(MPVec3MultiplyScalar(state.getPosition(), this->stepSize_));
-    
-    MPQuaternion plannerRotation = state.getRotation();
-
-    MPQuaternion q = MPRPYToQuaternion(plannerRotation.z * this->rotationStepSize_, plannerRotation.x * this->rotationStepSize_, plannerRotation.y * this->rotationStepSize_);
-    state.setRotation(q);
-}
-
-Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
-{
-    Transform3D worldState = state;
-    
-    plannerToWorld(worldState);
-    
-    return worldState;
-}
-
-void Environment3D::worldToPlanner(Transform3D &state) const
-{
-    MPVec3 pPos = state.getPosition();
-    pPos.x = int(pPos.x / this->stepSize_);
-    pPos.y = int(pPos.y / this->stepSize_);
-    pPos.z = int(pPos.z / this->stepSize_);
-    
-    MPQuaternion pRot;
-    float r, p, y;
-    MPQuaternionToRPY(state.getRotation(), &r, &p, &y);
-    pRot.x = (int(std::round(p / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-    pRot.y = (int(std::round(y / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-    pRot.z = (int(std::round(r / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-    pRot.w = 0.0f;
-    
-    state.setPosition(pPos);
-    state.setRotation(pRot);
-}
-
-Transform3D Environment3D::worldToPlanner(const Transform3D &state) const
-{
-    Transform3D plannerState = state;
-    
-    worldToPlanner(plannerState);
-    
-    return plannerState;
-}
 
 bool Environment3D::isValid(Transform3D &T) const
 {
@@ -281,6 +234,79 @@ bool Environment3D::inBoundsForModel(MP::Transform3D &T, MP::Model *model) const
     return inBounds;
 }
     
+#pragma mark - world/planner conversions
+    
+void Environment3D::plannerToWorld(Transform3D &state) const
+{
+    MPVec3 wPos = state.getPosition();
+    this->plannerToWorld(wPos);
+    
+    MPQuaternion wRot = state.getRotation();
+    this->plannerToWorld(wRot);
+    
+    state.setPosition(wPos);
+    state.setRotation(wRot);
+}
+
+Transform3D Environment3D::plannerToWorld(const Transform3D &state) const
+{
+    Transform3D worldState = state;
+    
+    plannerToWorld(worldState);
+    
+    return worldState;
+}
+
+void Environment3D::worldToPlanner(Transform3D &state) const
+{
+    MPVec3 pPos = state.getPosition();
+    this->worldToPlanner(pPos);
+    
+    MPQuaternion pRot;
+    this->worldToPlanner(pRot);
+    
+    state.setPosition(pPos);
+    state.setRotation(pRot);
+}
+
+Transform3D Environment3D::worldToPlanner(const Transform3D &state) const
+{
+    Transform3D plannerState = state;
+    
+    worldToPlanner(plannerState);
+    
+    return plannerState;
+}
+    
+void Environment3D::plannerToWorld(MPVec3 &vec) const
+{
+    vec.x *= this->stepSize_;
+    vec.y *= this->stepSize_;
+    vec.z *= this->stepSize_;
+}
+
+void Environment3D::plannerToWorld(MPQuaternion &q) const
+{
+    q = MPRPYToQuaternion(q.z * this->rotationStepSize_, q.x * this->rotationStepSize_, q.y * this->rotationStepSize_);
+}
+    
+void Environment3D::worldToPlanner(MPVec3 &vec) const
+{
+    vec.x = int(std::round(vec.x / this->stepSize_));
+    vec.y = int(std::round(vec.y / this->stepSize_));
+    vec.z = int(std::round(vec.z / this->stepSize_));
+}
+
+void Environment3D::worldToPlanner(MPQuaternion &q) const
+{
+    float r, p, y;
+    MPQuaternionToRPY(q, &r, &p, &y);
+    q.x = (int(std::round(p / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+    q.y = (int(std::round(y / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+    q.z = (int(std::round(r / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
+    q.w = 0.0f;
+}
+    
 #pragma mark - protected methods
     
 void Environment3D::updateBoundingBox()
@@ -302,17 +328,10 @@ void Environment3D::generateActionSet()
     for(auto action : activeObject_->getActionSet())
     {
         MPVec3 translation = action.getTranslation();
-        translation.x = int(translation.x / this->stepSize_);
-        translation.y = int(translation.y / this->stepSize_);
-        translation.z = int(translation.z / this->stepSize_);
+        this->worldToPlanner(translation);
         
-        MPQuaternion rotation;
-        float r, p, y;
-        MPQuaternionToRPY(action.getRotation(), &r, &p, &y);
-        rotation.x = (int(std::round(p / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-        rotation.y = (int(std::round(y / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-        rotation.z = (int(std::round(r / this->rotationStepSize_)) + this->numRotations_) % this->numRotations_;
-        rotation.w = 0.0f;
+        MPQuaternion rotation = action.getRotation();
+        this->worldToPlanner(rotation);
        
         actionSet_.push_back(Action6D(action.getCost(), translation, rotation));
     }
@@ -320,21 +339,30 @@ void Environment3D::generateActionSet()
     
 void Environment3D::applyAction(const MP::Action6D &action, MP::Transform3D &stateTransform)
 {
-    MPQuaternion q = stateTransform.getRotation();
-    
-    MPQuaternion worldQ = MPRPYToQuaternion(q.z * this->rotationStepSize_, q.x * this->rotationStepSize_, q.y * this->rotationStepSize_);
-    
     MPQuaternion rot = action.getRotation();
     MPVec3 trans = action.getTranslation();
     
-    MPVec3 worldTrans = MPVec3MultiplyScalar(trans, this->stepSize_);
-    worldTrans = MPQuaternionRotateVec3(worldQ, worldTrans);
-    trans = MPVec3Make(std::round(worldTrans.x / stepSize_), std::round(worldTrans.y / stepSize_), std::round(worldTrans.z / stepSize_));
+    MPVec3 p = stateTransform.getPosition();
+    MPQuaternion q = stateTransform.getRotation();
     
-    stateTransform.setPosition(MPVec3Add(stateTransform.getPosition(), trans));
+    MPQuaternion worldQ = q;
+    this->plannerToWorld(worldQ);
+    
+    this->plannerToWorld(trans);
+    
+    trans = MPQuaternionRotateVec3(worldQ, trans);
+    
+    this->worldToPlanner(trans);
+    
+    p.x += trans.x;
+    p.y += trans.y;
+    p.z += trans.z;
+    
     q.x = (int(q.x + rot.x + this->numRotations_) % this->numRotations_);
     q.y = (int(q.y + rot.y + this->numRotations_) % this->numRotations_);
     q.z = (int(q.z + rot.z + this->numRotations_) % this->numRotations_);
+    
+    stateTransform.setPosition(p);
     stateTransform.setRotation(q);
 }
     

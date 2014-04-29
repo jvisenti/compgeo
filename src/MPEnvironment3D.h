@@ -86,6 +86,12 @@ protected:
     
     void applyAction(const Action6D &action, Transform3D &stateTransform);
     
+    void plannerToWorld(MPVec3 &vec) const;
+    void plannerToWorld(MPQuaternion &q) const;
+    
+    void worldToPlanner(MPVec3 &vec) const;
+    void worldToPlanner(MPQuaternion &q) const;
+    
     MPVec3 origin_;
     MPVec3 size_;
     
