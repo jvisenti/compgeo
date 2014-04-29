@@ -104,6 +104,15 @@
 
 - (void)render
 {
+    [self configureProgram:self.program];
+    
+    [self.rootNode.children enumerateObjectsUsingBlock:^(BHGLNode *child, NSUInteger idx, BOOL *stop) {
+        if (child != self.boundingBox)
+        {
+            [child render];
+        }
+    }];
+    
     if (_environment && self.planner && self.shadow.model)
     {
         MP::Transform3D current = self.shadow.model->getTransform();
@@ -120,7 +129,7 @@
         self.shadow.model->setTransform(current);
     }
     
-    [super render];
+    [self.boundingBox render];
 }
 
 - (void)setEnvironment:(MP::Environment3D *)environment
@@ -236,6 +245,8 @@
             
             return NO;
         }
+        
+        self.planner->reset();
         
         return YES;
     }

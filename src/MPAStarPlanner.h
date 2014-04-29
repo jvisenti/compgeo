@@ -96,13 +96,12 @@ public:
     
     bool aStarSearch(SearchState<T> *startState, SearchState<T> *goalState)
     {
-        CLOSED_.clear();
-        exploredStates_.clear();
+        this->reset();
         Heap<T> OPEN;
         
         //startState->setParent(startState); ??
         startState->setPathCost(0.0f);
-        OPEN.insertState(startState, 4.0f * heuristic_(startState->getValue(), goalState->getValue()));
+        OPEN.insertState(startState, heuristic_(startState->getValue(), goalState->getValue()));
         
         while(OPEN.size() > 0)
         {
@@ -145,12 +144,12 @@ public:
                     if((*it)->getHeapIndex() == INVALID_INDEX)
                     {
                         OPEN.insertState(*it, (*it)->getPathCost() + 
-                                         4.0f * heuristic_((*it)->getValue(), goalState->getValue()));
+                                         heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                     else
                     {
                         OPEN.decreaseKey(*it, (*it)->getPathCost() + 
-                                         4.0f * heuristic_((*it)->getValue(), goalState->getValue()));
+                                         heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                 }
             }
@@ -160,6 +159,11 @@ public:
     }
     
     const std::vector<T>& getExploredStates() const { return this->exploredStates_; }
+    void reset()
+    {
+        CLOSED_.clear();
+        exploredStates_.clear();
+    }
     
 protected:
     void update(SearchState<T> *s, SearchState<T> *sp)
