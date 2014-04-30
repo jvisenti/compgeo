@@ -24,7 +24,7 @@ public:
     typedef double (*heuristicptr)(const T&, const T&);
     
     AStarPlanner(Environment<T> *environment, heuristicptr heuristic)
-    : Planner<T>(environment), heuristic_(heuristic), CLOSED_(environment->getHashFunction()), stateExpansions_(0)
+    : Planner<T>(environment), heuristic_(heuristic), CLOSED_(environment->getHashFunction()), stateExpansions_(0), weight_(1.0f)
     {
     }
     
@@ -101,7 +101,7 @@ public:
         
         //startState->setParent(startState); ??
         startState->setPathCost(0.0f);
-        OPEN.insertState(startState, heuristic_(startState->getValue(), goalState->getValue()));
+        OPEN.insertState(startState, this->weight_ * heuristic_(startState->getValue(), goalState->getValue()));
         
         while(OPEN.size() > 0)
         {
@@ -144,12 +144,12 @@ public:
                     if((*it)->getHeapIndex() == INVALID_INDEX)
                     {
                         OPEN.insertState(*it, (*it)->getPathCost() + 
-                                         heuristic_((*it)->getValue(), goalState->getValue()));
+                                         this->weight_ * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                     else
                     {
                         OPEN.decreaseKey(*it, (*it)->getPathCost() + 
-                                         heuristic_((*it)->getValue(), goalState->getValue()));
+                                         this->weight_ * heuristic_((*it)->getValue(), goalState->getValue()));
                     }
                 }
             }
@@ -159,6 +159,10 @@ public:
     }
     
     const std::vector<T>& getExploredStates() const { return this->exploredStates_; }
+    
+    void setWeight(double weight) { this->weight_ = weight; }
+    double getWeight() const { return this->weight_; }
+    
     void reset()
     {
         CLOSED_.clear();
@@ -178,6 +182,8 @@ protected:
             sp->setParent(s);
         }
     }
+    
+    double weight_;
     
     heuristicptr heuristic_;
     

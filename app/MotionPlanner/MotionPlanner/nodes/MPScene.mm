@@ -181,6 +181,9 @@
             }
             
             self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);
+            
+            // TODO: play with values for the weight
+            self.planner->setWeight(2.0f);
         }
         
         _environment = environment;
