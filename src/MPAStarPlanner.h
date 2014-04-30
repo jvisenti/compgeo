@@ -123,6 +123,9 @@ public:
             
             exploredStates_.push_back(stateVal);
             
+            // TODO: this is hack?
+            usleep(this->delay_);
+            
             std::vector<SearchState<T> *> neighbors;
             std::vector<double> costs;
             stateExpansions_++;
@@ -169,6 +172,8 @@ public:
         exploredStates_.clear();
     }
     
+    void setDelay(int delay) { delay_ = delay; }
+    
 protected:
     void update(SearchState<T> *s, SearchState<T> *sp)
     {
@@ -182,6 +187,8 @@ protected:
             sp->setParent(s);
         }
     }
+    
+    int delay_;
     
     double weight_;
     

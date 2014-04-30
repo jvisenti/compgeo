@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="5056" systemVersion="13C64" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="4514" systemVersion="13C1021" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
     <dependencies>
         <deployment defaultVersion="1080" identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="5056"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="4514"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -117,37 +117,188 @@
         </menu>
         <window title="MotionPlanner" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" animationBehavior="default" id="QvC-M9-y7g">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
-            <rect key="contentRect" x="335" y="390" width="520" height="520"/>
+            <rect key="contentRect" x="335" y="390" width="692" height="520"/>
             <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1058"/>
-            <value key="minSize" type="size" width="500" height="500"/>
+            <value key="minSize" type="size" width="692" height="520"/>
             <view key="contentView" id="EiT-Mj-1SZ">
-                <rect key="frame" x="0.0" y="0.0" width="520" height="520"/>
+                <rect key="frame" x="0.0" y="0.0" width="692" height="520"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <openGLView useAuxiliaryDepthBufferStencil="NO" allowOffline="YES" wantsBestResolutionOpenGLSurface="YES" id="Tdf-9D-1le" customClass="MPGLView">
-                        <rect key="frame" x="0.0" y="20" width="500" height="500"/>
+                        <rect key="frame" x="172" y="20" width="500" height="500"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <connections>
+                            <outlet property="actionControl" destination="9nc-2o-bzs" id="sIc-NG-JR3"/>
+                            <outlet property="movementControl" destination="oSG-d8-cTO" id="qTI-mD-FCF"/>
+                            <outlet property="pitchSlider" destination="XFb-KI-zbu" id="yfO-3l-GTz"/>
+                            <outlet property="rollSlider" destination="6ya-4F-QLE" id="pMi-XI-AIY"/>
+                            <outlet property="showExpansions" destination="fYH-Jd-59N" id="85P-5N-NMp"/>
+                            <outlet property="speedSlider" destination="nJP-bA-dPQ" id="Rmf-yG-7bE"/>
                             <outlet property="xSlider" destination="a71-AZ-ne8" id="cjR-ri-ie6"/>
                             <outlet property="ySlider" destination="Q4p-Xn-usa" id="vwx-I5-udI"/>
+                            <outlet property="yawSlider" destination="X44-p0-DZz" id="Ii8-gZ-FfE"/>
                         </connections>
                     </openGLView>
                     <slider horizontalHuggingPriority="750" id="Q4p-Xn-usa">
-                        <rect key="frame" x="501" y="30" width="16" height="480"/>
+                        <rect key="frame" x="673" y="30" width="16" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
-                        <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="-1" maxValue="1" tickMarkPosition="right" sliderType="linear" id="AFW-eL-h2h"/>
+                        <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="-1" maxValue="1" tickMarkPosition="left" sliderType="linear" id="AFW-eL-h2h"/>
                         <connections>
                             <action selector="ySliderChanged:" target="Tdf-9D-1le" id="CdA-6M-fBc"/>
                         </connections>
                     </slider>
                     <slider verticalHuggingPriority="750" id="a71-AZ-ne8">
-                        <rect key="frame" x="10" y="1" width="480" height="15"/>
+                        <rect key="frame" x="182" y="1" width="480" height="15"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                         <sliderCell key="cell" controlSize="mini" continuous="YES" state="on" alignment="left" minValue="-1" maxValue="1" tickMarkPosition="above" sliderType="linear" id="yWR-9s-xjx"/>
                         <connections>
                             <action selector="xSliderChanged:" target="Tdf-9D-1le" id="9hv-eG-8RK"/>
                         </connections>
                     </slider>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="rbg-Ck-bSa">
+                        <rect key="frame" x="18" y="477" width="86" height="23"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Action Set" id="mmX-Bh-sH3">
+                            <font key="font" metaFont="system" size="15"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="UaC-Tb-BkO">
+                        <rect key="frame" x="18" y="395" width="86" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Rotation" id="aJS-Lt-r21">
+                            <font key="font" metaFont="system" size="15"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="KHs-mH-Xde">
+                        <rect key="frame" x="18" y="273" width="113" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Visualization" id="zH4-CN-tLD">
+                            <font key="font" metaFont="system" size="15"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="IlO-26-4El">
+                        <rect key="frame" x="18" y="168" width="113" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Movement" id="nJJ-mD-3YA">
+                            <font key="font" metaFont="system" size="15"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="HxS-Ae-fFM">
+                        <rect key="frame" x="118" y="372" width="20" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="r" id="mQV-r6-Xyc">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="CoG-Vb-la6">
+                        <rect key="frame" x="118" y="349" width="20" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="p" id="wfX-Jo-e2x">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="uN4-fX-MBT">
+                        <rect key="frame" x="118" y="326" width="20" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="y" id="A9O-CF-OYk">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eqx-s0-7oO">
+                        <rect key="frame" x="118" y="222" width="48" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="speed" id="7us-ao-MVp">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <slider verticalHuggingPriority="750" id="6ya-4F-QLE">
+                        <rect key="frame" x="20" y="371" width="92" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="180" tickMarkPosition="above" sliderType="linear" id="62y-Sl-j9V"/>
+                        <connections>
+                            <action selector="angleSliderChanged:" target="Tdf-9D-1le" id="sKN-m7-jFL"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="XFb-KI-zbu">
+                        <rect key="frame" x="20" y="348" width="92" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="360" tickMarkPosition="above" sliderType="linear" id="zD0-tG-aHt"/>
+                        <connections>
+                            <action selector="angleSliderChanged:" target="Tdf-9D-1le" id="Q9D-A2-DOD"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="X44-p0-DZz">
+                        <rect key="frame" x="20" y="325" width="92" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="360" tickMarkPosition="above" sliderType="linear" id="NAc-QR-eTp"/>
+                        <connections>
+                            <action selector="angleSliderChanged:" target="Tdf-9D-1le" id="Z3v-MU-MQ3"/>
+                        </connections>
+                    </slider>
+                    <slider verticalHuggingPriority="750" id="nJP-bA-dPQ">
+                        <rect key="frame" x="20" y="221" width="92" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="otO-3w-EMn"/>
+                        <connections>
+                            <action selector="speedSliderChanged:" target="Tdf-9D-1le" id="Hl8-hL-6RO"/>
+                        </connections>
+                    </slider>
+                    <button id="fYH-Jd-59N">
+                        <rect key="frame" x="18" y="249" width="130" height="18"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="check" title="Show Expansions" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="f3b-Ix-rhs">
+                            <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                        <connections>
+                            <action selector="checkboxPressed:" target="Tdf-9D-1le" id="mmH-MY-hBf"/>
+                        </connections>
+                    </button>
+                    <segmentedControl verticalHuggingPriority="750" id="9nc-2o-bzs">
+                        <rect key="frame" x="18" y="445" width="133" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <segmentedCell key="cell" alignment="left" style="automatic" trackingMode="selectOne" id="WFG-EF-zWB">
+                            <font key="font" metaFont="smallSystem"/>
+                            <segments>
+                                <segment label="3D" width="32" selected="YES"/>
+                                <segment label="6D" width="32" tag="1"/>
+                                <segment label="Falcon"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="actionControlChanged:" target="Tdf-9D-1le" id="Gpj-E7-izW"/>
+                        </connections>
+                    </segmentedControl>
+                    <segmentedControl verticalHuggingPriority="750" id="oSG-d8-cTO">
+                        <rect key="frame" x="16" y="136" width="107" height="25"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <segmentedCell key="cell" alignment="left" style="automatic" trackingMode="selectOne" id="cdB-jK-lZ7">
+                            <font key="font" metaFont="smallSystem"/>
+                            <segments>
+                                <segment label="Start" width="50"/>
+                                <segment label="Goal" width="50" selected="YES" tag="1"/>
+                            </segments>
+                        </segmentedCell>
+                        <connections>
+                            <action selector="movementControlChanged:" target="Tdf-9D-1le" id="OVY-R3-8Rg"/>
+                        </connections>
+                    </segmentedControl>
                 </subviews>
             </view>
         </window>

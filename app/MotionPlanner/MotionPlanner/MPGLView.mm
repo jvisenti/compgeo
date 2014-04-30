@@ -18,13 +18,37 @@
 
 @interface MPGLView ()
 
+@property (nonatomic, weak) MPModelNode *controlledModel;
+
 @property (nonatomic, strong) NSMutableDictionary *movementAnimations;
+
+@property (nonatomic, weak) IBOutlet NSSegmentedControl *actionControl;
 
 @property (nonatomic, weak) IBOutlet NSSlider *xSlider;
 @property (nonatomic, weak) IBOutlet NSSlider *ySlider;
 
+@property (nonatomic, weak) IBOutlet NSSlider *rollSlider;
+@property (nonatomic, weak) IBOutlet NSSlider *pitchSlider;
+@property (nonatomic, weak) IBOutlet NSSlider *yawSlider;
+
+@property (nonatomic, weak) IBOutlet NSButton *showExpansions;
+@property (nonatomic, weak) IBOutlet NSSlider *speedSlider;
+
+@property (nonatomic, weak) IBOutlet NSSegmentedControl *movementControl;
+
 - (IBAction)xSliderChanged:(NSSlider *)sender;
 - (IBAction)ySliderChanged:(NSSlider *)sender;
+
+- (IBAction)actionControlChanged:(NSSegmentedControl *)sender;
+
+- (IBAction)angleSliderChanged:(NSSlider *)sender;
+
+- (IBAction)checkboxPressed:(NSButton *)sender;
+- (IBAction)speedSliderChanged:(NSSlider *)sender;
+
+- (IBAction)movementControlChanged:(NSSegmentedControl *)sender;
+
+- (void)setUIEnabled:(BOOL)enabled;
 
 - (IBAction)openFile:(NSMenuItem *)sender;
 
@@ -64,6 +88,8 @@
     [self setPixelFormat:pf];
     
     [self setOpenGLContext:context];
+    
+    [self setUIEnabled:NO];
 }
 
 - (BOOL)acceptsFirstResponder
@@ -155,7 +181,7 @@
         } duration:0.0];
         trans.repeats = YES;
         
-        [self.scene animateShadow:trans];
+        [self.controlledModel runAnimation:trans];
         
         [self.movementAnimations setObject:trans forKey:@(key)];
     }
@@ -199,11 +225,13 @@
             
         case kVK_ANSI_P:
         {
+            [self setUIEnabled:NO];
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 if ([self.scene plan])
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.scene executePlan];
+                        [self setUIEnabled:YES];
                     });
                 }
             });
@@ -217,7 +245,7 @@
     
     if (anim)
     {
-        [self.scene removeAnimationFromShadow:anim];
+        [self.controlledModel removeAnimation:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
 }
@@ -270,6 +298,91 @@
     self.scene.rootNode.rotation = GLKQuaternionMultiply(xRotation, yRotation);
 }
 
+- (IBAction)actionControlChanged:(NSSegmentedControl *)sender
+{
+    MP::Action6D::ActionSet actions;
+    
+    switch ([sender selectedSegment])
+    {
+        case 0:
+            actions = MP::Action6D::generate3DActions([self.scene getEnvironment]->getStepSize());
+            break;
+            
+        case 1:
+            actions = MP::Action6D::generate6DActions([self.scene getEnvironment]->getStepSize(), [self.scene getEnvironment]->getRotationStepSize());
+            break;
+            
+        case 2:
+            actions = MP::Action6D::generateFalconActions([self.scene getEnvironment]->getStepSize(), [self.scene getEnvironment]->getRotationStepSize());
+            break;
+            
+        default:
+            break;
+    }
+    
+    [self.scene getEnvironment]->getActiveObject()->setActionSet(actions);
+    [self.scene getEnvironment]->resetActions();
+}
+
+- (IBAction)angleSliderChanged:(NSSlider *)sender
+{
+    float roll = RADIANS([self.rollSlider intValue]);
+    float pitch = RADIANS([self.pitchSlider intValue]);
+    float yaw = RADIANS([self.yawSlider intValue]);
+    
+    MPQuaternion q = MPRPYToQuaternion(roll, pitch, yaw);
+    
+    self.controlledModel.rotation = MPQuaternionToGLKQuaternion(q);
+}
+
+- (IBAction)checkboxPressed:(NSButton *)sender
+{
+    self.scene.showExpandedStates = [sender state];
+    
+    if (!self.scene.isPlanning)
+    {
+        [self.speedSlider setEnabled:[sender state]];
+    }
+}
+
+- (IBAction)speedSliderChanged:(NSSlider *)sender
+{
+    self.scene.planningDelayMultiplier = ([sender maxValue] - [sender doubleValue]);
+}
+
+- (IBAction)movementControlChanged:(NSSegmentedControl *)sender
+{
+    switch ([sender selectedSegment])
+    {
+        case 0:
+            self.controlledModel = self.scene.activeObject;
+            break;
+            
+        case 1:
+            self.controlledModel = self.scene.shadow;
+            break;
+            
+        default:
+            break;
+    }
+}
+
+- (void)setUIEnabled:(BOOL)enabled
+{
+    [self.xSlider setEnabled:enabled];
+    [self.ySlider setEnabled:enabled];
+    
+    [self.actionControl setEnabled:enabled];
+    
+    [self.rollSlider setEnabled:enabled];
+    [self.pitchSlider setEnabled:enabled];
+    [self.yawSlider setEnabled:enabled];
+    
+    [self.speedSlider setEnabled:enabled];
+    
+    [self.movementControl setEnabled:enabled];
+}
+
 - (void)openFile:(NSMenuItem *)sender
 {
     NSOpenPanel *openPanel = [NSOpenPanel openPanel];
@@ -288,18 +401,39 @@
             MP::Reader reader(filePath);
             MP::Environment3D *environment = reader.generateEnvironment3D();
             
-            // TODO: Generate some default actions for the active object
-            MP::Model *activeObject = environment->getActiveObject();
-//            activeObject->setActionSet(MP::Action6D::generate6DActions(environment->getStepSize(), environment->getRotationStepSize()));
-//            activeObject->setActionSet(MP::Action6D::generate3DActions(environmnet->getStepSize()));
-            activeObject->setActionSet(MP::Action6D::generateFalconActions(environment->getStepSize(), environment->getRotationStepSize()));
-            
             if (environment)
             {                
                 [self.xSlider setFloatValue:0.0f];
                 [self.ySlider setFloatValue:0.0f];
                 
-                self.scene.environment = environment;
+                [self.actionControl setSelectedSegment:0];
+                
+                [self.rollSlider setIntValue:0];
+                [self.pitchSlider setIntValue:0];
+                [self.yawSlider setIntValue:0];
+                
+                [self.showExpansions setState:NSOnState];
+                [self.speedSlider setEnabled:YES];
+                [self.speedSlider setFloatValue:1.0f];
+                
+                [self.movementControl setSelectedSegment:1];
+                
+                // TODO: Generate some default actions for the active object
+                MP::Model *activeObject = environment->getActiveObject();
+                activeObject->setActionSet(MP::Action6D::generate3DActions(environment->getStepSize()));
+                
+                [self.scene setEnvironment:environment];
+                
+                self.scene.showExpandedStates = YES;
+                self.scene.planningDelayMultiplier = 0.0f;
+                
+                self.controlledModel = self.scene.shadow;
+                
+                [self setUIEnabled:YES];
+            }
+            else
+            {
+                [self setUIEnabled:NO];
             }
         }
     }];

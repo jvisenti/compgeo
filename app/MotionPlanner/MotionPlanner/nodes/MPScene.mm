@@ -17,6 +17,8 @@
 
 #define kMPPlanStatesPerSec 5
 
+#define kMPPlanMaxDelay 100000
+
 @interface MPScene ()
 {
     MP::Environment3D *_environment;
@@ -28,9 +30,7 @@
 @property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
 
 @property (nonatomic, weak) MPCube *boundingBox;
-@property (nonatomic, weak) MPModelNode *shadow;
 @property (nonatomic, weak) MPPathNode *pathNode;
-@property (nonatomic, weak) MPModelNode *activeObject;
 
 - (void)setupProgram;
 - (void)setupCamera;
@@ -91,6 +91,16 @@
     return _rootNode;
 }
 
+- (void)setPlanningDelayMultiplier:(double)planningDelayMultiplier
+{
+    _planningDelayMultiplier = planningDelayMultiplier;
+    
+    if (self.planner)
+    {
+        self.planner->setDelay((int)(planningDelayMultiplier * kMPPlanMaxDelay));
+    }
+}
+
 #pragma mark - public interface
 
 - (void)configureProgram:(BHGLProgram *)program
@@ -104,6 +114,12 @@
 
 - (void)render
 {
+    if (!self.showExpandedStates)
+    {
+        [super render];
+        return;
+    }
+    
     [self configureProgram:self.program];
     
     [self.rootNode.children enumerateObjectsUsingBlock:^(BHGLNode *child, NSUInteger idx, BOOL *stop) {
@@ -189,6 +205,7 @@
             }
             
             self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);
+            self.planner->setDelay((int)(self.planningDelayMultiplier * kMPPlanMaxDelay));
             
             // TODO: play with values for the weight
             self.planner->setWeight(2.0f);
@@ -206,7 +223,7 @@
     }
 }
 
-- (const MP::Environment3D *)getEnvironment
+- (MP::Environment3D *)getEnvironment
 {
     return _environment;
 }
@@ -298,26 +315,6 @@
     
     [self.activeObject removeAllAnimations];
     [self.activeObject runAnimation:anim];
-}
-
-- (void)animateActiveObject:(BHGLAnimation *)animation
-{
-    [self.activeObject runAnimation:animation];
-}
-
-- (void)removeAnimationFromActiveObject:(BHGLAnimation *)animation
-{
-    [self.activeObject removeAnimation:animation];
-}
-
-- (void)animateShadow:(BHGLAnimation *)animation
-{
-    [self.shadow runAnimation:animation];
-}
-
-- (void)removeAnimationFromShadow:(BHGLAnimation *)animation
-{
-    [self.shadow removeAnimation:animation];
 }
 
 #pragma mark - private interface

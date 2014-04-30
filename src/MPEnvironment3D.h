@@ -50,7 +50,7 @@ public:
     
     void setActiveObject(Model *activeObject);
     
-    Model* getActiveObject() { return activeObject_; }
+    Model* getActiveObject() const { return activeObject_; }
     
     void addObstacle(Model *obstacle) { obstacles_.push_back(obstacle); }
     
@@ -63,6 +63,8 @@ public:
     double getRotationStepSize() const { return rotationStepSize_; }
     
     void setRotationStepSize(double s);
+    
+    void resetActions() { actionSet_.clear(); }
     
     bool stateValid(const Transform3D &T);
     
