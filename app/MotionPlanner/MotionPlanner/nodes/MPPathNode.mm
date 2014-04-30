@@ -72,40 +72,50 @@
     [self updateMesh];
 }
 
+- (void)clearPath
+{
+    [self cleanup];
+}
+
 #pragma mark private interface
 
 - (void)updateMesh
 {
     [self cleanup];
     
-    size_t dataSize = 3* _path.size() * sizeof(GLfloat);
-    GLfloat *vertices = (GLfloat *)malloc(dataSize);
-    
-    for (int i = 0; i < self.path.size(); ++i)
+    if (self.path.size())
     {
-        memcpy(&vertices[3*i], _path.at(i).v, 3 * sizeof(GLfloat));
+        size_t dataSize = 3 * _path.size() * sizeof(GLfloat);
+        GLfloat *vertices = (GLfloat *)malloc(dataSize);
+        
+        for (int i = 0; i < self.path.size(); ++i)
+        {
+            memcpy(&vertices[3*i], _path.at(i).v, 3 * sizeof(GLfloat));
+        }
+        
+        BHGLVertexType vType = BHGLVertexTypeCreate(1);
+        vType.attribs[0] = BHGLVertexAttribPosition;
+        vType.types[0] = GL_FLOAT;
+        vType.lengths[0] = 3;
+        vType.normalized[0] = GL_FALSE;
+        vType.offsets[0] = (GLvoid *)0;
+        vType.stride = 3 * sizeof(GLfloat);
+        
+        BHGLMesh *mesh = [[BHGLMesh alloc] initWithVertexData:(const GLvoid *)vertices vertexDataSize:dataSize vertexType:&vType];
+        mesh.primitiveMode = GL_LINE_STRIP;
+        
+        BHGLVertexTypeFree(vType);
+        
+        [super setMesh:mesh];
     }
-    
-    BHGLVertexType vType = BHGLVertexTypeCreate(1);
-    vType.attribs[0] = BHGLVertexAttribPosition;
-    vType.types[0] = GL_FLOAT;
-    vType.lengths[0] = 3;
-    vType.normalized[0] = GL_FALSE;
-    vType.offsets[0] = (GLvoid *)0;
-    vType.stride = 3 * sizeof(GLfloat);
-    
-    BHGLMesh *mesh = [[BHGLMesh alloc] initWithVertexData:(const GLvoid *)vertices vertexDataSize:dataSize vertexType:&vType];
-    mesh.primitiveMode = GL_LINE_STRIP;
-    
-    BHGLVertexTypeFree(vType);
-    
-    [super setMesh:mesh];
 }
 
 - (void)cleanup
 {
     if (self.mesh)
     {
+        [super setMesh:nil];
+        
         // vertex data allocd locally, so node is responsible for freeing it
         free((void *)self.mesh.vertexData);
     }

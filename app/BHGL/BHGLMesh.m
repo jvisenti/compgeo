@@ -85,7 +85,7 @@
 - (void)dealloc
 {
     BHGLVertexTypeFree(_vertexType);
-    glDeleteBuffers(2, &_bufferSet.vertexBuffer);
+//    glDeleteBuffers(2, &_bufferSet.vertexBuffer);
 }
 
 #pragma mark - BHGLRenderedObject

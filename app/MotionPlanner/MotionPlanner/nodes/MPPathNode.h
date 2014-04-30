@@ -17,4 +17,6 @@
 - (void)setPath:(const std::vector<MPVec3> &)path;
 - (const std::vector<MPVec3> &)path;
 
+- (void)clearPath;
+
 @end

@@ -290,9 +290,9 @@
             
             // TODO: Generate some default actions for the active object
             MP::Model *activeObject = environment->getActiveObject();
-            activeObject->setActionSet(MP::Action6D::generate6DActions(environment->getStepSize(), environment->getRotationStepSize()));
+//            activeObject->setActionSet(MP::Action6D::generate6DActions(environment->getStepSize(), environment->getRotationStepSize()));
 //            activeObject->setActionSet(MP::Action6D::generate3DActions(environmnet->getStepSize()));
-//            activeObject->setActionSet(MP::Action6D::generateFalconActions(environment->getStepSize(), environment->getRotationStepSize()));
+            activeObject->setActionSet(MP::Action6D::generateFalconActions(environment->getStepSize(), environment->getRotationStepSize()));
             
             if (environment)
             {                

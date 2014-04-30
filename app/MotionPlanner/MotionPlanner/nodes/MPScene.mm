@@ -116,16 +116,24 @@
     if (_environment && self.planner && self.shadow.model)
     {
         MP::Transform3D current = self.shadow.model->getTransform();
+        BHGLColor currentColor = self.shadow.material.surfaceColor;
+        
         std::vector<MP::Transform3D> states = self.planner->getExploredStates();
         
-        for (auto t : states)
+        self.shadow.material.surfaceColor = BHGLColorMake(0.0f, 0.0f, 0.0f, 0.1f);
+        self.shadow.material.emissionColor = self.shadow.material.surfaceColor;
+        
+        for (int i = 0; i < states.size() && i < 100; ++i)
         {
+            MP::Transform3D t = states.at(states.size() - 1 - i);
             _environment->plannerToWorld(t);
             self.shadow.model->setTransform(t);
             
             [self.shadow render];
         }
         
+        self.shadow.material.surfaceColor = currentColor;
+        self.shadow.material.emissionColor = self.shadow.material.surfaceColor;
         self.shadow.model->setTransform(current);
     }
     
@@ -236,7 +244,7 @@
 {
     if (self.isPlanning)
     {
-        NSLog(@"planning is already planning!");
+        NSLog(@"planner is already planning!");
         return NO;
     }
     
@@ -245,6 +253,8 @@
         _planning = YES;
         
         self.planStates.clear();
+        
+        [self.pathNode clearPath];
         
         if(!self.planner->plan(start, goal, self.planStates))
         {
