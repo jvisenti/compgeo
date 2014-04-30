@@ -231,8 +231,16 @@
 
 - (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal
 {
+    if (self.isPlanning)
+    {
+        NSLog(@"planning is already planning!");
+        return NO;
+    }
+    
     if (self.planner)
     {
+        _planning = YES;
+        
         self.planStates.clear();
         
         if(!self.planner->plan(start, goal, self.planStates))
@@ -243,10 +251,13 @@
             MPVec3Print(goal.getPosition());
             printf("\n");
             
+            _planning = NO;
+            
             return NO;
         }
         
         self.planner->reset();
+        _planning = NO;
         
         return YES;
     }
@@ -272,6 +283,7 @@
     
     [self.pathNode setPath:path];
     
+    [self.activeObject removeAllAnimations];
     [self.activeObject runAnimation:anim];
 }
 

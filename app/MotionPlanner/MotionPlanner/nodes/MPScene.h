@@ -13,6 +13,7 @@
 @interface MPScene : BHGLScene
 
 @property (atomic, readonly, getter = isUserInteractionEnabled) BOOL userInteractionEnabled;
+@property (atomic, readonly, getter = isPlanning) BOOL planning;
 @property (nonatomic, readonly) BHGLNode *rootNode;
 
 - (id)initWithEnvironment:(MP::Environment3D *)environment;
