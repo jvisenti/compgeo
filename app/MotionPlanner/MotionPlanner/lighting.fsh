@@ -40,8 +40,11 @@ uniform vec3 u_EyeDirection;
 
 in vec3 v_normal;
 in vec4 v_position;
+in vec2 v_texCoord0;
 
 out vec4 o_frag_color;
+
+uniform sampler2D u_texture;
 
 void main()
 {
@@ -94,8 +97,9 @@ void main()
         scatteredLight += lightInfo.ambient * u_Material.ambient * attenuation + lightInfo.color * u_Material.diffuse * diffuse * attenuation;
         reflectedLight += lightInfo.color * u_Material.specular * specular * attenuation;
     }
+
+    vec4 tex = texture(u_texture, v_texCoord0);
+    vec3 rgb = min(u_Material.emission.rgb + (u_Material.surface.rgb + tex.rgb) * scatteredLight.rgb + reflectedLight.rgb, vec3(1.0));
     
-    vec3 rgb = min(u_Material.emission.rgb + u_Material.surface.rgb * scatteredLight.rgb + reflectedLight.rgb, vec3(1.0));
-    
-    o_frag_color = vec4(rgb, u_Material.surface.a);
+    o_frag_color = vec4(rgb, u_Material.surface.a * tex.a);
 }

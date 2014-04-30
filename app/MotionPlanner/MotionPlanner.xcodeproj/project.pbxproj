@@ -37,6 +37,7 @@
 		D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */ = {isa = PBXBuildFile; fileRef = D416EE0318EF1EBE00993BAF /* lighting.vsh */; };
 		D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */ = {isa = PBXBuildFile; fileRef = D416EEC718F4BDFD00993BAF /* BHGLView.m */; };
 		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
+		D445A35F1906BD0000E183DF /* sandstone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D445A35E1906BD0000E183DF /* sandstone.jpg */; };
 		D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
 		D4A79DC318FF8B96005B4D57 /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
 		D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
@@ -114,6 +115,8 @@
 		D416EEC618F4BDFD00993BAF /* BHGLView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BHGLView.h; path = ../BHGL/BHGLView.h; sourceTree = "<group>"; };
 		D416EEC718F4BDFD00993BAF /* BHGLView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BHGLView.m; path = ../BHGL/BHGLView.m; sourceTree = "<group>"; };
 		D416EEC918F4BE6D00993BAF /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		D445A35E1906BD0000E183DF /* sandstone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = sandstone.jpg; path = MotionPlanner/sandstone.jpg; sourceTree = SOURCE_ROOT; };
+		D4A79DA418FF8B96005B4D57 /* MPAStar3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStar3D.h; path = ../../src/MPAStar3D.h; sourceTree = "<group>"; };
 		D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStarPlanner.h; path = ../../src/MPAStarPlanner.h; sourceTree = "<group>"; };
 		D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
 		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
@@ -326,6 +329,7 @@
 		D416EE0118EF1EB500993BAF /* resources */ = {
 			isa = PBXGroup;
 			children = (
+				D445A35E1906BD0000E183DF /* sandstone.jpg */,
 				D416EE0218EF1EBE00993BAF /* lighting.fsh */,
 				D416EE0318EF1EBE00993BAF /* lighting.vsh */,
 			);
@@ -389,6 +393,7 @@
 				D416EE0418EF1EBE00993BAF /* lighting.fsh in Resources */,
 				D416EE0518EF1EBE00993BAF /* lighting.vsh in Resources */,
 				D416ED4F18EEEC0300993BAF /* MainMenu.xib in Resources */,
+				D445A35F1906BD0000E183DF /* sandstone.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

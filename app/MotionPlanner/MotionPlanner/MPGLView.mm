@@ -14,7 +14,7 @@
 
 #define kMPSceneScaleFactor 0.2f
 
-#define kMPObjectMotionIncrement 0.04f
+#define kMPObjectMotionIncrement 0.03f
 
 @interface MPGLView ()
 

@@ -11,7 +11,7 @@
 namespace MP
 {
     
-static const std::regex MeshValue("Vertex|Index");
+static const std::regex MeshValue("Vertex|Index|Texture");
 static const std::regex ModelValue("Mesh|Position|Rotation|Scale");
 static const std::regex EnvironmentValue("Step|RotationStep|Origin|Size|ActiveObject|Obstacles");
     
@@ -292,6 +292,8 @@ MPMesh* Reader::generateMesh_(Tokenizer &tokens) const
     size_t stride, numVertices, indexSize, numIndices;
     stride = numVertices = indexSize = numIndices = 0;
     
+    char *texName = nullptr;
+    
     try
     {
         tokens.match("{");
@@ -300,7 +302,19 @@ MPMesh* Reader::generateMesh_(Tokenizer &tokens) const
         {
             token = tokens.match(MeshValue);
             
-            if (token == "Vertex")
+            if (token == "Texture")
+            {
+                tokens.match("=");
+                tokens.match("{");
+                
+                std::string name = tokens.getNext();
+                
+                texName = (char *)malloc(name.size());
+                strcpy(texName, name.c_str());
+                
+                tokens.match("}");
+            }
+            else if (token == "Vertex")
             {
                 this->loadVertices(tokens, &vertexData, stride, numVertices);
             }
@@ -326,6 +340,7 @@ MPMesh* Reader::generateMesh_(Tokenizer &tokens) const
     }
     
     MPMesh *mesh = MPMeshCreate((const MPVec3 *)vertexData, stride, numVertices, (const void *)indexData, indexSize, numIndices);
+    mesh->texName = texName;
     
     return mesh;
 }
