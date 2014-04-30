@@ -134,6 +134,7 @@
                             <outlet property="rollSlider" destination="6ya-4F-QLE" id="pMi-XI-AIY"/>
                             <outlet property="showExpansions" destination="fYH-Jd-59N" id="85P-5N-NMp"/>
                             <outlet property="speedSlider" destination="nJP-bA-dPQ" id="Rmf-yG-7bE"/>
+                            <outlet property="weightField" destination="M4a-s4-l2v" id="064-J3-RY6"/>
                             <outlet property="xSlider" destination="a71-AZ-ne8" id="cjR-ri-ie6"/>
                             <outlet property="ySlider" destination="Q4p-Xn-usa" id="vwx-I5-udI"/>
                             <outlet property="yawSlider" destination="X44-p0-DZz" id="Ii8-gZ-FfE"/>
@@ -176,14 +177,14 @@
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="KHs-mH-Xde">
                         <rect key="frame" x="18" y="273" width="113" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Visualization" id="zH4-CN-tLD">
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Planning" id="zH4-CN-tLD">
                             <font key="font" metaFont="system" size="15"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="IlO-26-4El">
-                        <rect key="frame" x="18" y="168" width="113" height="25"/>
+                        <rect key="frame" x="18" y="153" width="113" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="Movement" id="nJJ-mD-3YA">
                             <font key="font" metaFont="system" size="15"/>
@@ -219,9 +220,18 @@
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="eqx-s0-7oO">
-                        <rect key="frame" x="118" y="222" width="48" height="17"/>
+                        <rect key="frame" x="118" y="197" width="48" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="speed" id="7us-ao-MVp">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="Hqe-OF-Tha">
+                        <rect key="frame" x="76" y="252" width="48" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" controlSize="mini" scrollable="YES" lineBreakMode="clipping" enabled="NO" sendsActionOnEndEditing="YES" title="weight" id="ppb-Th-BdW">
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -252,7 +262,7 @@
                         </connections>
                     </slider>
                     <slider verticalHuggingPriority="750" id="nJP-bA-dPQ">
-                        <rect key="frame" x="20" y="221" width="92" height="17"/>
+                        <rect key="frame" x="20" y="196" width="92" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <sliderCell key="cell" controlSize="small" continuous="YES" state="on" alignment="left" maxValue="1" doubleValue="1" tickMarkPosition="above" sliderType="linear" id="otO-3w-EMn"/>
                         <connections>
@@ -260,7 +270,7 @@
                         </connections>
                     </slider>
                     <button id="fYH-Jd-59N">
-                        <rect key="frame" x="18" y="249" width="130" height="18"/>
+                        <rect key="frame" x="18" y="220" width="130" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Show Expansions" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="f3b-Ix-rhs">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -286,7 +296,7 @@
                         </connections>
                     </segmentedControl>
                     <segmentedControl verticalHuggingPriority="750" id="oSG-d8-cTO">
-                        <rect key="frame" x="16" y="136" width="107" height="25"/>
+                        <rect key="frame" x="16" y="121" width="107" height="25"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <segmentedCell key="cell" alignment="left" style="automatic" trackingMode="selectOne" id="cdB-jK-lZ7">
                             <font key="font" metaFont="smallSystem"/>
@@ -299,6 +309,24 @@
                             <action selector="movementControlChanged:" target="Tdf-9D-1le" id="OVY-R3-8Rg"/>
                         </connections>
                     </segmentedControl>
+                    <textField verticalHuggingPriority="750" id="M4a-s4-l2v">
+                        <rect key="frame" x="20" y="250" width="50" height="20"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" alignment="center" title="0" bezelStyle="round" id="rjN-lo-gYi">
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" positiveFormat="#,##0.###" negativeFormat="#,##0.###" numberStyle="decimal" minimumIntegerDigits="1" maximumIntegerDigits="309" minimumFractionDigits="0" maximumFractionDigits="3" id="fYw-Gb-OAH">
+                                <real key="roundingIncrement" value="0.0"/>
+                                <metadata>
+                                    <bool key="localizesFormat" value="YES"/>
+                                </metadata>
+                            </numberFormatter>
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <action selector="weightFieldChanged:" target="Tdf-9D-1le" id="Yew-hW-Zrd"/>
+                        </connections>
+                    </textField>
                 </subviews>
             </view>
         </window>

@@ -101,6 +101,16 @@
     }
 }
 
+- (void)setPlanningWeight:(double)planningWeight
+{
+    _planningWeight = planningWeight;
+    
+    if (self.planner)
+    {
+        self.planner->setWeight(planningWeight);
+    }
+}
+
 #pragma mark - public interface
 
 - (void)configureProgram:(BHGLProgram *)program
@@ -206,9 +216,7 @@
             
             self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);
             self.planner->setDelay((int)(self.planningDelayMultiplier * kMPPlanMaxDelay));
-            
-            // TODO: play with values for the weight
-            self.planner->setWeight(2.0f);
+            self.planner->setWeight(self.planningWeight);
         }
         
         _environment = environment;
@@ -281,6 +289,7 @@
             MPVec3Print(goal.getPosition());
             printf("\n");
             
+            self.planner->reset();
             _planning = NO;
             
             return NO;

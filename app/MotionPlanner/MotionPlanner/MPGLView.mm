@@ -31,6 +31,7 @@
 @property (nonatomic, weak) IBOutlet NSSlider *pitchSlider;
 @property (nonatomic, weak) IBOutlet NSSlider *yawSlider;
 
+@property (nonatomic, weak) IBOutlet NSTextField *weightField;
 @property (nonatomic, weak) IBOutlet NSButton *showExpansions;
 @property (nonatomic, weak) IBOutlet NSSlider *speedSlider;
 
@@ -43,6 +44,7 @@
 
 - (IBAction)angleSliderChanged:(NSSlider *)sender;
 
+- (IBAction)weightFieldChanged:(NSTextField *)sender;
 - (IBAction)checkboxPressed:(NSButton *)sender;
 - (IBAction)speedSliderChanged:(NSSlider *)sender;
 
@@ -121,7 +123,12 @@
 }
 
 - (void)keyDown:(NSEvent *)theEvent
-{    
+{
+    if (self.scene.isPlanning)
+    {
+        return;
+    }
+    
     unsigned short keyCode = [theEvent keyCode];
     
     GLKVector3 dp = GLKVector3Make(0.0f, 0.0f, 0.0f);
@@ -231,9 +238,10 @@
                 {
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self.scene executePlan];
-                        [self setUIEnabled:YES];
                     });
                 }
+                
+                [self setUIEnabled:YES];
             });
         }
             
@@ -335,6 +343,11 @@
     self.controlledModel.rotation = MPQuaternionToGLKQuaternion(q);
 }
 
+- (IBAction)weightFieldChanged:(NSTextField *)sender
+{
+    self.scene.planningWeight = [sender doubleValue];
+}
+
 - (IBAction)checkboxPressed:(NSButton *)sender
 {
     self.scene.showExpandedStates = [sender state];
@@ -368,16 +381,14 @@
 }
 
 - (void)setUIEnabled:(BOOL)enabled
-{
-    [self.xSlider setEnabled:enabled];
-    [self.ySlider setEnabled:enabled];
-    
+{    
     [self.actionControl setEnabled:enabled];
     
     [self.rollSlider setEnabled:enabled];
     [self.pitchSlider setEnabled:enabled];
     [self.yawSlider setEnabled:enabled];
     
+    [self.weightField setEnabled:enabled];
     [self.speedSlider setEnabled:enabled];
     
     [self.movementControl setEnabled:enabled];

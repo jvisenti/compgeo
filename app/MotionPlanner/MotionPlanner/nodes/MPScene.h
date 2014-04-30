@@ -23,6 +23,7 @@
 @property (nonatomic, weak) MPModelNode *shadow;
 
 @property (nonatomic, assign) double planningDelayMultiplier;
+@property (nonatomic, assign) double planningWeight;
 
 - (id)initWithEnvironment:(MP::Environment3D *)environment;
 
