@@ -262,7 +262,7 @@ void Environment3D::worldToPlanner(Transform3D &state) const
     MPVec3 pPos = state.getPosition();
     this->worldToPlanner(pPos);
     
-    MPQuaternion pRot;
+    MPQuaternion pRot = state.getRotation();
     this->worldToPlanner(pRot);
     
     state.setPosition(pPos);
