@@ -25,7 +25,16 @@ void PotentialFieldController::setGoal(const Transform3D &goal)
 
 void PotentialFieldController::move()
 {
+    // Perform a single step of gradient descent
+    MPVec3 currentPosition = activeObject_->getPosition();
+    MPVec3 gradient = potentialGrad(currentPosition);
+    const float alpha = 0.6f;
     
+    // TODO: Check for convergence (i.e. when gradient of potential function is close to zero
+    // or, || gradient || < epsilon for some epsilon)
+    MPVec3 nextPosition = MPVec3Subtract(currentPosition, MPVec3MultiplyScalar(gradient, alpha));
+    
+    activeObject_->setPosition(nextPosition);
 }
 
 MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p)
@@ -45,13 +54,32 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p)
 
 MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p)
 {
-    return MPVec3Zero;
+    // TODO: Move these (arbitrary-defined) constants somewhere better
+    const float c = 4.0f;
+    const float threshold = 1.0f;
+    
+    float distance = MPVec3EuclideanDistance(p, goal_.getPosition());
+    
+    MPVec3 potentialGrad = MPVec3Zero;
+    
+    if(distance <= threshold)
+    {
+        potentialGrad = MPVec3Subtract(p, goal_.getPosition());
+        potentialGrad = MPVec3MultiplyScalar(potentialGrad, c);
+    }
+    else
+    {
+        potentialGrad = MPVec3Subtract(p, goal_.getPosition());
+        potentialGrad = MPVec3MultiplyScalar(potentialGrad, (threshold * c) / (distance));
+    }
+    
+    return potentialGrad;
 }
 
 MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P)
 {
-    // TODO: Move this (arbitrary-defined) constant somewhere else
-    const float a = 4.0f;
+    // TODO: Move this (arbitrary-defined) constant somewhere better
+    const float a = 6.0f;
     
     float distance = MPVec3EuclideanDistance(pObs, p);
     
