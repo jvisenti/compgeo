@@ -146,7 +146,7 @@
         
         std::vector<MP::Transform3D> states = self.planner->getExploredStates();
         
-        self.shadow.material.surfaceColor = BHGLColorMake(0.0f, 0.0f, 0.0f, 0.1f);
+        self.shadow.material.surfaceColor = BHGLColorMake(0.0f, 0.0f, 0.0f, 0.15f);
         self.shadow.material.emissionColor = self.shadow.material.surfaceColor;
         
         for (int i = 0; i < states.size() && i < 100; ++i)
