@@ -50,7 +50,7 @@
 {
     if ((self = [self init]))
     {
-        _environment = environment;
+        self.environment = environment;
     }
     return self;
 }

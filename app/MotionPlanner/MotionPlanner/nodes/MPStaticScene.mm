@@ -67,6 +67,8 @@
     [self insertChild:pathNode atIndex:0];
     self.pathNode = pathNode;
     
+    delete self.planner;
+    
     if (self.environment)
     {
         self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);

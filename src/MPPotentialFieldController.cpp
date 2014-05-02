@@ -23,7 +23,7 @@ void PotentialFieldController::setGoal(const Transform3D &goal)
     goal_ = goal;
 }
 
-void PotentialFieldController::move()
+void PotentialFieldController::move() const
 {
     // Perform a single step of gradient descent
     MPVec3 currentPosition = activeObject_->getPosition();
@@ -37,24 +37,26 @@ void PotentialFieldController::move()
     activeObject_->setPosition(nextPosition);
 }
 
-MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p)
+MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
 {
     // By superposition and linearity, the gradient of the potential at p is simply the
     // sum of the individual contributions from all the "particles"
     MPVec3 potentialGrad = attractivePotentialGrad(p);
+    
     for(auto obstacle : obstacles_)
     {
         const MPMat4 matrix = obstacle->getTransform().getMatrix();
         MPSphere boundingSphere = MPMeshGetBoundingSphere(obstacle->getMesh(), &matrix);
+        
         MPVec3Add(potentialGrad, repulsivePotentialGrad(obstacle->getPosition(), p, boundingSphere.radius));
     }
     
     return potentialGrad;
 }
 
-MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p)
+MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
 {
-    // TODO: Move these (arbitrary-defined) constants somewhere better
+    // TODO: Move these (arbitrarily-defined) constants somewhere better
     const float c = 4.0f;
     const float threshold = 1.0f;
     
@@ -76,16 +78,16 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p)
     return potentialGrad;
 }
 
-MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P)
+MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const
 {
-    // TODO: Move this (arbitrary-defined) constant somewhere better
+    // TODO: Move this (arbitrarilyy-defined) constant somewhere better
     const float a = 6.0f;
     
     float distance = MPVec3EuclideanDistance(pObs, p);
     
     // The gradient of the Euclidean distance function
     MPVec3 distanceGrad = MPVec3Make(p.x - pObs.x, p.y - pObs.y, p.z - pObs.z);
-    distanceGrad = MPVec3MultiplyScalar(distanceGrad, sqrtf(powf(p.x - pObs.x, 2.0f) + powf(p.y - pObs.y, 2.0f) + powf(p.z - pObs.z, 2.0f)));
+    distanceGrad = MPVec3MultiplyScalar(distanceGrad, MPVec3EuclideanDistance(pObs, p));
 
     if(distance > P)
         return MPVec3Zero;

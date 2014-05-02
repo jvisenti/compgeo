@@ -64,6 +64,10 @@ public:
     
     void setRotationStepSize(double s);
     
+    bool isDynamic() const { return dynamic_; }
+    
+    void setDynamic(bool d) { dynamic_ = d; }
+    
     void resetActions() { actionSet_.clear(); }
     
     bool stateValid(const Transform3D &T);
@@ -93,6 +97,8 @@ protected:
     
     void worldToPlanner(MPVec3 &vec) const;
     void worldToPlanner(MPQuaternion &q) const;
+    
+    bool dynamic_;
     
     MPVec3 origin_;
     MPVec3 size_;

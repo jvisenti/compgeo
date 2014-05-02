@@ -22,16 +22,18 @@ public:
     
     void setGoal(const Transform3D &goal);
     
-    void move();
+    void move() const;
     
 private:
     /* Potential functions inspired by http://www.cs.cmu.edu/~motionplanning/lecture/Chap4-Potential-Field_howie.pdf */
-    MPVec3 potentialGrad(const MPVec3 &p);
-    MPVec3 attractivePotentialGrad(const MPVec3 &p);
+    MPVec3 potentialGrad(const MPVec3 &p) const;
+    
+    MPVec3 attractivePotentialGrad(const MPVec3 &p) const;
+    
     /* pObs is the position of the obstacle
      * p is the position of the moving object
      * P is the cutoff beyond which there is no repuslive effect */
-    MPVec3 repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P);
+    MPVec3 repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const;
     
     std::vector<Model *> obstacles_;
     Model *activeObject_;

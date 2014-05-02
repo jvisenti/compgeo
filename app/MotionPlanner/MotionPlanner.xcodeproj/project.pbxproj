@@ -40,6 +40,7 @@
 		D416EECA18F4BE6D00993BAF /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416EEC918F4BE6D00993BAF /* QuartzCore.framework */; };
 		D445A35F1906BD0000E183DF /* sandstone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D445A35E1906BD0000E183DF /* sandstone.jpg */; };
 		D49B374C1912F0FF002EF51D /* MPStaticScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D49B374B1912F0FF002EF51D /* MPStaticScene.mm */; };
+		D49B374F19132512002EF51D /* MPDynamicScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D49B374E19132512002EF51D /* MPDynamicScene.mm */; };
 		D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
 		D4A79DC318FF8B96005B4D57 /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
 		D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
@@ -122,6 +123,8 @@
 		D445A35E1906BD0000E183DF /* sandstone.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = sandstone.jpg; path = MotionPlanner/sandstone.jpg; sourceTree = SOURCE_ROOT; };
 		D49B374A1912F0FF002EF51D /* MPStaticScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPStaticScene.h; sourceTree = "<group>"; };
 		D49B374B1912F0FF002EF51D /* MPStaticScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPStaticScene.mm; sourceTree = "<group>"; };
+		D49B374D19132512002EF51D /* MPDynamicScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPDynamicScene.h; sourceTree = "<group>"; };
+		D49B374E19132512002EF51D /* MPDynamicScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPDynamicScene.mm; sourceTree = "<group>"; };
 		D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStarPlanner.h; path = ../../src/MPAStarPlanner.h; sourceTree = "<group>"; };
 		D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
 		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
@@ -288,6 +291,8 @@
 				D416EDC818EEF00F00993BAF /* MPScene.mm */,
 				D49B374A1912F0FF002EF51D /* MPStaticScene.h */,
 				D49B374B1912F0FF002EF51D /* MPStaticScene.mm */,
+				D49B374D19132512002EF51D /* MPDynamicScene.h */,
+				D49B374E19132512002EF51D /* MPDynamicScene.mm */,
 				D416EDCA18EF168900993BAF /* MPModelNode.h */,
 				D416EDCB18EF168900993BAF /* MPModelNode.mm */,
 				D4F24EAA18F98913002F3CB0 /* MPPathNode.h */,
@@ -415,6 +420,7 @@
 			files = (
 				D416EDC218EEEEC800993BAF /* MPGLView.mm in Sources */,
 				D416ED4518EEEC0300993BAF /* main.m in Sources */,
+				D49B374F19132512002EF51D /* MPDynamicScene.mm in Sources */,
 				D416EDAE18EEED3D00993BAF /* BHGLTextNode.m in Sources */,
 				D416EEC818F4BDFD00993BAF /* BHGLView.m in Sources */,
 				D416EDAF18EEED3D00993BAF /* BHGLTexture.m in Sources */,
