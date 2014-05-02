@@ -7,30 +7,17 @@
 //
 
 #import "MPScene.h"
-#import "BHGL.h"
 #import "MPCube.h"
-#import "MPPathNode.h"
-#import "MPAStarPlanner.h"
-#import "MPUtils.h"
 
 #define kMPSceneMaxSize 4.0f
 
-#define kMPPlanStatesPerSec 5
-
-#define kMPPlanMaxDelay 100000
-
 @interface MPScene ()
 {
-    MP::Environment3D *_environment;
-    
     __weak BHGLNode *_rootNode;
+    __weak MPCube *_boundingBox;
+    __weak MPModelNode *_activeObject;
+    __weak MPModelNode *_shadow;
 }
-
-@property (nonatomic, assign) MP::AStarPlanner<MP::Transform3D> *planner;
-@property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
-
-@property (nonatomic, weak) MPCube *boundingBox;
-@property (nonatomic, weak) MPPathNode *pathNode;
 
 - (void)setupProgram;
 - (void)setupCamera;
@@ -39,13 +26,14 @@
 - (void)updateBoundingBox;
 - (void)updateShadow;
 
-- (void)cleanup;
-
 @end
 
 @implementation MPScene
 
 @synthesize rootNode = _rootNode;
+@synthesize boundingBox = _boundingBox;
+@synthesize activeObject = _activeObject;
+@synthesize shadow = _shadow;
 
 - (id)init
 {
@@ -79,6 +67,11 @@
     [self.rootNode addChild:node];
 }
 
+- (void)insertChild:(BHGLNode *)node atIndex:(NSUInteger)index
+{
+    [self.rootNode insertChild:node atIndex:index];
+}
+
 - (BHGLNode *)rootNode
 {
     if (!_rootNode)
@@ -91,24 +84,58 @@
     return _rootNode;
 }
 
-- (void)setPlanningDelayMultiplier:(double)planningDelayMultiplier
+- (void)setEnvironment:(MP::Environment3D *)environment
 {
-    _planningDelayMultiplier = planningDelayMultiplier;
+    [self.rootNode.children makeObjectsPerformSelector:@selector(removeFromParent)];
+    self.rootNode.position = GLKVector3Make(0.0f, 0.0f, 0.0f);
+    self.rootNode.scale = GLKVector3Make(1.0f, 1.0f, 1.0f);
+    self.rootNode.rotation = GLKQuaternionIdentity;
     
-    if (self.planner)
-    {
-        self.planner->setDelay((int)(planningDelayMultiplier * kMPPlanMaxDelay));
-    }
-}
-
-- (void)setPlanningWeight:(double)planningWeight
-{
-    _planningWeight = planningWeight;
+    // free old environment/planner
+    [self cleanup];
     
-    if (self.planner)
+    if (environment != nullptr)
     {
-        self.planner->setWeight(planningWeight);
+        // create active object
+        MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:environment->getActiveObject()];
+        
+        activeNode.material.surfaceColor = BHGLColorOrange;
+        activeNode.material.ambientColor = BHGLColorWhite;
+        activeNode.material.diffuseColor = BHGLColorWhite;
+        activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+        activeNode.material.shininess = 10.0f;
+        
+        [self addChild:activeNode];
+        
+        self.activeObject = activeNode;
+        
+        // create obstacles
+        const std::vector<MP::Model *> &obstacles = environment->getObstacles();
+        for(auto it = obstacles.begin(); it != obstacles.end(); ++it)
+        {
+            MP::Model *obstacle = *it;
+            
+            MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
+            
+            obstacleNode.material.surfaceColor = obstacleNode.material.texture ? BHGLColorBlack : BHGLColorTeal;
+            obstacleNode.material.ambientColor = BHGLColorWhite;
+            obstacleNode.material.diffuseColor = BHGLColorWhite;
+            obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+            obstacleNode.material.shininess = 10.0f;
+            
+            [self addChild:obstacleNode];
+        }
     }
+    
+    _environment = environment;
+    
+    [self updateShadow];
+    [self updateBoundingBox];
+    
+    float maxAxis = fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
+    float scale = kMPSceneMaxSize / maxAxis;
+    
+    self.rootNode.scale = GLKVector3Make(scale, scale, scale);
 }
 
 #pragma mark - public interface
@@ -120,120 +147,6 @@
     GLKVector3 eye = GLKVector3Make(0.0f, 0.0f, 1.0f);
     
     glUniform3fv([self.program uniformPosition:@"u_EyeDirection"], 1, eye.v);
-}
-
-- (void)render
-{
-    if (!self.showExpandedStates)
-    {
-        [super render];
-        return;
-    }
-    
-    [self configureProgram:self.program];
-    
-    [self.rootNode.children enumerateObjectsUsingBlock:^(BHGLNode *child, NSUInteger idx, BOOL *stop) {
-        if (child != self.boundingBox)
-        {
-            [child render];
-        }
-    }];
-    
-    if (_environment && self.planner && self.shadow.model)
-    {
-        MP::Transform3D current = self.shadow.model->getTransform();
-        BHGLColor currentColor = self.shadow.material.surfaceColor;
-        
-        std::vector<MP::Transform3D> states = self.planner->getExploredStates();
-        
-        self.shadow.material.surfaceColor = BHGLColorMake(0.0f, 0.0f, 0.0f, 0.15f);
-        self.shadow.material.emissionColor = self.shadow.material.surfaceColor;
-        
-        for (int i = 0; i < states.size() && i < 100; ++i)
-        {
-            MP::Transform3D t = states.at(states.size() - 1 - i);
-            _environment->plannerToWorld(t);
-            self.shadow.model->setTransform(t);
-            
-            [self.shadow render];
-        }
-        
-        self.shadow.material.surfaceColor = currentColor;
-        self.shadow.material.emissionColor = self.shadow.material.surfaceColor;
-        self.shadow.model->setTransform(current);
-    }
-    
-    [self.boundingBox render];
-}
-
-- (void)setEnvironment:(MP::Environment3D *)environment
-{
-    if (environment != _environment)
-    {
-        [self.rootNode.children makeObjectsPerformSelector:@selector(removeFromParent)];
-        self.rootNode.position = GLKVector3Make(0.0f, 0.0f, 0.0f);
-        self.rootNode.scale = GLKVector3Make(1.0f, 1.0f, 1.0f);
-        self.rootNode.rotation = GLKQuaternionIdentity;
-        
-        MPPathNode *pathNode = [[MPPathNode alloc] init];
-        [_rootNode addChild:pathNode];
-        self.pathNode = pathNode;
-        
-        // free old environment/planner
-        [self cleanup];
-        
-        if (environment != nullptr)
-        {
-            // create active object
-            MPModelNode *activeNode = [[MPModelNode alloc] initWithModel:environment->getActiveObject()];
-            
-            activeNode.material.surfaceColor = BHGLColorOrange;
-            activeNode.material.ambientColor = BHGLColorWhite;
-            activeNode.material.diffuseColor = BHGLColorWhite;
-            activeNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
-            activeNode.material.shininess = 10.0f;
-            
-            [self addChild:activeNode];
-            
-            self.activeObject = activeNode;
-            
-            // create obstacles
-            const std::vector<MP::Model *> &obstacles = environment->getObstacles();
-            for(auto it = obstacles.begin(); it != obstacles.end(); ++it)
-            {
-                MP::Model *obstacle = *it;
-                
-                MPModelNode *obstacleNode = [[MPModelNode alloc] initWithModel:obstacle];
-                
-                obstacleNode.material.surfaceColor = obstacleNode.material.texture ? BHGLColorBlack : BHGLColorTeal;
-                obstacleNode.material.ambientColor = BHGLColorWhite;
-                obstacleNode.material.diffuseColor = BHGLColorWhite;
-                obstacleNode.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
-                obstacleNode.material.shininess = 10.0f;
-                
-                [self addChild:obstacleNode];
-            }
-            
-            self.planner = new MP::AStarPlanner<MP::Transform3D>(environment, MP::manhattanHeuristic);
-            self.planner->setDelay((int)(self.planningDelayMultiplier * kMPPlanMaxDelay));
-            self.planner->setWeight(self.planningWeight);
-        }
-        
-        _environment = environment;
-        
-        [self updateShadow];
-        [self updateBoundingBox];
-        
-        float maxAxis = fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
-        float scale = kMPSceneMaxSize / maxAxis;
-        
-        self.rootNode.scale = GLKVector3Make(scale, scale, scale);
-    }
-}
-
-- (MP::Environment3D *)getEnvironment
-{
-    return _environment;
 }
 
 - (BOOL)transform:(MP::Transform3D &)transform validForModel:(MP::Model *)model
@@ -253,77 +166,6 @@
     }
     
     return valid;
-}
-
-- (BOOL)plan
-{
-    return [self planTo:self.shadow.model->getTransform()];
-}
-
-- (BOOL)planTo:(const MP::Transform3D &)goal
-{
-    return [self planFrom:self.activeObject.model->getTransform() to:goal];
-}
-
-- (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal
-{
-    if (self.isPlanning)
-    {
-        NSLog(@"planner is already planning!");
-        return NO;
-    }
-    
-    if (self.planner)
-    {
-        _planning = YES;
-        
-        self.planStates.clear();
-        
-        [self.pathNode clearPath];
-        
-        if(!self.planner->plan(start, goal, self.planStates))
-        {
-            printf("failed to find plan from ");
-            MPVec3Print(start.getPosition());
-            printf(" to ");
-            MPVec3Print(goal.getPosition());
-            printf("\n");
-            
-            self.planner->reset();
-            _planning = NO;
-            
-            return NO;
-        }
-        
-        self.planner->reset();
-        _planning = NO;
-        
-        return YES;
-    }
-    
-    return NO;
-}
-
-- (void)executePlan
-{
-    std::vector<MPVec3> path;
-    BHGLKeyframeAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)self.planStates.size() fps:kMPPlanStatesPerSec];
-    
-    for (int i = 0; i < self.planStates.size(); ++i)
-    {
-        MP::Transform3D &transform = self.planStates.at(i);
-        
-        path.push_back(transform.getPosition());
-        
-        [anim setTranslation:MPVec3ToGLKVector3(transform.getPosition()) forFrame:i];
-        [anim setScale:MPVec3ToGLKVector3(transform.getScale()) forFrame:i];
-        [anim setRotation:MPQuaternionToGLKQuaternion(transform.getRotation()) forFrame:i];
-    }
-    
-    [self.pathNode setPath:path];
-    
-    [self.activeObject removeAllAnimations];
-    [self.activeObject runAnimation:anim];
 }
 
 #pragma mark - private interface
@@ -413,25 +255,20 @@
 }
 
 - (void)cleanup
-{
-    if (self.planner)
+{    
+    if (self.environment)
     {
-        delete self.planner;
-    }
-    
-    if (_environment)
-    {
-        if (_environment->getActiveObject())
+        if (self.environment->getActiveObject())
         {
             
-            if (MPMeshGetRefCount(_environment->getActiveObject()->getMesh()) <= 1)
+            if (MPMeshGetRefCount(self.environment->getActiveObject()->getMesh()) <= 1)
             {
                 // free allocated vertex and index data if we're about to free the mesh
                 free((void *)_environment->getActiveObject()->getMesh()->vertexData);
                 free((void *)_environment->getActiveObject()->getMesh()->indexData);
             }
             
-            delete _environment->getActiveObject();
+            delete self.environment->getActiveObject();
         }
         
         const std::vector<MP::Model *> &obstacles = _environment->getObstacles();
@@ -449,7 +286,7 @@
             delete otherModel;
         }
         
-        delete _environment;
+        delete self.environment;
     }
 }
 

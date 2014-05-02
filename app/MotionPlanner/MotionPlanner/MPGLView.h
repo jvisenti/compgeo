@@ -7,10 +7,10 @@
 //
 
 #import "BHGLView.h"
-#import "MPScene.h"
+#import "MPStaticScene.h"
 
 @interface MPGLView : BHGLView
 
-@property (nonatomic, strong) MPScene *scene;
+@property (nonatomic, strong) MPStaticScene *scene;
 
 @end

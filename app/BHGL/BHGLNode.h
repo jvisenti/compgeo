@@ -50,6 +50,8 @@
     When a node is updated or rendered, its children are also updated or rendered. */
 - (void)addChild:(BHGLNode *)node;
 
+- (void)insertChild:(BHGLNode *)node atIndex:(NSUInteger)index;
+
 /** Adds the array of nodes as a children of the receiver, adding them to the node heirarchy.
     When a node is updated or rendered, its children are also updated or rendered. */
 - (void)addChildren:(NSArray *)nodes;

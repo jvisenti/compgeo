@@ -103,6 +103,13 @@
     [node setValue:self forKey:@"parent"];
 }
 
+- (void)insertChild:(BHGLNode *)node atIndex:(NSUInteger)index
+{
+    [node removeFromParent];
+    [self.mutableChildren insertObject:node atIndex:index];
+    [node setValue:self forKey:@"parent"];
+}
+
 - (void)addChildren:(NSArray *)nodes
 {
     [nodes enumerateObjectsUsingBlock:^(BHGLNode *node, NSUInteger idx, BOOL *stop) {

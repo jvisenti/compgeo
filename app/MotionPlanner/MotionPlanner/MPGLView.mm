@@ -124,7 +124,7 @@
 
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if (self.scene.isPlanning)
+    if (!self.scene.isUserInteractionEnabled)
     {
         return;
     }
@@ -262,7 +262,7 @@
 {
     [super prepareOpenGL];
     
-    self.scene = [[MPScene alloc] init];
+    self.scene = [[MPStaticScene alloc] init];
         
     glEnable(GL_MULTISAMPLE);
     
@@ -309,27 +309,27 @@
 - (IBAction)actionControlChanged:(NSSegmentedControl *)sender
 {
     MP::Action6D::ActionSet actions;
-    
+        
     switch ([sender selectedSegment])
     {
         case 0:
-            actions = MP::Action6D::generate3DActions([self.scene getEnvironment]->getStepSize());
+            actions = MP::Action6D::generate3DActions(self.scene.environment->getStepSize());
             break;
             
         case 1:
-            actions = MP::Action6D::generate6DActions([self.scene getEnvironment]->getStepSize(), [self.scene getEnvironment]->getRotationStepSize());
+            actions = MP::Action6D::generate6DActions(self.scene.environment->getStepSize(), self.scene.environment->getRotationStepSize());
             break;
             
         case 2:
-            actions = MP::Action6D::generateFalconActions([self.scene getEnvironment]->getStepSize(), [self.scene getEnvironment]->getRotationStepSize());
+            actions = MP::Action6D::generateFalconActions(self.scene.environment->getStepSize(), self.scene.environment->getRotationStepSize());
             break;
             
         default:
             break;
     }
     
-    [self.scene getEnvironment]->getActiveObject()->setActionSet(actions);
-    [self.scene getEnvironment]->resetActions();
+    self.scene.environment->getActiveObject()->setActionSet(actions);
+    self.scene.environment->resetActions();
 }
 
 - (IBAction)angleSliderChanged:(NSSlider *)sender
