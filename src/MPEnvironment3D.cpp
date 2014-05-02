@@ -75,17 +75,17 @@ int transform3DHash(const Transform3D &t)
 }
 
 Environment3D::Environment3D()
-: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Zero), activeObject_(nullptr)
+: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Zero), activeObject_(nullptr), dynamic_(false)
 {
 }
 
 Environment3D::Environment3D(const MPVec3 &size)
-: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(size), activeObject_(nullptr)
+: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(size), activeObject_(nullptr), dynamic_(false)
 {
 }
 
 Environment3D::Environment3D(const MPVec3 &origin, const MPVec3 &size)
-: Environment<Transform3D>(transform3DHash), origin_(origin), size_(size), activeObject_(nullptr)
+: Environment<Transform3D>(transform3DHash), origin_(origin), size_(size), activeObject_(nullptr), dynamic_(false)
 {
 }
 

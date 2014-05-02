@@ -414,17 +414,29 @@
 }
 
 - (void)setUIEnabled:(BOOL)enabled
-{    
-    [self.actionControl setEnabled:enabled];
-    
+{
     [self.rollSlider setEnabled:enabled];
     [self.pitchSlider setEnabled:enabled];
     [self.yawSlider setEnabled:enabled];
     
-    [self.weightField setEnabled:enabled];
-    [self.speedSlider setEnabled:enabled];
-    
     [self.movementControl setEnabled:enabled];
+    
+    if (self.staticScene)
+    {
+        [self.actionControl setEnabled:enabled];
+        
+        [self.weightField setEnabled:enabled];
+        [self.speedSlider setEnabled:enabled];
+    }
+    else
+    {
+        [self.actionControl setEnabled:NO];
+        
+        [self.showExpansions setEnabled:NO];
+        [self.weightField setEnabled:NO];
+        [self.speedSlider setEnabled:NO];
+        
+    }
 }
 
 - (void)openFile:(NSMenuItem *)sender
