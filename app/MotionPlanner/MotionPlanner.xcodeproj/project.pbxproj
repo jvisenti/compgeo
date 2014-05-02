@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		33647E3B1912F7CB006DFFFA /* MPPotentialFieldController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */; };
 		33FBB3681906D9F7002635EC /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
@@ -51,6 +52,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPPotentialFieldController.cpp; path = ../../src/MPPotentialFieldController.cpp; sourceTree = "<group>"; };
+		33647E3A1912F7CB006DFFFA /* MPPotentialFieldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPPotentialFieldController.h; path = ../../src/MPPotentialFieldController.h; sourceTree = "<group>"; };
 		33FBB3651906D9F7002635EC /* MPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction.h; path = ../../src/MPAction.h; sourceTree = "<group>"; };
 		33FBB3661906D9F7002635EC /* MPAction6D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPAction6D.cpp; path = ../../src/MPAction6D.cpp; sourceTree = "<group>"; };
 		33FBB3671906D9F7002635EC /* MPAction6D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction6D.h; path = ../../src/MPAction6D.h; sourceTree = "<group>"; };
@@ -326,6 +329,8 @@
 				33FBB3651906D9F7002635EC /* MPAction.h */,
 				33FBB3661906D9F7002635EC /* MPAction6D.cpp */,
 				33FBB3671906D9F7002635EC /* MPAction6D.h */,
+				33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */,
+				33647E3A1912F7CB006DFFFA /* MPPotentialFieldController.h */,
 			);
 			name = MotionPlannerSrc;
 			sourceTree = "<group>";
@@ -429,6 +434,7 @@
 				D416EDA818EEED3D00993BAF /* BHGLMaterial.m in Sources */,
 				D416EDA618EEED3D00993BAF /* BHGLKeyframeAnimation.m in Sources */,
 				D416EDAA18EEED3D00993BAF /* BHGLModelNode.m in Sources */,
+				33647E3B1912F7CB006DFFFA /* MPPotentialFieldController.cpp in Sources */,
 				D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */,
 				D416EDA418EEED3D00993BAF /* BHGLCamera.m in Sources */,
 				D4A79DC718FF8B96005B4D57 /* MPTokenizer.cpp in Sources */,
