@@ -9,7 +9,8 @@
 #import "MPGLView.h"
 #import "BHGL.h"
 #import "MPReader.h"
-#import "MPDijkstra3D.h"
+#import "MPStaticScene.h"
+#import "MPDynamicScene.h"
 #import <Carbon/Carbon.h>
 
 #define kMPSceneScaleFactor 0.2f
@@ -17,6 +18,10 @@
 #define kMPObjectMotionIncrement 0.03f
 
 @interface MPGLView ()
+
+/* mutually exclusive properties. returns a properly casted version of the scene or nil */
+@property (nonatomic, readonly) MPStaticScene *staticScene;
+@property (nonatomic, readonly) MPDynamicScene *dynamicScene;
 
 @property (nonatomic, weak) MPModelNode *controlledModel;
 
@@ -232,17 +237,25 @@
             
         case kVK_ANSI_P:
         {
-            [self setUIEnabled:NO];
-            dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-                if ([self.scene plan])
-                {
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        [self.scene executePlan];
-                    });
-                }
-                
-                [self setUIEnabled:YES];
-            });
+            if (self.staticScene)
+            {
+                [self setUIEnabled:NO];
+                dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+                    if ([self.staticScene plan])
+                    {
+                        dispatch_async(dispatch_get_main_queue(), ^{
+                            [self.staticScene executePlan];
+                        });
+                    }
+                    
+                    [self setUIEnabled:YES];
+                });
+            }
+            else
+            {
+                [self.dynamicScene move];
+            }
+            
         }
             
         default:
@@ -262,8 +275,8 @@
 {
     [super prepareOpenGL];
     
-    self.scene = [[MPStaticScene alloc] init];
-        
+//    self.scene = [[MPStaticScene alloc] init];
+    
     glEnable(GL_MULTISAMPLE);
     
     glEnable(GL_LINE_SMOOTH);
@@ -280,6 +293,26 @@
 }
 
 #pragma mark - private interface
+
+- (MPStaticScene *)staticScene
+{
+    if ([self.scene isKindOfClass:[MPStaticScene class]])
+    {
+        return (MPStaticScene *)self.scene;
+    }
+    
+    return nil;
+}
+
+- (MPDynamicScene *)dynamicScene
+{
+    if ([self.scene isKindOfClass:[MPDynamicScene class]])
+    {
+        return (MPDynamicScene *)self.scene;
+    }
+    
+    return nil;
+}
 
 - (NSMutableDictionary *)movementAnimations
 {
@@ -345,14 +378,14 @@
 
 - (IBAction)weightFieldChanged:(NSTextField *)sender
 {
-    self.scene.planningWeight = [sender doubleValue];
+    self.staticScene.planningWeight = [sender doubleValue];
 }
 
 - (IBAction)checkboxPressed:(NSButton *)sender
 {
-    self.scene.showExpandedStates = [sender state];
+    self.staticScene.showExpandedStates = [sender state];
     
-    if (!self.scene.isPlanning)
+    if (!self.staticScene.isPlanning)
     {
         [self.speedSlider setEnabled:[sender state]];
     }
@@ -360,7 +393,7 @@
 
 - (IBAction)speedSliderChanged:(NSSlider *)sender
 {
-    self.scene.planningDelayMultiplier = ([sender maxValue] - [sender doubleValue]);
+    self.staticScene.planningDelayMultiplier = ([sender maxValue] - [sender doubleValue]);
 }
 
 - (IBAction)movementControlChanged:(NSSegmentedControl *)sender
@@ -433,10 +466,19 @@
                 MP::Model *activeObject = environment->getActiveObject();
                 activeObject->setActionSet(MP::Action6D::generate3DActions(environment->getStepSize()));
                 
-                [self.scene setEnvironment:environment];
+                // TODO: adjust UI based on whether scene is static or dynamic
                 
-                self.scene.showExpandedStates = YES;
-                self.scene.planningDelayMultiplier = 0.0f;
+                if (environment->isDynamic())
+                {
+                    self.scene = [[MPDynamicScene alloc] initWithEnvironment:environment];
+                }
+                else
+                {
+                    self.scene = [[MPStaticScene alloc] initWithEnvironment:environment];
+                }
+            
+                self.staticScene.showExpandedStates = YES;
+                self.staticScene.planningDelayMultiplier = 0.0f;
                 
                 self.controlledModel = self.scene.shadow;
                 
