@@ -5,6 +5,7 @@
 //
 
 #include "MPPotentialFieldController.h"
+#include "MPUtils.h"
 
 namespace MP
 {
@@ -28,7 +29,7 @@ void PotentialFieldController::move() const
     // Perform a single step of gradient descent
     MPVec3 currentPosition = activeObject_->getPosition();
     MPVec3 gradient = potentialGrad(currentPosition);
-    const float alpha = 0.6f;
+    const float alpha = 0.1f;
     
     // TODO: Check for convergence (i.e. when gradient of potential function is close to zero
     // or, || gradient || < epsilon for some epsilon)
@@ -48,7 +49,11 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
         const MPMat4 matrix = obstacle->getTransform().getMatrix();
         MPSphere boundingSphere = MPMeshGetBoundingSphere(obstacle->getMesh(), &matrix);
         
-        MPVec3Add(potentialGrad, repulsivePotentialGrad(obstacle->getPosition(), p, boundingSphere.radius));
+        MPVec3 repulsiveGrad = repulsivePotentialGrad(obstacle->getPosition(), p, boundingSphere.radius);
+        
+        potentialGrad.x += repulsiveGrad.x;
+        potentialGrad.y += repulsiveGrad.y;
+        potentialGrad.z += repulsiveGrad.z;
     }
     
     return potentialGrad;
@@ -80,19 +85,19 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
 
 MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const
 {
-    // TODO: Move this (arbitrarilyy-defined) constant somewhere better
+    // TODO: Move this (arbitrarily-defined) constant somewhere better
     const float a = 6.0f;
     
     float distance = MPVec3EuclideanDistance(pObs, p);
     
     // The gradient of the Euclidean distance function
     MPVec3 distanceGrad = MPVec3Make(p.x - pObs.x, p.y - pObs.y, p.z - pObs.z);
-    distanceGrad = MPVec3MultiplyScalar(distanceGrad, MPVec3EuclideanDistance(pObs, p));
+    distanceGrad = MPVec3MultiplyScalar(distanceGrad, distance);
 
     if(distance > P)
         return MPVec3Zero;
     
-    float multiplier = a * (1.0f / P - 1.0f / distance) * (1.0f / powf(distance, 2.0f));
+    float multiplier = a * (1.0f / P - 1.0f / distance) * (1.0f / (distance * distance));
     
     // Compute the gradient of the repulsive potential function
     return MPVec3MultiplyScalar(distanceGrad, multiplier);

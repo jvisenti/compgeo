@@ -478,8 +478,6 @@
                 MP::Model *activeObject = environment->getActiveObject();
                 activeObject->setActionSet(MP::Action6D::generate3DActions(environment->getStepSize()));
                 
-                // TODO: adjust UI based on whether scene is static or dynamic
-                
                 if (environment->isDynamic())
                 {
                     self.scene = [[MPDynamicScene alloc] initWithEnvironment:environment];
