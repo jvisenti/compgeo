@@ -11,6 +11,7 @@
 
 @interface MPDynamicScene ()
 
+@property (nonatomic, assign) MP::Transform3D *goal;
 @property (nonatomic, assign) MP::PotentialFieldController *controller;
 
 @end
@@ -28,6 +29,7 @@
 {
     [super setEnvironment:environment];
     
+    delete self.goal;
     delete self.controller;
     
     if (self.environment)
@@ -45,23 +47,32 @@
 
 - (void)moveTo:(const MP::Transform3D &)goal
 {
-    self.controller->setGoal(goal);
-    self.controller->move();
+    delete self.goal;
+    
+    self.goal = new MP::Transform3D(goal.getPosition(), goal.getScale(), goal.getRotation());
+    
+    if (self.controller)
+    {
+        self.controller->setGoal(goal);
+        self.controller->move();
+    }
 }
 
 - (void)update:(NSTimeInterval)dt
 {
     [super update:dt];
     
-//    if (self.controller && self.activeObject.model)
-//    {
-//        self.controller->move();
-//    }
+    if (self.controller && self.activeObject.model && self.goal)
+    {
+        self.controller->move();
+    }
 }
 
 - (void)cleanup
 {
     [super cleanup];
+    
+    delete self.goal;
     
     if (self.controller)
     {

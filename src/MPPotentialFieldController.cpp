@@ -29,7 +29,7 @@ void PotentialFieldController::move() const
     // Perform a single step of gradient descent
     MPVec3 currentPosition = activeObject_->getPosition();
     MPVec3 gradient = potentialGrad(currentPosition);
-    const float alpha = 0.1f;
+    const float alpha = 0.01f;
     
     // TODO: Check for convergence (i.e. when gradient of potential function is close to zero
     // or, || gradient || < epsilon for some epsilon)
