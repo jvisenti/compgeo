@@ -149,7 +149,7 @@ static inline MPVec3 MPVec3Project(MPVec3 a, MPVec3 b)
     
     return MPVec3MultiplyScalar(b, scale);
 }
-
+    
 #pragma mark - quaternion functions
 
 static inline MPQuaternion MPQuaternionMake(float x, float y, float z, float w)
@@ -334,6 +334,11 @@ static inline MPVec3 MPMat4TransformVec3(MPMat4 m, MPVec3 v)
     
     return mv;
 }
+    
+static inline void MPVec3ApplyTransform(MPVec3 *v, MPMat4 t)
+{
+    *v = MPMat4TransformVec3(t, *v);
+}
 
 #pragma mark - sphere functions
 
@@ -475,6 +480,12 @@ static inline void MPTriangleApplyTransform(MPTriangle *t, MPMat4 m)
     t->p[0] = MPMat4TransformVec3(m, t->p[0]);
     t->p[1] = MPMat4TransformVec3(m, t->p[1]);
     t->p[2] = MPMat4TransformVec3(m, t->p[2]);
+}
+    
+/* assumes vertices specified in CCW order. */
+static inline MPVec3 MPTriangleNormal(MPTriangle t)
+{
+    return MPVec3CrossProduct(MPVec3Subtract(t.v2, t.v1), MPVec3Subtract(t.v3, t.v1));
 }
     
 /* returns the line segment resulting from projecting the vertices of t onto v. */

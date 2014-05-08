@@ -274,9 +274,7 @@
 - (void)prepareOpenGL
 {
     [super prepareOpenGL];
-    
-//    self.scene = [[MPStaticScene alloc] init];
-    
+        
     glEnable(GL_MULTISAMPLE);
     
     glEnable(GL_LINE_SMOOTH);
@@ -289,7 +287,7 @@
     
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-    glClearColor(0.2f, 0.6f, 0.4f, 0.0f);
+    glClearColor(0.7f, 0.9f, 1.0f, 0.0f);
 }
 
 #pragma mark - private interface

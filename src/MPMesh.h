@@ -31,9 +31,12 @@ typedef struct _MPMesh
     
     void *_reserved;
 } MPMesh;
-
+    
 /* initialize a new mesh. mesh members shouldn't be changed after creation. */
 MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices, const void *indexData, size_t indexSize, size_t numIndices);
+    
+/* initialize a new mesh that is a 1x1x1 cube. Origin of mesh is the center. */
+MPMesh* MPMeshCreateCube();
 
 /* free all memory used by the mesh, including the mesh itself. */
 void MPMeshFree(MPMesh *mesh);
@@ -58,6 +61,10 @@ const MPVec3* MPMeshGetExtremePoints(const MPMesh *mesh);
     
 /* returns the bounding sphere of the mesh using the given transform. pass NULL to use identity. */
 MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform);
+    
+/* returns points relative to mesh origin that are active in the voxel grid. assumes mesh origin is at the center.
+    @note return value must be freed. */
+MPVec3* MPMeshGetVoxels(const MPMesh *mesh, MPVec3 scale, float voxelSize, int *n);
     
 #if defined(__cplusplus)
 }

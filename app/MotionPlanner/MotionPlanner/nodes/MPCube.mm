@@ -9,60 +9,6 @@
 #import "MPCube.h"
 #import "BHGLCUtils.h"
 
-const GLfloat Vertices[24][6] = {
-    // Front
-    {0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
-    {0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
-    {-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
-    {-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
-    // Back
-    {0.5, -0.5, -0.5f, 0.0f, 0.0f, -1.0f},
-    {-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f},
-    {-0.5, 0.5, -0.5f, 0.0f, 0.0f, -1.0f},
-    {0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f},
-    // Left
-    {-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f},
-    {-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f},
-    {-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f},
-    {-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f},
-    // Right
-    {0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
-    {0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
-    {0.5f, 0.5, 0.5, 1.0f, 0.0f, 0.0f},
-    {0.5, -0.5, 0.5, 1.0f, 0.0f, 0.0f},
-    // Top
-    {0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f},
-    {0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f},
-    {-0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f},
-    {-0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f},
-    // Bottom
-    {0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f},
-    {0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f},
-    {-0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f},
-    {-0.5, -0.5f, -0.5, 0.0f, -1.0f, 0.0f}
-};
-
-const GLuint Indices[] = {
-    // Front
-    0, 1, 2,
-    2, 3, 0,
-    // Back
-    4, 5, 6,
-    6, 7, 4,
-    // Left
-    8, 9, 10,
-    10, 11, 8,
-    // Right
-    12, 13, 14,
-    14, 15, 12,
-    // Top
-    16, 17, 18,
-    18, 19, 16,
-    // Bottom
-    20, 21, 22,
-    22, 23, 20
-};
-
 @interface MPCube ()
 
 + (MPMesh *)sharedMesh;
@@ -80,6 +26,16 @@ const GLuint Indices[] = {
     }
     
     return self;
+}
+
+- (id)initWithMesh:(BHGLMesh *)mesh material:(BHGLMaterial *)material
+{
+    return [self init];
+}
+
+- (id)initWithModel:(MP::Model *)model
+{
+    return [self init];
 }
 
 - (void)setModel:(MP::Model *)model
@@ -102,7 +58,7 @@ const GLuint Indices[] = {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         
-        SharedMesh = MPMeshCreate((const MPVec3 *)Vertices, sizeof(Vertices[0]), sizeof(Vertices)/sizeof(Vertices[0]), (const void *)Indices, sizeof(Indices[0]), sizeof(Indices)/sizeof(Indices[0]));
+        SharedMesh = MPMeshCreateCube();
         MPMeshRetain(SharedMesh);
     });
     

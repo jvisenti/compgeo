@@ -20,6 +20,62 @@ typedef struct _MPMeshPrivate
 
 void _MPMeshComputePrivate(MPMesh *mesh);
 
+int _MPMeshVoxelCollision(const MPTriangle *faces, size_t n, const MPMesh *voxMesh, MPMat4 voxTransform);
+
+const float CubeVertices[24][6] = {
+    // Front
+    {0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+    {0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+    {-0.5f, 0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+    {-0.5f, -0.5f, 0.5f, 0.0f, 0.0f, 1.0f},
+    // Back
+    {0.5, -0.5, -0.5f, 0.0f, 0.0f, -1.0f},
+    {-0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f},
+    {-0.5, 0.5, -0.5f, 0.0f, 0.0f, -1.0f},
+    {0.5f, 0.5f, -0.5f, 0.0f, 0.0f, -1.0f},
+    // Left
+    {-0.5f, -0.5f, 0.5f, -1.0f, 0.0f, 0.0f},
+    {-0.5f, 0.5f, 0.5f, -1.0f, 0.0f, 0.0f},
+    {-0.5f, 0.5f, -0.5f, -1.0f, 0.0f, 0.0f},
+    {-0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f},
+    // Right
+    {0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
+    {0.5f, 0.5f, -0.5f, 1.0f, 0.0f, 0.0f},
+    {0.5f, 0.5, 0.5, 1.0f, 0.0f, 0.0f},
+    {0.5, -0.5, 0.5, 1.0f, 0.0f, 0.0f},
+    // Top
+    {0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f},
+    {0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f},
+    {-0.5, 0.5, -0.5, 0.0f, 1.0f, 0.0f},
+    {-0.5, 0.5, 0.5, 0.0f, 1.0f, 0.0f},
+    // Bottom
+    {0.5, -0.5, -0.5, 0.0f, -1.0f, 0.0f},
+    {0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f},
+    {-0.5, -0.5, 0.5, 0.0f, -1.0f, 0.0f},
+    {-0.5, -0.5f, -0.5, 0.0f, -1.0f, 0.0f}
+};
+
+const unsigned int CubeIndices[] = {
+    // Front
+    0, 1, 2,
+    2, 3, 0,
+    // Back
+    4, 5, 6,
+    6, 7, 4,
+    // Left
+    8, 9, 10,
+    10, 11, 8,
+    // Right
+    12, 13, 14,
+    14, 15, 12,
+    // Top
+    16, 17, 18,
+    18, 19, 16,
+    // Bottom
+    20, 21, 22,
+    22, 23, 20
+};
+
 #pragma mark - public functions
 
 MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices, const void *indexData, size_t indexSize, size_t numIndices)
@@ -44,6 +100,11 @@ MPMesh* MPMeshCreate(const MPVec3 *vertexData, size_t stride, size_t numVertices
     _MPMeshComputePrivate(mesh);
     
     return mesh;
+}
+
+MPMesh* MPMeshCreateCube()
+{
+    return MPMeshCreate((const MPVec3 *)CubeVertices, sizeof(CubeVertices[0]), sizeof(CubeVertices)/sizeof(CubeVertices[0]), (const void *)CubeIndices, sizeof(CubeIndices[0]), sizeof(CubeIndices)/sizeof(CubeIndices[0]));
 }
 
 void MPMeshFree(MPMesh *mesh)
@@ -164,6 +225,89 @@ MPSphere MPMeshGetBoundingSphere(const MPMesh *mesh, const MPMat4 *transform)
     return  boundingSphere;
 }
 
+MPVec3* MPMeshGetVoxels(const MPMesh *mesh, MPVec3 scale, float voxelSize, int *n)
+{
+    MPVec3 *extremes = ((MPMeshPrivate *)mesh->_reserved)->extremePoints;
+    
+    // some arbitrary start size
+    int arraySize = 10;
+    int count = 0;
+    
+    MPVec3 *voxels = malloc(arraySize * sizeof(MPVec3));
+    
+    // temporary cube mesh to represent a voxel
+    MPMesh *cubeMesh = MPMeshCreateCube();
+    MPMat4 transform = MPMat4MakeScale(MPVec3Make(voxelSize, voxelSize, voxelSize));
+    
+    float startX = scale.x * extremes[0].x + 0.5f * voxelSize;
+    float endX = scale.x * extremes[3].x;
+    
+    float startY = scale.y * extremes[1].y + 0.5f * voxelSize;
+    float endY = scale.y * extremes[4].y;
+    
+    float startZ = scale.z * extremes[2].z + 0.5f * voxelSize;
+    float endZ = scale.z * extremes[5].z;
+    
+    // compute triangles of the mesh
+    size_t numTriangles = MPMeshGetTriangleCount(mesh);
+    MPTriangle triangles[numTriangles];
+    
+    MPMat4 scaleT = MPMat4MakeScale(scale);
+    
+    int i;
+    for (i = 0; i < numTriangles; ++i)
+    {
+        MPMeshGetTriangle(mesh, i, triangles[i].p);
+        MPTriangleApplyTransform(&triangles[i], scaleT);
+    }
+    
+    float x, y, z;
+    for (x = startX; x < endX; x += voxelSize)
+    {
+        transform.m[12] = x;
+        
+        for (y = startY; y < endY; y += voxelSize)
+        {
+            transform.m[13] = y;
+            
+            for (z = startZ; z < endZ; z += voxelSize)
+            {
+                transform.m[14] = z;
+                
+                if (_MPMeshVoxelCollision(triangles, numTriangles, cubeMesh, transform))
+                {
+                    if (count >= arraySize)
+                    {
+                        // double array if necessary
+                        voxels = realloc(voxels, 2 * arraySize * sizeof(MPVec3));
+                        arraySize *= 2;
+                    }
+                    
+                    voxels[count] = MPVec3Make(x, y, z);
+                    ++count;
+                }
+            }
+        }
+    }
+    
+    // resize array to fit
+    if (count > 0)
+    {
+        voxels = realloc(voxels, count * sizeof(MPVec3));
+    }
+    else
+    {
+        voxels = NULL;
+    }
+    
+    if (n != NULL)
+    {
+        *n = count;
+    }
+    
+    return voxels;
+}
+
 #pragma mark - private functions
 
 void _MPMeshComputePrivate(MPMesh *mesh)
@@ -210,4 +354,37 @@ void _MPMeshComputePrivate(MPMesh *mesh)
     private->extremePoints[5] = *front;
                               
     private->boundingSphere = MPSphereMake(center, maxDist);
+}
+
+int _MPMeshVoxelCollision(const MPTriangle *faces, size_t n, const MPMesh *voxMesh, MPMat4 voxTransform)
+{
+    int numInside = 0;
+    int numOutside = 0;
+    
+    size_t v, t;
+    for (v = 0; v < voxMesh->numVertices && !(numOutside && numInside); ++v)
+    {
+        int inside = 1;
+        
+        for (t = 0; t < n && inside; ++t)
+        {
+            MPVec3 vertex = *(MPVec3 *)((char *)voxMesh->vertexData + v * voxMesh->stride);
+            MPVec3ApplyTransform(&vertex, voxTransform);
+            
+            MPVec3 normal = MPTriangleNormal(faces[t]);
+            
+            inside = MPVec3DotProduct(MPVec3Subtract(vertex, faces[t].v1), normal) <= 0.0f;
+        }
+        
+        if (inside)
+        {
+            ++numInside;
+        }
+        else
+        {
+            ++numOutside;
+        }
+    }
+    
+    return (numInside && numOutside);
 }
