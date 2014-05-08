@@ -8,6 +8,7 @@
 #define __MPPotentialFieldPlanner__
 
 #include <iostream>
+#include <map>
 #include "MPModel.h"
 
 namespace MP
@@ -35,10 +36,10 @@ private:
      * P is the cutoff beyond which there is no repuslive effect */
     MPVec3 repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const;
     
-    std::vector<Model *> obstacles_;
+    std::map<Model *, std::vector<MPVec3>> obstacles_;
+    
     Model *activeObject_;
     Transform3D goal_;
-    
 };
     
 }

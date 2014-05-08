@@ -10,9 +10,25 @@
 namespace MP
 {
 PotentialFieldController::PotentialFieldController(const std::vector<Model *> &obstacles, Model *activeObject)
-: obstacles_(obstacles), activeObject_(activeObject)
-{
-    
+: activeObject_(activeObject)
+{    
+    for(auto obstacle : obstacles)
+    {
+        // TODO: make voxel size a parameter somewhere
+        int n;
+        MPVec3 *voxArray = MPMeshGetVoxels(obstacle->getMesh(), obstacle->getScale(), 0.5, &n);
+        
+        std::vector<MPVec3> voxels;
+        
+        for (int i = 0; i < n; ++i)
+        {
+            voxels.push_back(voxArray[i]);
+        }
+        
+        obstacles_.insert(std::make_pair(obstacle, voxels));
+        
+        free(voxArray);
+    }
 }
 
 PotentialFieldController::PotentialFieldController()
@@ -44,16 +60,29 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
     // sum of the individual contributions from all the "particles"
     MPVec3 potentialGrad = attractivePotentialGrad(p);
     
-    for(auto obstacle : obstacles_)
+    const MPMat4 activeT = this->activeObject_->getTransform().getMatrix();
+    MPSphere activeSphere = MPMeshGetBoundingSphere(this->activeObject_->getMesh(), &activeT);
+    
+    for(auto it = this->obstacles_.begin(); it != this->obstacles_.end(); ++it)
     {
+        Model *obstacle = it->first;
+        std::vector<MPVec3> voxels = it->second;
+        
         const MPMat4 matrix = obstacle->getTransform().getMatrix();
         MPSphere boundingSphere = MPMeshGetBoundingSphere(obstacle->getMesh(), &matrix);
         
-        MPVec3 repulsiveGrad = repulsivePotentialGrad(obstacle->getPosition(), p, boundingSphere.radius);
-        
-        potentialGrad.x += repulsiveGrad.x;
-        potentialGrad.y += repulsiveGrad.y;
-        potentialGrad.z += repulsiveGrad.z;
+        if (MPSphereIntersectsSphere(boundingSphere, activeSphere))
+        {
+            for (auto vox : voxels)
+            {
+                // TODO: what should this radius be?
+                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 2.0f);
+                
+                potentialGrad.x += repulsiveGrad.x;
+                potentialGrad.y += repulsiveGrad.y;
+                potentialGrad.z += repulsiveGrad.z;
+            }
+        }
     }
     
     return potentialGrad;
@@ -86,7 +115,7 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
 MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const
 {
     // TODO: Move this (arbitrarily-defined) constant somewhere better
-    const float a = 6.0f;
+    const float a = 10.0f;
     
     float distance = MPVec3EuclideanDistance(pObs, p);
     

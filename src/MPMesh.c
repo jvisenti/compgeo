@@ -356,6 +356,7 @@ void _MPMeshComputePrivate(MPMesh *mesh)
     private->boundingSphere = MPSphereMake(center, maxDist);
 }
 
+// NOTE: this method is faster than full collision detection, but is not guaranteed to catch all cases
 int _MPMeshVoxelCollision(const MPTriangle *faces, size_t n, const MPMesh *voxMesh, MPMat4 voxTransform)
 {
     int numInside = 0;
@@ -365,6 +366,7 @@ int _MPMeshVoxelCollision(const MPTriangle *faces, size_t n, const MPMesh *voxMe
     for (v = 0; v < voxMesh->numVertices && !(numOutside && numInside); ++v)
     {
         int inside = 1;
+        int on = 0;
         
         for (t = 0; t < n && inside; ++t)
         {
@@ -373,14 +375,21 @@ int _MPMeshVoxelCollision(const MPTriangle *faces, size_t n, const MPMesh *voxMe
             
             MPVec3 normal = MPTriangleNormal(faces[t]);
             
-            inside = MPVec3DotProduct(MPVec3Subtract(vertex, faces[t].v1), normal) <= 0.0f;
+            float dot = MPVec3DotProduct(MPVec3Subtract(vertex, faces[t].v1), normal);
+            
+            if (dot >= 0.0f)
+            {
+                inside = 0;
+                on = (dot == 0.0f);
+            }
         }
         
-        if (inside)
+        if (on || inside)
         {
             ++numInside;
         }
-        else
+        
+        if (on || !inside)
         {
             ++numOutside;
         }
