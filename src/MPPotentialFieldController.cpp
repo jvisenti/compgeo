@@ -16,7 +16,7 @@ PotentialFieldController::PotentialFieldController(const std::vector<Model *> &o
     {
         // TODO: make voxel size a parameter somewhere
         int n;
-        MPVec3 *voxArray = MPMeshGetVoxels(obstacle->getMesh(), obstacle->getScale(), 0.5, &n);
+        MPVec3 *voxArray = MPMeshGetVoxels(obstacle->getMesh(), obstacle->getScale(), 0.25, &n);
         
         std::vector<MPVec3> voxels;
         
@@ -76,7 +76,7 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
             for (auto vox : voxels)
             {
                 // TODO: what should this radius be?
-                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 2.0f);
+                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 1.0f);
                 
                 potentialGrad.x += repulsiveGrad.x;
                 potentialGrad.y += repulsiveGrad.y;
