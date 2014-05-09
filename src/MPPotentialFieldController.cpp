@@ -71,10 +71,21 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
         const MPMat4 matrix = obstacle->getTransform().getMatrix();
         MPSphere boundingSphere = MPMeshGetBoundingSphere(obstacle->getMesh(), &matrix);
         
+        MPVec3 trans = obstacle->getPosition();
+        
+        MPMat4 tr = MPMat4MakeRotation(obstacle->getRotation());
+
+        // shortcut to apply translation
+        tr.m[12] = trans.x;
+        tr.m[13] = trans.y;
+        tr.m[14] = trans.z;
+        
         if (MPSphereIntersectsSphere(boundingSphere, activeSphere))
         {
             for (auto vox : voxels)
             {
+                MPVec3ApplyTransform(&vox, tr);
+                
                 // TODO: what should this radius be?
                 MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 1.0f);
                 
