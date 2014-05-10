@@ -17,7 +17,7 @@ namespace MP
 class PotentialFieldController
 {
 public:
-    PotentialFieldController(const std::vector<Model *> &obstacles, Model *activeObject);
+    PotentialFieldController(const std::vector<Model *> &obstacles, Model *activeObject, float voxelSize);
     
     PotentialFieldController();
     
@@ -34,7 +34,13 @@ private:
     /* pObs is the position of the obstacle
      * p is the position of the moving object
      * P is the cutoff beyond which there is no repuslive effect */
-    MPVec3 repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const;
+    MPVec3 repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float r, float P) const;
+    
+    float voxelSize_;
+    
+    float gradStep_;
+    float attractiveMultiplier_;
+    float repulsiveMultiplier_;
     
     std::map<Model *, std::vector<MPVec3>> obstacles_;
     

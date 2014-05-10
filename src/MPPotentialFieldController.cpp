@@ -87,7 +87,7 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
                 MPVec3ApplyTransform(&vox, tr);
                 
                 // TODO: what should this radius be?
-                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 1.0f);
+                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 0.5f * activeSphere.radius, 0.5f);
                 
                 potentialGrad.x += repulsiveGrad.x;
                 potentialGrad.y += repulsiveGrad.y;
@@ -123,12 +123,12 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
     return potentialGrad;
 }
 
-MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float P) const
+MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float r, float P) const
 {
     // TODO: Move this (arbitrarily-defined) constant somewhere better
-    const float a = 10.0f;
+    const float a = 1.0f;
     
-    float distance = MPVec3EuclideanDistance(pObs, p);
+    float distance = MPVec3EuclideanDistance(pObs, p) - r;
     
     // The gradient of the Euclidean distance function
     MPVec3 distanceGrad = MPVec3Make(p.x - pObs.x, p.y - pObs.y, p.z - pObs.z);
