@@ -9,6 +9,8 @@
 #import "MPDynamicScene.h"
 #import "MPPotentialFieldController.h"
 
+#import "BHGLKeyframeAnimation.h"
+
 #define kMPDynamicSceneVoxelSize 0.25f
 
 #define kMPPotentialGradStep 0.01f
@@ -40,6 +42,41 @@
     
     if (self.environment)
     {
+        for (MPModelNode *obstacleNode in self.obstacles)
+        {
+            MP::Motion *motion = obstacleNode.model->getMotion();
+            
+            if (motion)
+            {
+                std::vector<MPVec3> path = motion->path();
+                
+                if (motion->loops())
+                {
+                    path.push_back(path.at(0));
+                }
+                
+                BHGLAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)path.size() fps:(int)(path.size() / motion->duration())];
+                
+                for (int i = 0; i < path.size(); ++i)
+                {
+                    // bit of a hack... assumes obstacles can't scale or rotate in the future
+                    [(BHGLKeyframeAnimation *)anim setScale:MPVec3ToGLKVector3(obstacleNode.model->getScale()) forFrame:i];
+                    [(BHGLKeyframeAnimation *)anim setRotation:MPQuaternionToGLKQuaternion(obstacleNode.model->getRotation()) forFrame:i];
+                    
+                    [(BHGLKeyframeAnimation *)anim setTranslation:MPVec3ToGLKVector3(path.at(i)) forFrame:i];
+                }
+                
+                if (!motion->loops())
+                {
+                    anim = [BHGLAnimation sequence:@[anim, [anim reversedAnimation]]];
+                }
+                
+                anim.repeats = motion->repeats();
+                
+                [obstacleNode runAnimation:anim];
+            }
+        }
+        
         self.controller = new MP::PotentialFieldController(self.environment->getObstacles(), self.environment->getActiveObject(), kMPDynamicSceneVoxelSize);
         
         self.controller->setGradStep(kMPPotentialGradStep);

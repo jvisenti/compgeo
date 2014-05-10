@@ -125,6 +125,7 @@
 		D49B374B1912F0FF002EF51D /* MPStaticScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPStaticScene.mm; sourceTree = "<group>"; };
 		D49B374D19132512002EF51D /* MPDynamicScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPDynamicScene.h; sourceTree = "<group>"; };
 		D49B374E19132512002EF51D /* MPDynamicScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPDynamicScene.mm; sourceTree = "<group>"; };
+		D49B3763191E8D35002EF51D /* MPMotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPMotion.h; path = ../../src/MPMotion.h; sourceTree = "<group>"; };
 		D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStarPlanner.h; path = ../../src/MPAStarPlanner.h; sourceTree = "<group>"; };
 		D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
 		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
@@ -321,6 +322,7 @@
 				D4A79DB318FF8B96005B4D57 /* MPMesh.h */,
 				D4A79DB418FF8B96005B4D57 /* MPModel.cpp */,
 				D4A79DB518FF8B96005B4D57 /* MPModel.h */,
+				D49B3763191E8D35002EF51D /* MPMotion.h */,
 				D4A79DB618FF8B96005B4D57 /* MPPlanner.h */,
 				D4A79DB718FF8B96005B4D57 /* MPReader.cpp */,
 				D4A79DB818FF8B96005B4D57 /* MPReader.h */,

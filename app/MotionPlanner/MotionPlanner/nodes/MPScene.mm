@@ -105,6 +105,8 @@
         
         self.activeObject = activeNode;
         
+        NSMutableArray *mutableObstacles = [NSMutableArray array];
+        
         // create obstacles
         const std::vector<MP::Model *> &obstacles = environment->getObstacles();
         for(auto it = obstacles.begin(); it != obstacles.end(); ++it)
@@ -120,7 +122,11 @@
             obstacleNode.material.shininess = 10.0f;
             
             [self addChild:obstacleNode];
+            
+            [mutableObstacles addObject:obstacleNode];
         }
+        
+        _obstacles = [mutableObstacles copy];
     }
     
     _environment = environment;

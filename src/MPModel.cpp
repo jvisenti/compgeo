@@ -11,12 +11,11 @@ namespace MP
 {
 #pragma mark - public methods
 
-Model::Model()
+Model::Model() : mesh(nullptr), motion(nullptr)
 {
-    this->mesh = nullptr;
 }
 
-Model::Model(MPMesh *mesh)
+Model::Model(MPMesh *mesh) : motion(nullptr)
 {
     this->mesh = nullptr;
     this->setMesh(mesh);
@@ -25,6 +24,8 @@ Model::Model(MPMesh *mesh)
 Model::~Model()
 {
     MPMeshRelease(this->mesh);
+    
+    delete this->motion;
 }
 
 void Model::setMesh(MPMesh *mesh)
@@ -46,6 +47,19 @@ void Model::setMesh(MPMesh *mesh)
 MPMesh* Model::getMesh() const
 {
     return this->mesh;
+}
+    
+void Model::setMotion(const Motion &motion)
+{
+    delete this->motion;
+    
+    this->motion = new Motion();
+    *this->motion = motion;
+}
+    
+Motion* Model::getMotion() const
+{
+    return this->motion;
 }
 
 void Model::setTransform(const Transform3D &transform)

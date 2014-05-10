@@ -16,6 +16,8 @@
 
 @property (nonatomic, readonly) BHGLNode *rootNode;
 
+@property (nonatomic, readonly) NSArray *obstacles;
+
 @property (nonatomic, weak) MPModelNode *activeObject;
 @property (nonatomic, weak) MPModelNode *shadow;
 
