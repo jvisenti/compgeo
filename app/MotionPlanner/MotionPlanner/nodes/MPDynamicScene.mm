@@ -9,6 +9,12 @@
 #import "MPDynamicScene.h"
 #import "MPPotentialFieldController.h"
 
+#define kMPDynamicSceneVoxelSize 0.25f
+
+#define kMPPotentialGradStep 0.01f
+#define kMPPotentialAttractiveMultiplier 4.0f
+#define kMPPotentialRepulsiveMultiplier 1.0f
+
 @interface MPDynamicScene ()
 
 @property (nonatomic, assign) MP::Transform3D *goal;
@@ -34,7 +40,11 @@
     
     if (self.environment)
     {
-        self.controller = new MP::PotentialFieldController(self.environment->getObstacles(), self.environment->getActiveObject());
+        self.controller = new MP::PotentialFieldController(self.environment->getObstacles(), self.environment->getActiveObject(), kMPDynamicSceneVoxelSize);
+        
+        self.controller->setGradStep(kMPPotentialGradStep);
+        self.controller->setAttractiveMultiplier(kMPPotentialAttractiveMultiplier);
+        self.controller->setRepulsiveMultiplier(kMPPotentialRepulsiveMultiplier);
     }
 }
 
