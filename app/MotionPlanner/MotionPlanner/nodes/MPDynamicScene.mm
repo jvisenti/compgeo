@@ -55,7 +55,7 @@
                     path.push_back(path.at(0));
                 }
                 
-                BHGLAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)path.size() fps:(int)(path.size() / motion->duration())];
+                BHGLAnimation *anim = [BHGLKeyframeAnimation animationWithFrames:(int)path.size() fps:ceil(path.size() / motion->duration())];
                 
                 for (int i = 0; i < path.size(); ++i)
                 {
