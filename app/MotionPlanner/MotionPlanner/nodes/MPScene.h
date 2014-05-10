@@ -16,7 +16,6 @@
 
 @property (nonatomic, readonly) BHGLNode *rootNode;
 
-@property (nonatomic, weak) BHGLNode *boundingBox;
 @property (nonatomic, weak) MPModelNode *activeObject;
 @property (nonatomic, weak) MPModelNode *shadow;
 

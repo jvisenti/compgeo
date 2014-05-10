@@ -10,6 +10,7 @@
 #import "BHGL.h"
 #import "MPPathNode.h"
 #import "MPAStarPlanner.h"
+#import "MPCube.h"
 #import "MPUtils.h"
 
 #define kMPPlanStatesPerSec 5
@@ -19,18 +20,23 @@
 @interface MPStaticScene ()
 {
     __weak MPPathNode *_pathNode;
+    __weak MPCube *_boundingBox;
 }
 
 @property (nonatomic, assign) MP::AStarPlanner<MP::Transform3D> *planner;
 @property (nonatomic, assign) std::vector<MP::Transform3D> &planStates;
 
+@property (nonatomic, weak) BHGLNode *boundingBox;
 @property (nonatomic, weak) MPPathNode *pathNode;
+
+- (void)updateBoundingBox;
 
 @end
 
 @implementation MPStaticScene
 
 @synthesize pathNode = _pathNode;
+@synthesize boundingBox = _boundingBox;
 
 #pragma mark - property overrides
 
@@ -66,6 +72,8 @@
     MPPathNode *pathNode = [[MPPathNode alloc] init];
     [self insertChild:pathNode atIndex:0];
     self.pathNode = pathNode;
+    
+    [self updateBoundingBox];
     
     delete self.planner;
     
@@ -201,6 +209,31 @@
     if (self.planner)
     {
         delete self.planner;
+    }
+}
+
+#pragma mark - private interface
+
+- (void)updateBoundingBox
+{
+    [self.boundingBox removeFromParent];
+    
+    if (self.environment)
+    {
+        MPCube *boundingBox = [[MPCube alloc] init];
+        boundingBox.scale = GLKVector3Make(self.environment->getSize().w+0.01, self.environment->getSize().h+0.01, self.environment->getSize().d+0.01);
+        
+        boundingBox.material.surfaceColor = BHGLColorMake(1.0f, 1.0f, 1.0f, 0.1f);
+        boundingBox.material.ambientColor = BHGLColorWhite;
+        boundingBox.material.diffuseColor = BHGLColorWhite;
+        boundingBox.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
+        boundingBox.material.blendEnabled = GL_TRUE;
+        boundingBox.material.blendSrcRGB = GL_SRC_ALPHA;
+        boundingBox.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
+        
+        [self addChild:boundingBox];
+        
+        self.boundingBox = boundingBox;
     }
 }
 
