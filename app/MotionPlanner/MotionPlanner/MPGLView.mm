@@ -417,7 +417,6 @@
     [self.pitchSlider setEnabled:enabled];
     [self.yawSlider setEnabled:enabled];
     
-    [self.movementControl setEnabled:enabled];
     
     if (self.staticScene)
     {
@@ -425,6 +424,8 @@
         
         [self.weightField setEnabled:enabled];
         [self.speedSlider setEnabled:enabled];
+        
+        [self.movementControl setEnabled:enabled];
     }
     else
     {
@@ -433,6 +434,8 @@
         [self.showExpansions setEnabled:NO];
         [self.weightField setEnabled:NO];
         [self.speedSlider setEnabled:NO];
+        
+        [self.movementControl setEnabled:NO];
         
     }
 }

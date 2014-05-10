@@ -50,6 +50,12 @@
 
 #pragma mark - public interface
 
+- (BOOL)transform:(MP::Transform3D &)transform validForModel:(MP::Model *)model
+{
+    // no true collision detection for dynamic scenes
+    return YES;
+}
+
 - (void)move
 {
     [self moveTo:self.shadow.model->getTransform()];
