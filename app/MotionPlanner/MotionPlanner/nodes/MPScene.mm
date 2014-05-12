@@ -219,7 +219,7 @@
     MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
     
     BHGLColor shadowColor = self.activeObject.material.surfaceColor;
-    shadowColor.a = 0.2f;
+    shadowColor.a = 0.5f;
     
     shadow.material.surfaceColor = shadowColor;
     shadow.material.emissionColor = shadow.material.surfaceColor;
