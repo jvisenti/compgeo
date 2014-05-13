@@ -104,8 +104,8 @@ namespace MP
                 << ", " << startGoalPairs_.at(i).second.getPosition().z
                 << ")" << std::endl;
                 
-                // Reset the environment before each plan TODO
-//                environment_->reset();
+                // Reset the environment before each plan
+                environment_->reset();
                 
                 timer.start();
                 // Give the planner a timeout, and then force it to stop

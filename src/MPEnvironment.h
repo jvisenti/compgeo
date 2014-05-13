@@ -93,6 +93,9 @@ protected:
                 it = it->next;
             }
         }
+        
+        states_.clear();
+        invalidStates_.clear();
     }
     
     HashTable<T> states_;

@@ -13,6 +13,7 @@
 #include "MPHashTable.h"
 #include "MPTimer.h"
 #include <algorithm>
+#include <unistd.h>
 
 namespace MP
 {

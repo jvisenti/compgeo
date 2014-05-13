@@ -10,9 +10,16 @@
 
 int main(int argc, const char * argv[])
 {
+    if (argc != 2)
+    {
+        printf("invalid arguments\n");
+        printf("usage: benchmarker [env_file]\n");
+        exit(1);
+    }
+    
     MP::Benchmarker benchmarker;
     
-    benchmarker.loadEnvironment("/Users/eratner/Documents/Bowdoin/Spring 2014/Computational Geometry/compgeo/src/geometry/simple.env");
+    benchmarker.loadEnvironment(argv[1]);
     
 //    benchmarker.benchmark(100, MP::Action6D::generate6DActions(benchmarker.getEnvStepSize(), benchmarker.getEnvRotationStepSize()));
     benchmarker.benchmark(100, MP::Action6D::generate3DActions(benchmarker.getEnvStepSize()));

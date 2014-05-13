@@ -11,36 +11,15 @@
 		335230C6191DE60800026D66 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335230C5191DE60800026D66 /* main.cpp */; };
 		335230C8191DE60800026D66 /* Benchmarker.1 in Copy Files */ = {isa = PBXBuildFile; fileRef = 335230C7191DE60800026D66 /* Benchmarker.1 */; };
 		335230EB191DE66D00026D66 /* MPBenchmarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335230BC191DC6CB00026D66 /* MPBenchmarker.cpp */; };
-		335230EC191DE66D00026D66 /* MPBenchmarker.h in Sources */ = {isa = PBXBuildFile; fileRef = 335230BD191DC6CB00026D66 /* MPBenchmarker.h */; };
 		33647E3B1912F7CB006DFFFA /* MPPotentialFieldController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */; };
-		33D182A6191F321F0019F11D /* MPAStarPlanner.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */; };
 		33D182A7191F321F0019F11D /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
-		33D182A8191F321F0019F11D /* MPDijkstra3D.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */; };
-		33D182A9191F321F0019F11D /* MPDijkstraPlanner.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA818FF8B96005B4D57 /* MPDijkstraPlanner.h */; };
-		33D182AA191F321F0019F11D /* MPEnvironment.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA918FF8B96005B4D57 /* MPEnvironment.h */; };
 		33D182AB191F321F0019F11D /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
-		33D182AC191F321F0019F11D /* MPEnvironment3D.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAD18FF8B96005B4D57 /* MPEnvironment3D.h */; };
-		33D182AD191F321F0019F11D /* MPFloat.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAE18FF8B96005B4D57 /* MPFloat.h */; };
-		33D182AE191F321F0019F11D /* MPHashTable.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAF18FF8B96005B4D57 /* MPHashTable.h */; };
-		33D182AF191F321F0019F11D /* MPHeap.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB018FF8B96005B4D57 /* MPHeap.h */; };
-		33D182B0191F321F0019F11D /* MPMath.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB118FF8B96005B4D57 /* MPMath.h */; };
 		33D182B1191F321F0019F11D /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
-		33D182B2191F321F0019F11D /* MPMesh.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB318FF8B96005B4D57 /* MPMesh.h */; };
 		33D182B3191F321F0019F11D /* MPModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB418FF8B96005B4D57 /* MPModel.cpp */; };
-		33D182B4191F321F0019F11D /* MPModel.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB518FF8B96005B4D57 /* MPModel.h */; };
-		33D182B5191F321F0019F11D /* MPPlanner.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB618FF8B96005B4D57 /* MPPlanner.h */; };
 		33D182B6191F321F0019F11D /* MPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB718FF8B96005B4D57 /* MPReader.cpp */; };
-		33D182B7191F321F0019F11D /* MPReader.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB818FF8B96005B4D57 /* MPReader.h */; };
-		33D182B8191F321F0019F11D /* MPSearchState.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB918FF8B96005B4D57 /* MPSearchState.h */; };
-		33D182B9191F321F0019F11D /* MPTimer.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBA18FF8B96005B4D57 /* MPTimer.h */; };
 		33D182BA191F321F0019F11D /* MPTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBB18FF8B96005B4D57 /* MPTokenizer.cpp */; };
-		33D182BB191F321F0019F11D /* MPTokenizer.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBC18FF8B96005B4D57 /* MPTokenizer.h */; };
 		33D182BC191F321F0019F11D /* MPTransform3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBD18FF8B96005B4D57 /* MPTransform3D.cpp */; };
-		33D182BD191F321F0019F11D /* MPTransform3D.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBE18FF8B96005B4D57 /* MPTransform3D.h */; };
-		33D182BE191F321F0019F11D /* MPUtils.h in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBF18FF8B96005B4D57 /* MPUtils.h */; };
-		33D182BF191F321F0019F11D /* MPAction.h in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3651906D9F7002635EC /* MPAction.h */; };
 		33D182C0191F321F0019F11D /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
-		33D182C1191F321F0019F11D /* MPAction6D.h in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3671906D9F7002635EC /* MPAction6D.h */; };
 		33FBB3681906D9F7002635EC /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
@@ -510,36 +489,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				33D182A6191F321F0019F11D /* MPAStarPlanner.h in Sources */,
 				33D182A7191F321F0019F11D /* MPDijkstra3D.cpp in Sources */,
-				33D182A8191F321F0019F11D /* MPDijkstra3D.h in Sources */,
-				33D182A9191F321F0019F11D /* MPDijkstraPlanner.h in Sources */,
-				33D182AA191F321F0019F11D /* MPEnvironment.h in Sources */,
 				33D182AB191F321F0019F11D /* MPEnvironment3D.cpp in Sources */,
-				33D182AC191F321F0019F11D /* MPEnvironment3D.h in Sources */,
-				33D182AD191F321F0019F11D /* MPFloat.h in Sources */,
-				33D182AE191F321F0019F11D /* MPHashTable.h in Sources */,
-				33D182AF191F321F0019F11D /* MPHeap.h in Sources */,
-				33D182B0191F321F0019F11D /* MPMath.h in Sources */,
 				33D182B1191F321F0019F11D /* MPMesh.c in Sources */,
-				33D182B2191F321F0019F11D /* MPMesh.h in Sources */,
 				33D182B3191F321F0019F11D /* MPModel.cpp in Sources */,
-				33D182B4191F321F0019F11D /* MPModel.h in Sources */,
-				33D182B5191F321F0019F11D /* MPPlanner.h in Sources */,
 				33D182B6191F321F0019F11D /* MPReader.cpp in Sources */,
-				33D182B7191F321F0019F11D /* MPReader.h in Sources */,
-				33D182B8191F321F0019F11D /* MPSearchState.h in Sources */,
-				33D182B9191F321F0019F11D /* MPTimer.h in Sources */,
 				33D182BA191F321F0019F11D /* MPTokenizer.cpp in Sources */,
-				33D182BB191F321F0019F11D /* MPTokenizer.h in Sources */,
 				33D182BC191F321F0019F11D /* MPTransform3D.cpp in Sources */,
-				33D182BD191F321F0019F11D /* MPTransform3D.h in Sources */,
-				33D182BE191F321F0019F11D /* MPUtils.h in Sources */,
-				33D182BF191F321F0019F11D /* MPAction.h in Sources */,
 				33D182C0191F321F0019F11D /* MPAction6D.cpp in Sources */,
-				33D182C1191F321F0019F11D /* MPAction6D.h in Sources */,
 				335230EB191DE66D00026D66 /* MPBenchmarker.cpp in Sources */,
-				335230EC191DE66D00026D66 /* MPBenchmarker.h in Sources */,
 				335230C6191DE60800026D66 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -608,18 +566,19 @@
 					"DEBUG=1",
 					"$(inherited)",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Debug;
 		};
 		335230CB191DE60800026D66 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				GCC_OPTIMIZATION_LEVEL = 3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = macosx;
+				SDKROOT = macosx10.8;
 			};
 			name = Release;
 		};
@@ -711,6 +670,7 @@
 				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -734,6 +694,7 @@
 				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
