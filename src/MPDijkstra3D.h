@@ -22,6 +22,8 @@ public:
   virtual ~Dijkstra3D();
 
   bool plan(Transform3D start, Transform3D goal, std::vector<Transform3D> &plan);
+    
+    void stopPlanning();
 
   void plannerToWorld(Transform3D &T);
 

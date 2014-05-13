@@ -62,6 +62,11 @@ public:
 
     return false;
   }
+    
+    void stopPlanning()
+    {
+        // TODO
+    }
 
   bool dijkstraSearch(SearchState<T> *startState, SearchState<T> *goalState)
   {

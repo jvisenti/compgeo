@@ -58,5 +58,10 @@ void Dijkstra3D::plannerToWorld(Transform3D &T)
   pos.z *= eps;
   T.setPosition(pos);
 }
+    
+void Dijkstra3D::stopPlanning()
+{
+    
+}
 
 }
