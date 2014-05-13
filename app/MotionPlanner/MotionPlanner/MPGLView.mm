@@ -491,6 +491,9 @@
                 self.staticScene.showExpandedStates = YES;
                 self.staticScene.planningDelayMultiplier = 0.0f;
                 
+                self.staticScene.planningWeight = [self.weightField doubleValue];
+
+                
                 self.controlledModel = self.scene.shadow;
                 
                 [self setUIEnabled:YES];
