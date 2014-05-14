@@ -12,7 +12,8 @@ namespace MP
     Benchmarker::Benchmarker()
     : environment_(nullptr), planner_(nullptr), startGoalPairs_(), planCounter_(0)
     {
-        srand(static_cast<unsigned>(time(0)));
+//        srand(static_cast<unsigned>(time(0)));
+        srand48(static_cast<unsigned>(time(0)));
     }
     
     Benchmarker::~Benchmarker()
@@ -176,10 +177,13 @@ namespace MP
         Transform3D transform;
         while(!valid)
         {
-            x = region.min.x + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.x - region.min.x)));
-            y = region.min.y + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.y - region.min.y)));
-            z = region.min.z + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.z - region.min.z)));
-            transform = Transform3D(MPVec3Make(x, y, z), MPVec3Make(1.0f, 1.0f, 1.0f), MPQuaternionIdentity);
+//            x = region.min.x + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.x - region.min.x)));
+//            y = region.min.y + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.y - region.min.y)));
+//            z = region.min.z + static_cast<float>(rand()) / (static_cast<float>(RAND_MAX / (region.max.z - region.min.z)));
+            x = region.min.x + drand48() * (region.max.x - region.min.x);
+            y = region.min.y + drand48() * (region.max.y - region.min.y);
+            z = region.min.z + drand48() * (region.max.z - region.min.z);
+            transform = Transform3D(MPVec3Make(x, y, z), environment_->getActiveObject()->getScale(), environment_->getActiveObject()->getRotation());
             
             Transform3D plannerTransform(transform);
             environment_->worldToPlanner(plannerTransform);
