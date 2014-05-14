@@ -12,7 +12,8 @@ namespace MP
 {
     
 static const std::regex MeshValue("Vertex|Index|Texture");
-static const std::regex ModelValue("Mesh|Position|Rotation|Scale");
+static const std::regex ModelValue("Mesh|Position|Rotation|Scale|Motion");
+static const std::regex MotionValue("Path|Repeat|Loop|Duration");
 static const std::regex EnvironmentValue("Dynamic|Step|RotationStep|Origin|Size|ActiveObject|Obstacles");
     
 static const std::regex FloatLit("^\\-?[\\d]*\\.?[\\d]*$");
@@ -247,6 +248,18 @@ Model* Reader::generateModel_(Tokenizer &tokens, const std::map<std::string, MPM
             {
                 model->setScale(this->loadVector3_(tokens));
             }
+            else if (token == "Motion")
+            {
+                tokens.match("new");
+                tokens.match("Motion");
+                
+                Motion *motion = this->generateMotion_(tokens);
+                
+                if (motion)
+                {
+                    model->setMotion(*motion);
+                }
+            }
             else // token = Mesh
             {
                 token = tokens.getNext();
@@ -351,6 +364,70 @@ MPMesh* Reader::generateMesh_(Tokenizer &tokens) const
     mesh->texName = texName;
     
     return mesh;
+}
+    
+Motion* Reader::generateMotion_(Tokenizer &tokens) const
+{
+    Motion *motion = new Motion();
+    
+    std::string token;
+    
+    try
+    {
+        tokens.match("{");
+        
+        while ((token = tokens.getNext()) == "set")
+        {
+            token = tokens.match(MotionValue);
+            
+            if (token == "Repeat")
+            {
+                tokens.match("=");
+                tokens.match("{");
+                
+                motion->setRepeats(atoi(tokens.match(IntLit).c_str()));
+                
+                tokens.match("}");
+            }
+            else if (token == "Loop")
+            {
+                tokens.match("=");
+                tokens.match("{");
+                
+                motion->setLoops(atoi(tokens.match(IntLit).c_str()));
+                
+                tokens.match("}");
+            }
+            else if (token == "Duration")
+            {
+                tokens.match("=");
+                tokens.match("{");
+                
+                motion->setDuration(atoi(tokens.match(FloatLit).c_str()));
+                
+                tokens.match("}");
+            }
+            else if (token == "Path")
+            {
+                this->loadPath(tokens, motion->path());
+            }
+        }
+        
+        if (token != "}")
+        {
+            tokens.throw_token_error(token);
+        }
+    }
+    catch (std::runtime_error e)
+    {
+        delete motion;
+        
+        std::cout << e.what() << std::endl;
+        
+        return nullptr;
+    }
+    
+    return motion;
 }
     
 void Reader::importMeshes_(Tokenizer &tokens, std::map<std::string, MPMesh *> &meshes) const
@@ -458,6 +535,40 @@ void Reader::loadIndices(Tokenizer &tokens, void **indexData, size_t &size, size
         }
         
         values[i] = (unsigned int)atoi(token.c_str());
+    }
+    
+    // set delimiter back to default
+    tokens.setTokenDelimiter(' ');
+}
+    
+void Reader::loadPath(Tokenizer &tokens, std::vector<MPVec3> &path) const
+{
+    std::string token;
+    
+    tokens.match("=");
+    tokens.match("{");
+    
+    // arrays have elements delimited by a comma
+    tokens.setTokenDelimiter(',');
+    
+    for (int i = 0; (token = tokens.getNext()) != "}"; ++i)
+    {
+        if (!std::regex_match(token.begin(), token.end(), FloatLit))
+        {
+            tokens.throw_token_error(token);
+        }
+        
+        MPVec3 vec;
+        vec.v[0] = atof(token.c_str());
+        
+        // load yz coordinates
+        for (int j = 0; j < 2; ++j)
+        {
+            token = tokens.match(FloatLit);
+            vec.v[j+1] = atof(token.c_str());
+        }
+        
+        path.push_back(vec);
     }
     
     // set delimiter back to default

@@ -12,6 +12,7 @@
 #include "MPMesh.h"
 #include "MPTransform3D.h"
 #include "MPAction6D.h"
+#include "MPMotion.h"
 
 namespace MP
 {
@@ -24,6 +25,9 @@ public:
     
     void setMesh(MPMesh *mesh);
     MPMesh* getMesh() const;
+    
+    void setMotion(const Motion &motion);
+    Motion* getMotion() const;
     
     void setTransform(const Transform3D &transform);
     Transform3D& getTransform();
@@ -50,6 +54,8 @@ public:
     
 protected:
     MPMesh *mesh;
+    
+    Motion *motion;
     
     Transform3D transform;
     

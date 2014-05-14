@@ -290,6 +290,8 @@ MPVec3* MPMeshGetVoxels(const MPMesh *mesh, MPVec3 scale, float voxelSize, int *
         }
     }
     
+    MPMeshFree(cubeMesh);
+    
     // resize array to fit
     if (count > 0)
     {

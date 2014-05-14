@@ -9,14 +9,14 @@
 
 namespace MP
 {
-PotentialFieldController::PotentialFieldController(const std::vector<Model *> &obstacles, Model *activeObject)
-: activeObject_(activeObject)
+PotentialFieldController::PotentialFieldController(const std::vector<Model *> &obstacles, Model *activeObject, float voxelSize)
+: activeObject_(activeObject), voxelSize_(voxelSize), gradStep_(1.0f), attractiveMultiplier_(1.0f), repulsiveMultiplier_(1.0f)
 {    
     for(auto obstacle : obstacles)
     {
         // TODO: make voxel size a parameter somewhere
         int n;
-        MPVec3 *voxArray = MPMeshGetVoxels(obstacle->getMesh(), obstacle->getScale(), 0.25, &n);
+        MPVec3 *voxArray = MPMeshGetVoxels(obstacle->getMesh(), obstacle->getScale(), voxelSize, &n);
         
         std::vector<MPVec3> voxels;
         
@@ -45,11 +45,10 @@ void PotentialFieldController::move() const
     // Perform a single step of gradient descent
     MPVec3 currentPosition = activeObject_->getPosition();
     MPVec3 gradient = potentialGrad(currentPosition);
-    const float alpha = 0.01f;
     
     // TODO: Check for convergence (i.e. when gradient of potential function is close to zero
     // or, || gradient || < epsilon for some epsilon)
-    MPVec3 nextPosition = MPVec3Subtract(currentPosition, MPVec3MultiplyScalar(gradient, alpha));
+    MPVec3 nextPosition = MPVec3Subtract(currentPosition, MPVec3MultiplyScalar(gradient, this->gradStep_));
     
     activeObject_->setPosition(nextPosition);
 }
@@ -86,8 +85,8 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
             {
                 MPVec3ApplyTransform(&vox, tr);
                 
-                // TODO: what should this radius be?
-                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 0.5f * activeSphere.radius, 0.5f);
+                // TODO: what should these radii be?
+                MPVec3 repulsiveGrad = repulsivePotentialGrad(vox, p, 0.5f * activeSphere.radius, this->voxelSize_ + 0.25f);
                 
                 potentialGrad.x += repulsiveGrad.x;
                 potentialGrad.y += repulsiveGrad.y;
@@ -101,8 +100,7 @@ MPVec3 PotentialFieldController::potentialGrad(const MPVec3 &p) const
 
 MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
 {
-    // TODO: Move these (arbitrarily-defined) constants somewhere better
-    const float c = 4.0f;
+    // TODO: Move this (arbitrarily-defined) constant somewhere better
     const float threshold = 1.0f;
     
     float distance = MPVec3EuclideanDistance(p, goal_.getPosition());
@@ -112,12 +110,12 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
     if(distance <= threshold)
     {
         potentialGrad = MPVec3Subtract(p, goal_.getPosition());
-        potentialGrad = MPVec3MultiplyScalar(potentialGrad, c);
+        potentialGrad = MPVec3MultiplyScalar(potentialGrad, this->attractiveMultiplier_);
     }
     else
     {
         potentialGrad = MPVec3Subtract(p, goal_.getPosition());
-        potentialGrad = MPVec3MultiplyScalar(potentialGrad, (threshold * c) / (distance));
+        potentialGrad = MPVec3MultiplyScalar(potentialGrad, (threshold * this->attractiveMultiplier_) / (distance));
     }
     
     return potentialGrad;
@@ -125,9 +123,6 @@ MPVec3 PotentialFieldController::attractivePotentialGrad(const MPVec3 &p) const
 
 MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, const MPVec3 &p, float r, float P) const
 {
-    // TODO: Move this (arbitrarily-defined) constant somewhere better
-    const float a = 1.0f;
-    
     float distance = MPVec3EuclideanDistance(pObs, p) - r;
     
     // The gradient of the Euclidean distance function
@@ -137,7 +132,7 @@ MPVec3 PotentialFieldController::repulsivePotentialGrad(const MPVec3 &pObs, cons
     if(distance > P)
         return MPVec3Zero;
     
-    float multiplier = a * (1.0f / P - 1.0f / distance) * (1.0f / (distance * distance));
+    float multiplier = this->repulsiveMultiplier_ * (1.0f / P - 1.0f / distance) * (1.0f / (distance * distance));
     
     // Compute the gradient of the repulsive potential function
     return MPVec3MultiplyScalar(distanceGrad, multiplier);

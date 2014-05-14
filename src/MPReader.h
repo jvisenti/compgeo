@@ -12,6 +12,7 @@
 #include "MPEnvironment3D.h"
 #include "MPTokenizer.h"
 #include <map>
+#include <vector>
 
 namespace MP
 {
@@ -31,6 +32,7 @@ private:
     Environment3D* generateEnvironment3D_(Tokenizer &tokens, const std::map<std::string, MPMesh *> &meshes) const;
     Model* generateModel_(Tokenizer &tokens, const std::map<std::string, MPMesh *> &meshes) const;
     MPMesh* generateMesh_(Tokenizer &tokens) const;
+    Motion* generateMotion_(Tokenizer &tokens) const;
     
     void importMeshes_(Tokenizer &tokens, std::map<std::string, MPMesh *> &meshes) const;
     
@@ -38,6 +40,8 @@ private:
     
     void loadVertices(Tokenizer &tokens, void **vertexData, size_t &stride, size_t &count) const;
     void loadIndices(Tokenizer &tokens, void **indexData, size_t &size, size_t &count) const;
+    
+    void loadPath(Tokenizer &tokens, std::vector<MPVec3> &path) const;
 };
     
 }

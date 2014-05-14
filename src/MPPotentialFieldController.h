@@ -23,6 +23,12 @@ public:
     
     void setGoal(const Transform3D &goal);
     
+    void setGradStep(float gradStep) { gradStep_ = gradStep; }
+    
+    void setAttractiveMultiplier(float multiplier) { attractiveMultiplier_ = multiplier; }
+    
+    void setRepulsiveMultiplier(float multiplier) { repulsiveMultiplier_ = multiplier; }
+    
     void move() const;
     
 private:
@@ -38,6 +44,7 @@ private:
     
     float voxelSize_;
     
+    /* all default to 1.0 */
     float gradStep_;
     float attractiveMultiplier_;
     float repulsiveMultiplier_;

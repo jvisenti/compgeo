@@ -75,7 +75,7 @@ int transform3DHash(const Transform3D &t)
 }
 
 Environment3D::Environment3D()
-: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Zero), activeObject_(nullptr), dynamic_(false)
+: Environment<Transform3D>(transform3DHash), origin_(MPVec3Zero), size_(MPVec3Make(1.0f, 1.0f, 1.0f)), activeObject_(nullptr), dynamic_(false)
 {
 }
 

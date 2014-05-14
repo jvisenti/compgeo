@@ -7,14 +7,12 @@
 //
 
 #import "MPScene.h"
-#import "MPCube.h"
 
 #define kMPSceneMaxSize 4.0f
 
 @interface MPScene ()
 {
     __weak BHGLNode *_rootNode;
-    __weak MPCube *_boundingBox;
     __weak MPModelNode *_activeObject;
     __weak MPModelNode *_shadow;
 }
@@ -23,7 +21,6 @@
 - (void)setupCamera;
 - (void)setupLights;
 
-- (void)updateBoundingBox;
 - (void)updateShadow;
 
 @end
@@ -31,7 +28,6 @@
 @implementation MPScene
 
 @synthesize rootNode = _rootNode;
-@synthesize boundingBox = _boundingBox;
 @synthesize activeObject = _activeObject;
 @synthesize shadow = _shadow;
 
@@ -109,6 +105,8 @@
         
         self.activeObject = activeNode;
         
+        NSMutableArray *mutableObstacles = [NSMutableArray array];
+        
         // create obstacles
         const std::vector<MP::Model *> &obstacles = environment->getObstacles();
         for(auto it = obstacles.begin(); it != obstacles.end(); ++it)
@@ -124,13 +122,16 @@
             obstacleNode.material.shininess = 10.0f;
             
             [self addChild:obstacleNode];
+            
+            [mutableObstacles addObject:obstacleNode];
         }
+        
+        _obstacles = [mutableObstacles copy];
     }
     
     _environment = environment;
     
     [self updateShadow];
-    [self updateBoundingBox];
     
     float maxAxis = fmaxf(fmaxf(environment->getSize().w, environment->getSize().h), environment->getSize().d);
     float scale = kMPSceneMaxSize / maxAxis;
@@ -208,26 +209,6 @@
     self.lightUniform = @"u_Lights";
 }
 
-- (void)updateBoundingBox
-{
-    [self.boundingBox removeFromParent];
-    
-    MPCube *boundingBox = [[MPCube alloc] init];
-    boundingBox.scale = GLKVector3Make(_environment->getSize().w+0.01, _environment->getSize().h+0.01, _environment->getSize().d+0.01);
-    
-    boundingBox.material.surfaceColor = BHGLColorMake(1.0f, 1.0f, 1.0f, 0.1f);
-    boundingBox.material.ambientColor = BHGLColorWhite;
-    boundingBox.material.diffuseColor = BHGLColorWhite;
-    boundingBox.material.specularColor = BHGLColorMake(0.6f, 0.6f, 0.6f, 1.0f);
-    boundingBox.material.blendEnabled = GL_TRUE;
-    boundingBox.material.blendSrcRGB = GL_SRC_ALPHA;
-    boundingBox.material.blendDestRGB = GL_ONE_MINUS_SRC_ALPHA;
-    
-    [self addChild:boundingBox];
-    
-    self.boundingBox = boundingBox;
-}
-
 - (void)updateShadow
 {
     [self.shadow removeFromParent];
@@ -238,7 +219,7 @@
     MPModelNode *shadow = [[MPModelNode alloc] initWithModel:shadowModel];
     
     BHGLColor shadowColor = self.activeObject.material.surfaceColor;
-    shadowColor.a = 0.2f;
+    shadowColor.a = 0.5f;
     
     shadow.material.surfaceColor = shadowColor;
     shadow.material.emissionColor = shadow.material.surfaceColor;
