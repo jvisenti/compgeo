@@ -4,7 +4,8 @@ new Mesh
 	{
 		sandstone.jpg
 	}
-
+	
+	// 24 vertices, each with position, normal, texture coordinates
 	set Vertex 24 8 =
 	{
 		0.5, -0.5, 0.5, 0.0, 0.0, 1.0, 1.0, 0.0

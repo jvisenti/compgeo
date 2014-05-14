@@ -1,5 +1,6 @@
 new Mesh
 {
+	// 24 vertices, each with 6 elements
 	set Vertex 24 6 =
 	{
 		0.5, -0.5, 0.5, 0.0, 0.0, 1.0,
@@ -28,6 +29,7 @@ new Mesh
     		-0.5, -0.5, -0.5, 0.0, -1.0, 0.0
 	}
 
+	// 36 indices representing the triangles in the mesh
 	set Index 36 =
 	{
     		0, 1, 2,

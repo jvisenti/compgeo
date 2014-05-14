@@ -1,5 +1,6 @@
 new Mesh
 {
+	// 850 vertices, each with position and normal data
 	set Vertex 850 6 =
 	{
 		-1.795862, 0.260532, 0.040819, -0.990696, 0.000820, 0.136089,
