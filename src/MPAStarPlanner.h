@@ -13,6 +13,7 @@
 #include "MPHashTable.h"
 #include "MPTimer.h"
 #include <algorithm>
+#include <unistd.h>
 
 namespace MP
 {
@@ -24,7 +25,7 @@ public:
     typedef double (*heuristicptr)(const T&, const T&);
     
     AStarPlanner(Environment<T> *environment, heuristicptr heuristic)
-    : Planner<T>(environment), heuristic_(heuristic), CLOSED_(environment->getHashFunction()), stateExpansions_(0), weight_(1.0f)
+    : Planner<T>(environment), heuristic_(heuristic), CLOSED_(environment->getHashFunction()), stateExpansions_(0), weight_(1.0f), stopPlanning_(false)
     {
     }
     
@@ -34,6 +35,8 @@ public:
     
     bool plan(T start, T goal, std::vector<T> &plan)
     {
+        stopPlanning_ = false;
+        
         T wGoal = goal;
         
         // convert world states to planner states
@@ -94,6 +97,11 @@ public:
         return false;
     }
     
+    void stopPlanning()
+    {
+        stopPlanning_ = true;
+    }
+    
     bool aStarSearch(SearchState<T> *startState, SearchState<T> *goalState)
     {
         this->reset();
@@ -103,7 +111,7 @@ public:
         startState->setPathCost(0.0f);
         OPEN.insertState(startState, this->weight_ * heuristic_(startState->getValue(), goalState->getValue()));
         
-        while(OPEN.size() > 0)
+        while(OPEN.size() > 0 && !stopPlanning_)
         {
             SearchState<T> *s = OPEN.remove().state;
             T stateVal = s->getValue();
@@ -199,6 +207,8 @@ protected:
     std::vector<T> exploredStates_;
     
     int stateExpansions_;
+    
+    bool stopPlanning_;
     
 };
     

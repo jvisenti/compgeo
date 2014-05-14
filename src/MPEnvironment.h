@@ -61,7 +61,12 @@ public:
     virtual T plannerToWorld(const T &state) const { return state; }
     
     virtual void worldToPlanner(T &state) const { return; }
-    virtual T worldToPlanner(const T &state) const {return state; }
+    virtual T worldToPlanner(const T &state) const { return state; }
+    
+    virtual void reset()
+    {
+        clear();
+    }
     
 protected:
     void clear()
@@ -88,6 +93,9 @@ protected:
                 it = it->next;
             }
         }
+        
+        states_.clear();
+        invalidStates_.clear();
     }
     
     HashTable<T> states_;

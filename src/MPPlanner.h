@@ -27,6 +27,8 @@ public:
   }
 
   virtual bool plan(T start, T goal, std::vector<T> &plan) = 0;
+    
+    virtual void stopPlanning() = 0;
 
 protected:
   Environment<T> *environment_;
