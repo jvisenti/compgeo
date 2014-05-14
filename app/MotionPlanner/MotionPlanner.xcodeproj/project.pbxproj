@@ -7,7 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		335230BE191DC6CB00026D66 /* MPBenchmarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335230BC191DC6CB00026D66 /* MPBenchmarker.cpp */; };
+		335230C6191DE60800026D66 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335230C5191DE60800026D66 /* main.cpp */; };
+		335230C8191DE60800026D66 /* Benchmarker.1 in Copy Files */ = {isa = PBXBuildFile; fileRef = 335230C7191DE60800026D66 /* Benchmarker.1 */; };
+		335230EB191DE66D00026D66 /* MPBenchmarker.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 335230BC191DC6CB00026D66 /* MPBenchmarker.cpp */; };
 		33647E3B1912F7CB006DFFFA /* MPPotentialFieldController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */; };
+		33D182AB191F321F0019F11D /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
+		33D182B1191F321F0019F11D /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
+		33D182B3191F321F0019F11D /* MPModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB418FF8B96005B4D57 /* MPModel.cpp */; };
+		33D182B6191F321F0019F11D /* MPReader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB718FF8B96005B4D57 /* MPReader.cpp */; };
+		33D182BA191F321F0019F11D /* MPTokenizer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBB18FF8B96005B4D57 /* MPTokenizer.cpp */; };
+		33D182BC191F321F0019F11D /* MPTransform3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DBD18FF8B96005B4D57 /* MPTransform3D.cpp */; };
+		33D182C0191F321F0019F11D /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
 		33FBB3681906D9F7002635EC /* MPAction6D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 33FBB3661906D9F7002635EC /* MPAction6D.cpp */; };
 		D416ED3918EEEC0300993BAF /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D416ED3818EEEC0300993BAF /* Cocoa.framework */; };
 		D416ED4518EEEC0300993BAF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D416ED4418EEEC0300993BAF /* main.m */; };
@@ -41,7 +52,6 @@
 		D445A35F1906BD0000E183DF /* sandstone.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D445A35E1906BD0000E183DF /* sandstone.jpg */; };
 		D49B374C1912F0FF002EF51D /* MPStaticScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D49B374B1912F0FF002EF51D /* MPStaticScene.mm */; };
 		D49B374F19132512002EF51D /* MPDynamicScene.mm in Sources */ = {isa = PBXBuildFile; fileRef = D49B374E19132512002EF51D /* MPDynamicScene.mm */; };
-		D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */; };
 		D4A79DC318FF8B96005B4D57 /* MPEnvironment3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */; };
 		D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB218FF8B96005B4D57 /* MPMesh.c */; };
 		D4A79DC518FF8B96005B4D57 /* MPModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = D4A79DB418FF8B96005B4D57 /* MPModel.cpp */; };
@@ -52,9 +62,29 @@
 		D4F24EAC18F98913002F3CB0 /* MPPathNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = D4F24EAB18F98913002F3CB0 /* MPPathNode.mm */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		335230C1191DE60800026D66 /* Copy Files */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				335230C8191DE60800026D66 /* Benchmarker.1 in Copy Files */,
+			);
+			name = "Copy Files";
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		335230BC191DC6CB00026D66 /* MPBenchmarker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPBenchmarker.cpp; path = ../../../src/MPBenchmarker.cpp; sourceTree = "<group>"; };
+		335230BD191DC6CB00026D66 /* MPBenchmarker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPBenchmarker.h; path = ../../../src/MPBenchmarker.h; sourceTree = "<group>"; };
+		335230C3191DE60800026D66 /* Benchmarker */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Benchmarker; sourceTree = BUILT_PRODUCTS_DIR; };
+		335230C5191DE60800026D66 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		335230C7191DE60800026D66 /* Benchmarker.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = Benchmarker.1; sourceTree = "<group>"; };
 		33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPPotentialFieldController.cpp; path = ../../src/MPPotentialFieldController.cpp; sourceTree = "<group>"; };
 		33647E3A1912F7CB006DFFFA /* MPPotentialFieldController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPPotentialFieldController.h; path = ../../src/MPPotentialFieldController.h; sourceTree = "<group>"; };
+		33647E3D1917513C006DFFFA /* MPVoxelGrid.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPVoxelGrid.h; path = ../../src/MPVoxelGrid.h; sourceTree = "<group>"; };
 		33FBB3651906D9F7002635EC /* MPAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction.h; path = ../../src/MPAction.h; sourceTree = "<group>"; };
 		33FBB3661906D9F7002635EC /* MPAction6D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPAction6D.cpp; path = ../../src/MPAction6D.cpp; sourceTree = "<group>"; };
 		33FBB3671906D9F7002635EC /* MPAction6D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAction6D.h; path = ../../src/MPAction6D.h; sourceTree = "<group>"; };
@@ -126,9 +156,6 @@
 		D49B374D19132512002EF51D /* MPDynamicScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MPDynamicScene.h; sourceTree = "<group>"; };
 		D49B374E19132512002EF51D /* MPDynamicScene.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = MPDynamicScene.mm; sourceTree = "<group>"; };
 		D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPAStarPlanner.h; path = ../../src/MPAStarPlanner.h; sourceTree = "<group>"; };
-		D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPDijkstra3D.cpp; path = ../../src/MPDijkstra3D.cpp; sourceTree = "<group>"; };
-		D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstra3D.h; path = ../../src/MPDijkstra3D.h; sourceTree = "<group>"; };
-		D4A79DA818FF8B96005B4D57 /* MPDijkstraPlanner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPDijkstraPlanner.h; path = ../../src/MPDijkstraPlanner.h; sourceTree = "<group>"; };
 		D4A79DA918FF8B96005B4D57 /* MPEnvironment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment.h; path = ../../src/MPEnvironment.h; sourceTree = "<group>"; };
 		D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = MPEnvironment3D.cpp; path = ../../src/MPEnvironment3D.cpp; sourceTree = "<group>"; };
 		D4A79DAD18FF8B96005B4D57 /* MPEnvironment3D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MPEnvironment3D.h; path = ../../src/MPEnvironment3D.h; sourceTree = "<group>"; };
@@ -157,6 +184,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		335230C0191DE60800026D66 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D416ED3218EEEC0300993BAF /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -171,12 +205,24 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		335230C4191DE60800026D66 /* Benchmarker */ = {
+			isa = PBXGroup;
+			children = (
+				335230BC191DC6CB00026D66 /* MPBenchmarker.cpp */,
+				335230BD191DC6CB00026D66 /* MPBenchmarker.h */,
+				335230C5191DE60800026D66 /* main.cpp */,
+				335230C7191DE60800026D66 /* Benchmarker.1 */,
+			);
+			path = Benchmarker;
+			sourceTree = "<group>";
+		};
 		D416ED2C18EEEC0300993BAF = {
 			isa = PBXGroup;
 			children = (
 				D416ED7018EEED3300993BAF /* BHGL */,
 				D416EDEB18EF19D000993BAF /* MotionPlannerSrc */,
 				D416ED3E18EEEC0300993BAF /* MotionPlanner */,
+				335230C4191DE60800026D66 /* Benchmarker */,
 				D416ED3718EEEC0300993BAF /* Frameworks */,
 				D416ED3618EEEC0300993BAF /* Products */,
 			);
@@ -186,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				D416ED3518EEEC0300993BAF /* MotionPlanner.app */,
+				335230C3191DE60800026D66 /* Benchmarker */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -307,9 +354,6 @@
 			isa = PBXGroup;
 			children = (
 				D4A79DA518FF8B96005B4D57 /* MPAStarPlanner.h */,
-				D4A79DA618FF8B96005B4D57 /* MPDijkstra3D.cpp */,
-				D4A79DA718FF8B96005B4D57 /* MPDijkstra3D.h */,
-				D4A79DA818FF8B96005B4D57 /* MPDijkstraPlanner.h */,
 				D4A79DA918FF8B96005B4D57 /* MPEnvironment.h */,
 				D4A79DAC18FF8B96005B4D57 /* MPEnvironment3D.cpp */,
 				D4A79DAD18FF8B96005B4D57 /* MPEnvironment3D.h */,
@@ -336,6 +380,7 @@
 				33FBB3671906D9F7002635EC /* MPAction6D.h */,
 				33647E391912F7CB006DFFFA /* MPPotentialFieldController.cpp */,
 				33647E3A1912F7CB006DFFFA /* MPPotentialFieldController.h */,
+				33647E3D1917513C006DFFFA /* MPVoxelGrid.h */,
 			);
 			name = MotionPlannerSrc;
 			sourceTree = "<group>";
@@ -354,6 +399,23 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		335230C2191DE60800026D66 /* Benchmarker */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 335230C9191DE60800026D66 /* Build configuration list for PBXNativeTarget "Benchmarker" */;
+			buildPhases = (
+				335230BF191DE60800026D66 /* Sources */,
+				335230C0191DE60800026D66 /* Frameworks */,
+				335230C1191DE60800026D66 /* Copy Files */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Benchmarker;
+			productName = Benchmarker;
+			productReference = 335230C3191DE60800026D66 /* Benchmarker */;
+			productType = "com.apple.product-type.tool";
+		};
 		D416ED3418EEEC0300993BAF /* MotionPlanner */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = D416ED6618EEEC0300993BAF /* Build configuration list for PBXNativeTarget "MotionPlanner" */;
@@ -395,6 +457,7 @@
 			projectRoot = "";
 			targets = (
 				D416ED3418EEEC0300993BAF /* MotionPlanner */,
+				335230C2191DE60800026D66 /* Benchmarker */,
 			);
 		};
 /* End PBXProject section */
@@ -414,6 +477,22 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		335230BF191DE60800026D66 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				33D182AB191F321F0019F11D /* MPEnvironment3D.cpp in Sources */,
+				33D182B1191F321F0019F11D /* MPMesh.c in Sources */,
+				33D182B3191F321F0019F11D /* MPModel.cpp in Sources */,
+				33D182B6191F321F0019F11D /* MPReader.cpp in Sources */,
+				33D182BA191F321F0019F11D /* MPTokenizer.cpp in Sources */,
+				33D182BC191F321F0019F11D /* MPTransform3D.cpp in Sources */,
+				33D182C0191F321F0019F11D /* MPAction6D.cpp in Sources */,
+				335230EB191DE66D00026D66 /* MPBenchmarker.cpp in Sources */,
+				335230C6191DE60800026D66 /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		D416ED3118EEEC0300993BAF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -436,13 +515,13 @@
 				D4F24EA918F97CF6002F3CB0 /* MPCube.mm in Sources */,
 				D416ED4C18EEEC0300993BAF /* MPAppDelegate.m in Sources */,
 				D416EDA118EEED3D00993BAF /* BHGLAnimatedObject.m in Sources */,
-				D4A79DC118FF8B96005B4D57 /* MPDijkstra3D.cpp in Sources */,
 				D416EDA818EEED3D00993BAF /* BHGLMaterial.m in Sources */,
 				D416EDA618EEED3D00993BAF /* BHGLKeyframeAnimation.m in Sources */,
 				D416EDAA18EEED3D00993BAF /* BHGLModelNode.m in Sources */,
 				33647E3B1912F7CB006DFFFA /* MPPotentialFieldController.cpp in Sources */,
 				D4A79DC418FF8B96005B4D57 /* MPMesh.c in Sources */,
 				D416EDA418EEED3D00993BAF /* BHGLCamera.m in Sources */,
+				335230BE191DC6CB00026D66 /* MPBenchmarker.cpp in Sources */,
 				D4A79DC718FF8B96005B4D57 /* MPTokenizer.cpp in Sources */,
 				D49B374C1912F0FF002EF51D /* MPStaticScene.mm in Sources */,
 				D416EDCC18EF168900993BAF /* MPModelNode.mm in Sources */,
@@ -470,6 +549,29 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		335230CA191DE60800026D66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+			};
+			name = Debug;
+		};
+		335230CB191DE60800026D66 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_OPTIMIZATION_LEVEL = 3;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx10.8;
+			};
+			name = Release;
+		};
 		D416ED6418EEEC0300993BAF /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -504,7 +606,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -536,7 +638,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.8;
-				SDKROOT = macosx10.8;
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};
@@ -558,6 +660,7 @@
 				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -581,6 +684,7 @@
 				LLVM_LTO = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SCAN_ALL_SOURCE_FILES_FOR_INCLUDES = NO;
+				SDKROOT = macosx10.8;
 				USER_HEADER_SEARCH_PATHS = "../../src/**";
 				WRAPPER_EXTENSION = app;
 			};
@@ -589,6 +693,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		335230C9191DE60800026D66 /* Build configuration list for PBXNativeTarget "Benchmarker" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				335230CA191DE60800026D66 /* Debug */,
+				335230CB191DE60800026D66 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		D416ED3018EEEC0300993BAF /* Build configuration list for PBXProject "MotionPlanner" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
