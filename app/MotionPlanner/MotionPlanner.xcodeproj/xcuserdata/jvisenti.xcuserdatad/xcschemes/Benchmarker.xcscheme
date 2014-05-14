@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "D416ED3418EEEC0300993BAF"
-               BuildableName = "MotionPlanner.app"
-               BlueprintName = "MotionPlanner"
+               BlueprintIdentifier = "335230C2191DE60800026D66"
+               BuildableName = "Benchmarker"
+               BlueprintName = "Benchmarker"
                ReferencedContainer = "container:MotionPlanner.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -32,9 +32,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D416ED3418EEEC0300993BAF"
-            BuildableName = "MotionPlanner.app"
-            BlueprintName = "MotionPlanner"
+            BlueprintIdentifier = "335230C2191DE60800026D66"
+            BuildableName = "Benchmarker"
+            BlueprintName = "Benchmarker"
             ReferencedContainer = "container:MotionPlanner.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -51,12 +51,18 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D416ED3418EEEC0300993BAF"
-            BuildableName = "MotionPlanner.app"
-            BlueprintName = "MotionPlanner"
+            BlueprintIdentifier = "335230C2191DE60800026D66"
+            BuildableName = "Benchmarker"
+            BlueprintName = "Benchmarker"
             ReferencedContainer = "container:MotionPlanner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "/Users/jvisenti/Desktop/compgeo/src/geometry/simple.env"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <AdditionalOptions>
       </AdditionalOptions>
    </LaunchAction>
@@ -69,9 +75,9 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "D416ED3418EEEC0300993BAF"
-            BuildableName = "MotionPlanner.app"
-            BlueprintName = "MotionPlanner"
+            BlueprintIdentifier = "335230C2191DE60800026D66"
+            BuildableName = "Benchmarker"
+            BlueprintName = "Benchmarker"
             ReferencedContainer = "container:MotionPlanner.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

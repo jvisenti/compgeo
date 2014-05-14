@@ -42,6 +42,8 @@
 
 @property (nonatomic, weak) IBOutlet NSSegmentedControl *movementControl;
 
+@property (nonatomic, weak) IBOutlet NSButton *stopPlanningButton;
+
 - (IBAction)xSliderChanged:(NSSlider *)sender;
 - (IBAction)ySliderChanged:(NSSlider *)sender;
 
@@ -240,6 +242,9 @@
             if (self.staticScene)
             {
                 [self setUIEnabled:NO];
+                
+                [self.stopPlanningButton setEnabled:YES];
+                
                 dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                     if ([self.staticScene plan])
                     {
@@ -249,6 +254,8 @@
                     }
                     
                     [self setUIEnabled:YES];
+                    
+                    [self.stopPlanningButton setEnabled:NO];
                 });
             }
             else
@@ -269,6 +276,13 @@
         [self.controlledModel removeAnimation:anim];
         [self.movementAnimations removeObjectForKey:@(key)];
     }
+}
+
+- (void)stopPlanning
+{
+    [self.staticScene stopPlanning];
+    
+    [self.stopPlanningButton setEnabled:NO];
 }
 
 - (void)prepareOpenGL
@@ -487,6 +501,8 @@
             
                 self.staticScene.showExpandedStates = YES;
                 self.staticScene.planningDelayMultiplier = 0.0f;
+                
+                [self.stopPlanningButton setEnabled:NO];
                 
                 self.controlledModel = self.scene.shadow;
                 

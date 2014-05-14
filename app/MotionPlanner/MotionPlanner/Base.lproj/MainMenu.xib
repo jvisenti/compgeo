@@ -143,7 +143,7 @@
                     <slider horizontalHuggingPriority="750" id="Q4p-Xn-usa">
                         <rect key="frame" x="673" y="30" width="16" height="480"/>
                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
-                        <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="-1" maxValue="1" tickMarkPosition="left" sliderType="linear" id="AFW-eL-h2h"/>
+                        <sliderCell key="cell" controlSize="mini" continuous="YES" alignment="left" minValue="-1" maxValue="1" tickMarkPosition="right" sliderType="linear" id="AFW-eL-h2h"/>
                         <connections>
                             <action selector="ySliderChanged:" target="Tdf-9D-1le" id="CdA-6M-fBc"/>
                         </connections>
@@ -327,6 +327,14 @@
                             <action selector="weightFieldChanged:" target="Tdf-9D-1le" id="Yew-hW-Zrd"/>
                         </connections>
                     </textField>
+                    <button verticalHuggingPriority="750" id="A5O-tk-Fbf">
+                        <rect key="frame" x="10" y="13" width="147" height="32"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <buttonCell key="cell" type="push" title="Stop Planning" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="qtw-Fv-VvQ">
+                            <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                            <font key="font" metaFont="system"/>
+                        </buttonCell>
+                    </button>
                 </subviews>
             </view>
         </window>

@@ -22,9 +22,9 @@ int main(int argc, const char * argv[])
     
     benchmarker.loadEnvironment(argv[1]);
     
-//    benchmarker.benchmark(100, MP::Action6D::generate6DActions(benchmarker.getEnvStepSize(), benchmarker.getEnvRotationStepSize()));
+    benchmarker.benchmark(100, MP::Action6D::generate6DActions(benchmarker.getEnvStepSize(), benchmarker.getEnvRotationStepSize()));
 //    benchmarker.benchmark(100, MP::Action6D::generate3DActions(benchmarker.getEnvStepSize()));
-        benchmarker.benchmark(100, MP::Action6D::generateFalconActions(benchmarker.getEnvStepSize(), benchmarker.getEnvRotationStepSize()));
+//        benchmarker.benchmark(100, MP::Action6D::generateFalconActions(benchmarker.getEnvStepSize(), benchmarker.getEnvRotationStepSize()));
     
     return 0;
 }

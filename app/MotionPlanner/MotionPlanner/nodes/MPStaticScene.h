@@ -21,6 +21,8 @@
 - (BOOL)planTo:(const MP::Transform3D &)goal;
 - (BOOL)planFrom:(const MP::Transform3D &)start to:(const MP::Transform3D &)goal;
 
+- (void)stopPlanning;
+
 - (void)executePlan;
 
 @end

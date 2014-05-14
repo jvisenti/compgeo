@@ -172,6 +172,14 @@
     return NO;
 }
 
+- (void)stopPlanning
+{
+    if (self.planner)
+    {
+        self.planner->stopPlanning();
+    }
+}
+
 - (void)executePlan
 {
     std::vector<MPVec3> path;
