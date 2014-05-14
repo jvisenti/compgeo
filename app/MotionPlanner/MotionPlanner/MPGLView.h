@@ -13,6 +13,6 @@
 
 @property (nonatomic, strong) MPScene *scene;
 
-- (IBAction)stopPlanning;
+- (void)stopPlanning;
 
 @end

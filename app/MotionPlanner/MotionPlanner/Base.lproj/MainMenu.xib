@@ -134,6 +134,7 @@
                             <outlet property="rollSlider" destination="6ya-4F-QLE" id="pMi-XI-AIY"/>
                             <outlet property="showExpansions" destination="fYH-Jd-59N" id="85P-5N-NMp"/>
                             <outlet property="speedSlider" destination="nJP-bA-dPQ" id="Rmf-yG-7bE"/>
+                            <outlet property="stopPlanningButton" destination="A5O-tk-Fbf" id="yq2-Gd-6rg"/>
                             <outlet property="weightField" destination="M4a-s4-l2v" id="064-J3-RY6"/>
                             <outlet property="xSlider" destination="a71-AZ-ne8" id="cjR-ri-ie6"/>
                             <outlet property="ySlider" destination="Q4p-Xn-usa" id="vwx-I5-udI"/>
@@ -334,6 +335,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="stopPlanningPressed:" target="Tdf-9D-1le" id="iZY-vL-age"/>
+                        </connections>
                     </button>
                 </subviews>
             </view>

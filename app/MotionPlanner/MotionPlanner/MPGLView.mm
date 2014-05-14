@@ -57,6 +57,8 @@
 
 - (IBAction)movementControlChanged:(NSSegmentedControl *)sender;
 
+- (IBAction)stopPlanningPressed:(NSButton *)sender;
+
 - (void)setUIEnabled:(BOOL)enabled;
 
 - (IBAction)openFile:(NSMenuItem *)sender;
@@ -99,6 +101,8 @@
     [self setOpenGLContext:context];
     
     [self setUIEnabled:NO];
+    
+    [self.stopPlanningButton setEnabled:NO];
 }
 
 - (BOOL)acceptsFirstResponder
@@ -423,6 +427,11 @@
         default:
             break;
     }
+}
+
+- (void)stopPlanningPressed:(NSButton *)sender
+{
+    [self stopPlanning];
 }
 
 - (void)setUIEnabled:(BOOL)enabled
